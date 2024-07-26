@@ -1,0 +1,205 @@
+import { StyleSheet, Dimensions } from 'react-native';
+const { width, height } = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#020825',
+        alignItems: 'center',
+    },
+    topContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: width,
+        height: height * 0.07,
+        padding: 10,
+    },
+    heartContainer: {
+        flexDirection: 'row',
+    },
+    scoreContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    scoreText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginRight: 10,
+        color: '#FFF'
+    },
+    timerText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#FFF'
+    },
+    progressBarContainer: {
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        alignSelf: 'center',
+        width: width * 0.9,
+        height: height * 0.02,
+        borderRadius: 10,
+        backgroundColor:'transparent'
+    },
+    progressBarContent: {
+       flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        alignSelf:'center',
+        width: width * 0.9,
+        height: height * 0.01,
+        borderRadius:20,
+        backgroundColor: '#5D3FD3',
+        borderWidth: 1,
+        //borderColor: '#00e0ff',
+    },
+    progressBar: {
+        height: '100%',
+        backgroundColor: '#00e0ff',  // Ana renk
+        borderRadius: 20,
+        shadowColor: '#00e0ff',  // Daha parlak kenar rengi
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.9,
+        shadowRadius: 12,
+        elevation: 12,
+        borderWidth: 1,
+        borderColor: '#00e0ff',
+    },
+
+    coinsContainer: {
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center',
+        alignSelf:'flex-end',
+        width:width*0.2,
+        height:height*0.03,
+        backgroundColor:'transparent',
+    },
+    coinsText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#FFD700',
+    },
+    headerContainer: {
+        marginBottom: 20,
+        alignItems: 'center',
+    },
+    headerText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#FFE047',
+    },
+    questionContainer: {
+        backgroundColor: 'transparent',
+        padding: 8,
+        borderRadius: 12,
+        alignItems: 'center',
+        width: width * 0.9,
+        height: height * 0.73,
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        borderWidth: 1,
+        borderColor: '#5D3FD3',
+    },
+    questionText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 20,
+        color: '#FFFFFF',
+    },
+    timeText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 16,
+        color: '#020825',
+    },
+    optionsContainer: {
+        width: '100%',
+    },
+    optionButton: {
+        backgroundColor: '#020825',
+        width: width * 0.72,
+        height: height * 0.06,
+        justifyContent: 'center',
+        alignSelf: 'center',
+        alignItems: 'center',
+        borderRadius: 12,
+        marginBottom: 16,
+        borderWidth: 1,
+        borderColor: '#5D3FD3',
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    },
+    optionText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: '#FFFFFF',
+    },
+    correctOption: {
+        backgroundColor: '#4CBB17',
+    },
+    incorrectOption: {
+        backgroundColor: '#FF5733',
+    },
+    countryImage: {
+        width: 300,
+        height: 250,
+        borderRadius: 8,
+        marginBottom: 20,
+        borderWidth: 1.5,
+        borderColor: '#5D3FD3',
+    },
+    powerUpsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'flex-end',
+        alignSelf:'flex-end',
+        width: width,
+        height: height * 0.06,
+        backgroundColor: 'transparent',
+        borderTopWidth: 1,
+       // borderTopColor: '#FFE047',
+    },
+    powerUpButton: {
+        backgroundColor: 'transparent',
+        padding: 10,
+        borderRadius: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: width * 0.25,
+        height: height * 0.05,
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+        borderWidth: 1,
+        borderColor: '#00e0ff',
+    },
+    powerUpDisabled: {
+        backgroundColor: 'rgba(93, 63, 211, 0.5)',
+    },
+    powerUpText: {
+        color: '#ffffff',
+        marginLeft: 5,
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    animatedQuestionContainer: {
+        ...StyleSheet.absoluteFillObject,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+});
+
+export default styles;
