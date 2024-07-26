@@ -17,7 +17,7 @@ interface CategoryData {
 
 interface GreetingsQuizProps {
     categories: CategoryData[];
-    onComplete: () => void;
+    onComplete: (moveToNext: boolean) => void;
 }
 
 const GreetingsQuiz: React.FC<GreetingsQuizProps> = ({ categories, onComplete }) => {
@@ -55,7 +55,7 @@ const GreetingsQuiz: React.FC<GreetingsQuizProps> = ({ categories, onComplete })
 
     useEffect(() => {
         if (currentItemIndex === totalQuestions && currentCategoryIndex === totalCategories - 1) {
-            onComplete();
+            onComplete(false);
         }
     }, [currentItemIndex, currentCategoryIndex, totalQuestions, totalCategories, onComplete]);
 
@@ -73,19 +73,15 @@ const GreetingsQuiz: React.FC<GreetingsQuizProps> = ({ categories, onComplete })
     };
 
     const handleNextItem = () => {
-        if (selectedAnswer === null) return; // Prevent moving to next item if no answer is selected
+        if (selectedAnswer === null) return;
 
         if (currentItemIndex < totalQuestions - 1) {
             setCurrentItemIndex(prevIndex => prevIndex + 1);
-        } else if (currentCategoryIndex < totalCategories - 1) {
-            setCurrentCategoryIndex(prevIndex => prevIndex + 1);
-            setCurrentItemIndex(0);
         } else {
-            if (correctCount === totalQuestions * totalCategories) {
+            if (correctCount === totalQuestions) {
                 setShowCongratulations(true);
             } else {
-                setShowCongratulations(false);
-                resetQuiz();
+                onComplete(true);
             }
         }
 
@@ -94,7 +90,6 @@ const GreetingsQuiz: React.FC<GreetingsQuizProps> = ({ categories, onComplete })
     };
 
     const resetQuiz = () => {
-        setCurrentCategoryIndex(0);
         setCurrentItemIndex(0);
         setCorrectCount(0);
         setIncorrectCount(0);
@@ -104,8 +99,9 @@ const GreetingsQuiz: React.FC<GreetingsQuizProps> = ({ categories, onComplete })
         setShowCongratulations(false);
     };
 
-    const restartQuiz = () => {
-        resetQuiz();
+    const handleCongratulationsClose = () => {
+        setShowCongratulations(false);
+        onComplete(true);
     };
 
     const renderSwipeContainer = () => {
@@ -167,13 +163,6 @@ const GreetingsQuiz: React.FC<GreetingsQuizProps> = ({ categories, onComplete })
                         </Text>
                     </TouchableOpacity>
                 </View>
-                <CongratulationsModal visible={showCongratulations} onClose={restartQuiz} />
-                <GameOverModal
-                    visible={showGameOverModal}
-                    onRestart={restartQuiz}
-                    answer={currentItem.tr}
-                    hint="Bu soruyu doğru cevaplamalısın."
-                />
             </View>
         );
     };
@@ -196,6 +185,13 @@ const GreetingsQuiz: React.FC<GreetingsQuizProps> = ({ categories, onComplete })
                 height={8}
             />
             {renderSwipeContainer()}
+            <CongratulationsModal visible={showCongratulations} onClose={handleCongratulationsClose} />
+            <GameOverModal
+                visible={showGameOverModal}
+                onRestart={resetQuiz}
+                answer={currentItem.tr}
+                hint="Bu soruyu doğru cevaplamalısın."
+            />
         </View>
     );
 };

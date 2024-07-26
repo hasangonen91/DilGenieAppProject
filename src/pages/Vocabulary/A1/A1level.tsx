@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, Text, Modal, TouchableOpacity, View } from 'react-native';
+import { Text } from 'react-native';
 import { fetchA1LevelData } from '../../../services/api/base';
 import { A1LevelData, CategoryData } from '../A1/A1LevelData';
-import BackHeader from '../../../components/header/BackHeader';
 import TeachingPhase from '../../../components/Teaching/TeachingPhase';
 import GreetingsQuiz from '../../../components/quizComponent/GreetingsQuiz';
 import ContinueModal from '../../../components/modal/ContinueModal/ContinueModal';
 import styles from './styles';
 import MainComponent from '../../..//components/MainComponent/MainComponent';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const A1level: React.FC = () => {
   const [data, setData] = useState<A1LevelData | null>(null);
@@ -44,49 +42,42 @@ const A1level: React.FC = () => {
     }
   };
 
-  const handleNext = () => {
+  const handleNext = (moveToNext: boolean = false) => {
     if (!data) return;
 
     const currentCategoryItems = getCategoryItems(currentCategoryIndex);
-    if (currentItemIndex < currentCategoryItems.length - 1) {
-      setCurrentItemIndex(currentItemIndex + 1);
-    } else if (isTeachingPhase) {
-      setIsTeachingPhase(false); // Switch to GreetingsQuiz after TeachingPhase is complete
-      setCurrentItemIndex(0); // Reset item index for GreetingsQuiz
-    } else if (currentCategoryIndex < categories.length - 1) {
-      setCurrentCategoryIndex(currentCategoryIndex + 1);
+    if (moveToNext || (!isTeachingPhase && currentCategoryIndex < categories.length - 1)) {
+      setCurrentCategoryIndex(prevIndex => prevIndex + 1);
       setCurrentItemIndex(0);
-      setIsTeachingPhase(true); // Switch back to TeachingPhase for the next category
+      setIsTeachingPhase(true);
       const nextCategory = categories[currentCategoryIndex + 1];
       setModalTitle(nextCategory.en);
-      setModalContent(nextCategory.tr); // İsterseniz içerik değişkeniyle içeriği değiştirebilirsiniz
-      setShowDevamModal(true); // Show devam modal before switching to teaching phase
-    } else {
-      setIsCompleted(true); // Mark completion when all categories are done
+      setModalContent(nextCategory.tr);
+      setShowDevamModal(true);
+    } else if (isTeachingPhase) {
+      if (currentItemIndex < currentCategoryItems.length - 1) {
+        setCurrentItemIndex(prevIndex => prevIndex + 1);
+      } else {
+        setIsTeachingPhase(false);
+        setCurrentItemIndex(0);
+      }
+    } else if (currentCategoryIndex === categories.length - 1) {
+      setIsCompleted(true);
     }
   };
 
   const getCategoryItems = (index: number): { en: string; tr: string; image: string }[] => {
     if (!data) return [];
     switch (index) {
-      case 0:
-        return data.vocabulary.greetings.category.words;
-      case 1:
-        return data.vocabulary.family.category.words;
-      case 2:
-        return data.vocabulary.months.category.words;
-      case 3:
-        return data.vocabulary.years.category.words;
-      case 4:
-        return data.vocabulary.colors_numbers_shapes.category.words;
-      case 5:
-        return data.vocabulary.days.category.words;
-      case 6:
-        return data.vocabulary.places.category.words;
-      case 7:
-        return data.vocabulary.directions.category.words;
-      default:
-        return [];
+      case 0: return data.vocabulary.greetings.category.words;
+      case 1: return data.vocabulary.family.category.words;
+      case 2: return data.vocabulary.months.category.words;
+      case 3: return data.vocabulary.years.category.words;
+      case 4: return data.vocabulary.colors_numbers_shapes.category.words;
+      case 5: return data.vocabulary.days.category.words;
+      case 6: return data.vocabulary.places.category.words;
+      case 7: return data.vocabulary.directions.category.words;
+      default: return [];
     }
   };
 
@@ -118,7 +109,7 @@ const A1level: React.FC = () => {
             categoryName={currentCategory}
             currentItemIndex={currentItemIndex}
             totalItems={getCategoryItems(currentCategoryIndex).length}
-            onNext={handleNext}
+            onNext={() => handleNext()}
           />
           <ContinueModal
             visible={showDevamModal}
