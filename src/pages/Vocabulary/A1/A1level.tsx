@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Text } from 'react-native';
+import { Text, ActivityIndicator, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; 
 import { fetchA1LevelData } from '../../../services/api/base';
 import { A1LevelData, CategoryData } from '../A1/A1LevelData';
 import TeachingPhase from '../../../components/Teaching/TeachingPhase';
 import GreetingsQuiz from '../../../components/quizComponent/GreetingsQuiz';
 import ContinueModal from '../../../components/modal/ContinueModal/ContinueModal';
+import FinalModal from '../../../components/modal/FinalModal/FinalModal';
 import styles from './styles';
-import MainComponent from '../../..//components/MainComponent/MainComponent';
+import MainComponent from '../../../components/MainComponent/MainComponent';
+import { ScreenNames } from '../../../routes/routes.common';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ApplicationStackParamList } from '../../../types/navigation';
 
 const A1level: React.FC = () => {
   const [data, setData] = useState<A1LevelData | null>(null);
@@ -18,6 +23,34 @@ const A1level: React.FC = () => {
   const [showDevamModal, setShowDevamModal] = useState(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContent, setModalContent] = useState<string>("");
+  const [showFinalModal, setShowFinalModal] = useState(false); 
+  const [loading, setLoading] = useState(true);
+  const [indicatorColor, setIndicatorColor] = useState('#00ff00');
+  const navigation = useNavigation<NativeStackNavigationProp<ApplicationStackParamList>>();
+  const colors = ['#00ff00', '#ff0000', '#00e0ff', '#ffff00', '#ff00ff'];
+
+  useEffect(() => {
+    // Yükleme göstergesini 3 saniye göster
+    const timer = setTimeout(() => {
+      fetchData();
+      setLoading(false);
+    }, 3000); // 3 saniye
+
+    // Renk değiştirme intervali
+    const colorChangeInterval = setInterval(() => {
+      setIndicatorColor((prevColor) => {
+        const currentIndex = colors.indexOf(prevColor);
+        const nextIndex = (currentIndex + 1) % colors.length;
+        return colors[nextIndex];
+      });
+    }, 500); // Renk değişim süresi (500ms)
+
+    return () => {
+      clearTimeout(timer);
+      clearInterval(colorChangeInterval);
+    };
+  }, []);
+
 
   useEffect(() => {
     fetchData();
@@ -46,25 +79,36 @@ const A1level: React.FC = () => {
     if (!data) return;
 
     const currentCategoryItems = getCategoryItems(currentCategoryIndex);
-    if (moveToNext || (!isTeachingPhase && currentCategoryIndex < categories.length - 1)) {
-      setCurrentCategoryIndex(prevIndex => prevIndex + 1);
-      setCurrentItemIndex(0);
-      setIsTeachingPhase(true);
-      const nextCategory = categories[currentCategoryIndex + 1];
-      setModalTitle(nextCategory.en);
-      setModalContent(nextCategory.tr);
-      setShowDevamModal(true);
-    } else if (isTeachingPhase) {
+
+    if (isTeachingPhase) {
       if (currentItemIndex < currentCategoryItems.length - 1) {
+        // Henüz kategorinin tüm öğeleri bitmediyse sıradaki öğeye geç
         setCurrentItemIndex(prevIndex => prevIndex + 1);
       } else {
+        // Öğretim aşaması tamamlandığında quiz aşamasına geç
         setIsTeachingPhase(false);
         setCurrentItemIndex(0);
       }
-    } else if (currentCategoryIndex === categories.length - 1) {
+    } else if (currentCategoryIndex < categories.length - 1) {
+      if (moveToNext) {
+        // Sıradaki kategoriye geç
+        setCurrentCategoryIndex(prevIndex => prevIndex + 7);
+        setCurrentItemIndex(0);
+        setIsTeachingPhase(true);
+
+        // Bir sonraki kategoriye geçerken devam modali aç
+        const nextCategory = categories[currentCategoryIndex + 1];
+        setModalTitle(nextCategory.en);
+        setModalContent(nextCategory.tr);
+        setShowDevamModal(true);
+      }
+    } else {
+      // Tüm kategoriler tamamlandığında final modalını aç
       setIsCompleted(true);
+      setShowFinalModal(true);
     }
   };
+
 
   const getCategoryItems = (index: number): { en: string; tr: string; image: string }[] => {
     if (!data) return [];
@@ -82,8 +126,10 @@ const A1level: React.FC = () => {
   };
 
   if (!data) {
-    return <Text>Loading...</Text>;
+    return <ActivityIndicator size="large" color="#00ff00" />;
   }
+
+
 
   const categories: CategoryData[] = [
     data.vocabulary.greetings,
@@ -98,10 +144,29 @@ const A1level: React.FC = () => {
 
   const currentCategory = categories[currentCategoryIndex];
 
+  if (loading) {
+    return (
+      <View style={styles.indicatorContainer}>
+        <ActivityIndicator size="large" color={indicatorColor} />
+        <Text style={styles.loadingText}>Just do it...</Text>
+      </View>
+    );
+  }
+
   return (
     <MainComponent headerTitle="A1 Level">
       {isCompleted ? (
-        <Text style={styles.congratulationsText}>Tebrikler, A2 seviyesine geçtiniz!</Text>
+        <>
+          <FinalModal
+            visible={showFinalModal}
+            onClose={() => {
+              setShowFinalModal(false);
+              navigation.navigate(ScreenNames.DragDropQuiz); 
+            }}
+            title="Tebrikler"
+            content="Tebrikler 1.Yarı finale geçtiniz!"
+          />
+        </>
       ) : isTeachingPhase ? (
         <>
           <TeachingPhase

@@ -17,6 +17,7 @@ export enum ScreenNames {
   Profile = 'Profile',
   PlayGround = 'PlayGround',
   A1level= 'A1level',
+  DragDropQuiz='DragDropQuiz',
   A2level= 'A2level',
   B1level= 'B1level',
   B2level= 'B2level',

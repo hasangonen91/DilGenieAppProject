@@ -10,11 +10,24 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center',
     },
-    
+    loadingText: {
+        marginTop: 10,
+        fontSize: 16,
+        color: '#ffffff',
+    },
     congratulationsText: {
-        fontSize: 18,
-        color: '#fff', 
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#ffffff',
         textAlign: 'center',
+        marginVertical: 20,
+    },
+    indicatorContainer:{
+        width:width,
+        height:height,
+        justifyContent:'center',
+        alignItems:'center',
+        backgroundColor: '#020825',
     },
 });
 

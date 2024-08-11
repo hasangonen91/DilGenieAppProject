@@ -54,7 +54,6 @@ const SplashScreen: React.FC = () => {
   if (isConnected === null) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#5D3FD3" />
         <Image
           source={require('../../../assets/images/logo.png')}
           style={styles.image}

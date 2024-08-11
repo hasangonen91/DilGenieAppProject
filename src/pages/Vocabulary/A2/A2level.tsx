@@ -1,16 +1,13 @@
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native'
 import React from 'react'
-import BackHeader from '../../../components/header/BackHeader';
-import DragDropQuizComponent from '../../../components/dragDrop/nes';
 import MainComponent from '../../..//components/MainComponent/MainComponent';
-
+import ListeningExercise from '../../../components/Listening/Listening';
 
 const A2level = () => {
   return (
     <MainComponent headerTitle="A2 Level">
-
       <View style={styles.container}>
-        <DragDropQuizComponent />
+        <ListeningExercise />
       </View>
     </MainComponent>
   )

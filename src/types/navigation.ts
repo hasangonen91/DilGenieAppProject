@@ -5,11 +5,11 @@ export type ApplicationStackParamList = {
   Splash: undefined;
   Login: undefined;
   Register: undefined;
- // BottomTab: undefined;
-  BottomTab: {
-    screen: 'Home';
-    params: {uid: string; displayName: string | null};
-  };
+  BottomTab: undefined;
+  // BottomTab: {
+  //   screen: 'Home';
+  //   params: {uid: string; displayName: string | null};
+  // };
   Hangman: undefined;
   FlappyBird: undefined;
   WordPuzzle: undefined;
@@ -19,6 +19,7 @@ export type ApplicationStackParamList = {
   WordSorting: undefined;
   CrossWordPuzzle: undefined;
   A1level: undefined;
+  DragDropQuiz: undefined;
   A2level: undefined;
   B1level: undefined;
   B2level: undefined;

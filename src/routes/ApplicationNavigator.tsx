@@ -5,6 +5,7 @@ import { TransitionPresets } from '@react-navigation/stack';
 import { Splash, Login, Register } from '../pages/Start';
 import { Hangman, FlappyBird, WordPuzzle, Quiz, WordMatching, WordCompletion, WordSorting, CrossWordPuzzle } from '../pages/games';
 import { A1level, A2level, B1level, B2level, C1level, C2level } from '../pages/Vocabulary';
+import DragDropQuiz from '../pages/Vocabulary/A1/DragDropQuiz/DragDropQuiz';
 import { ApplicationStackParamList } from '../types/navigation';
 import BottomTab from './Bottom/BottomTab';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -71,6 +72,7 @@ function ApplicationNavigator() {
                 <Stack.Screen name={ScreenNames.WordSorting} component={WordSorting} />
                 <Stack.Screen name={ScreenNames.CrossWordPuzzle} component={CrossWordPuzzle} />
                 <Stack.Screen name={ScreenNames.A1level} component={A1level} />
+                <Stack.Screen name={ScreenNames.DragDropQuiz} component={DragDropQuiz} />
                 <Stack.Screen name={ScreenNames.A2level} component={A2level} />
                 <Stack.Screen name={ScreenNames.B1level} component={B1level} />
                 <Stack.Screen name={ScreenNames.B2level} component={B2level} />
