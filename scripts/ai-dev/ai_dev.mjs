@@ -232,12 +232,29 @@ Kurallar:
 - Eklediğin her şey TypeScript'te derlenmeli ve eslint kurallarına uymalı.
 - Asla App.tsx'teki köklü navigasyonu bozma, yeni ekranı mevcut navigasyon yapısına uygun ekle.
 - REACT NATIVE ORTAMINDA ÇALIŞIYORSUN: localStorage, window, document, navigator (tarayıcı API'leri) YOKTUR. Kalıcı veri için @react-native-async-storage/async-storage (import AsyncStorage from '@react-native-async-storage/async-storage') veya react-native-mmkv kullan.
-- Zustand persist kullanımı şu şekilde (BİREBİR bu kalıbı kullan, zustand v4.5.2 kurulu):
+- Zustand persist kullanımı için TAM GEÇERLİ ÖRNEK (zustand v4.5.2, TS — BİREBİR bu kalıbı uygula):
   import { create } from 'zustand';
   import { persist, createJSONStorage } from 'zustand/middleware';
   import AsyncStorage from '@react-native-async-storage/async-storage';
-  export const useStore = create(persist((set, get) => ({ ... }), { name: 'kisa-isim', storage: createJSONStorage(() => AsyncStorage), partialize: (s) => ({ kalici-kisimlar }), }));
-  DİKKAT: 'createJSONStorage' yaz (küçük c), sakın 'CreateJSONStorage' yazma.
+
+  type MyState = {
+    items: string[];
+    addItem: (s: string) => void;
+  };
+
+  export const useMyStore = create<MyState>()(
+    persist(
+      (set) => ({
+        items: [],
+        addItem: (s) => set((state) => ({ items: [...state.items, s] })),
+      }),
+      {
+        name: 'my-store',
+        storage: createJSONStorage(() => AsyncStorage),
+      },
+    ),
+  );
+  Not: 'create<MyState>()(...)' CURRIED form zorunlu (iki parantez). düz 'create(persist(...))' yazma, TS hatası verir. createJSONStorage küçük c ile.
 - ASLA test dosyası yazma: __tests__ klasörü, *.test.ts, *.spec.ts YASAK. Sadece production kaynak kodu üret.
 - Görev bir "altyapı"/"modül" ise production dosyalarının TAMAMINI tek seferde üret (servis, tipler, store). Import ettiğin her dosyayı mutlaka create et, eksik bırakma.
 - Yalnızca JSON cevap ver, başka metin yazma.`;
