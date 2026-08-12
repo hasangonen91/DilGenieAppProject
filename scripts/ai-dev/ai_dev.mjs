@@ -36,6 +36,14 @@ function read(p) {
   return existsSync(p) ? readFileSync(p, 'utf8') : null;
 }
 
+function readdirSafe(dir) {
+  try {
+    return readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+}
+
 function walk(dir, base = '') {
   const out = [];
   for (const entry of readdirSafe(dir)) {
