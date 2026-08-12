@@ -70,6 +70,80 @@ const data = {
         },
       ],
     },
+    family: {
+      en: 'Family',
+      tr: 'Aile',
+      words: [
+        {
+          key: 6,
+          en: 'Mother',
+          tr: 'Anne',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 7,
+          en: 'Father',
+          tr: 'Baba',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 8,
+          en: 'Sister',
+          tr: 'Kız kardeş',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 9,
+          en: 'Brother',
+          tr: 'Erkek kardeş',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 10,
+          en: 'Grandmother',
+          tr: 'Büyükanne',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 11,
+          en: 'Grandfather',
+          tr: 'Büyükbaba',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+      ],
+      example_sentences: [
+        {
+          key: 1,
+          en: 'My mother is a teacher.',
+          tr: 'Annemi bir öğretmen.',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 2,
+          en: 'I have two sisters and one brother.',
+          tr: 'İki kız kardeşim ve bir erkek kardeşim var.',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+      ],
+      questions: [
+        {
+          key: 1,
+          question_en: "What do you call your mother's mother?",
+          question_tr: 'Annennin annesine ne dersin?',
+          answer_en: 'Grandmother',
+          answer_tr: 'Büyükanne',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 2,
+          question_en: "Who is your father's son?",
+          question_tr: 'Babanın oğlusu kim?',
+          answer_en: 'Brother or yourself',
+          answer_tr: 'Kardeş veya sen kendin',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+      ],
+    },
   },
 };
 
