@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, {useRef, useState} from 'react';
 import Swiper from 'react-native-deck-swiper';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import {Button, StyleSheet, Text, View} from 'react-native';
 
 // demo purposes only
 function* range(start: number, end: number) {
@@ -14,12 +14,14 @@ const Example = () => {
   const [swipedAllCards, setSwipedAllCards] = useState(false);
   const [swipeDirection, setSwipeDirection] = useState('');
   const [cardIndex, setCardIndex] = useState(0);
-  const swiperRef = useRef<Swiper<any>>(null);
+  const swiperRef = useRef<Swiper<number>>(null);
 
   const renderCard = (card: number, index: number) => {
     return (
       <View style={styles.card}>
-        <Text style={styles.text}>{card} - {index}</Text>
+        <Text style={styles.text}>
+          {card} - {index}
+        </Text>
       </View>
     );
   };
@@ -53,7 +55,7 @@ const Example = () => {
         onSwipedAll={onSwipedAllCards}
         stackSize={3}
         stackSeparation={15}
-        backgroundColor='black'
+        backgroundColor="black"
         overlayLabels={{
           bottom: {
             title: 'BLEAH',
@@ -127,9 +129,11 @@ const Example = () => {
         animateOverlayLabelsOpacity
         animateCardOpacity
         swipeBackCard
-      >
-        <Button onPress={() => swiperRef.current?.swipeBack()} title='Swipe Back' />
-      </Swiper>
+      />
+      <Button
+        onPress={() => swiperRef.current?.swipeBack()}
+        title="Swipe Back"
+      />
     </View>
   );
 };

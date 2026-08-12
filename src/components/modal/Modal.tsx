@@ -1,7 +1,14 @@
 import React from 'react';
-import { Modal, Text, View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import {
+  Modal,
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 interface CustomModalProps {
   isVisible: boolean;
@@ -11,27 +18,30 @@ interface CustomModalProps {
   modalContentStyle?: object; // Yeni prop
 }
 
-const CustomModal: React.FC<CustomModalProps> = ({ isVisible, closeModal, modalContent, backgroundColor = 'rgba(0, 0, 0, 0.5)', modalContentStyle }) => {
-
+const CustomModal: React.FC<CustomModalProps> = ({
+  isVisible,
+  closeModal,
+  modalContent,
+  backgroundColor = 'rgba(0, 0, 0, 0.5)',
+  modalContentStyle,
+}) => {
   return (
     <Modal
       animationType="slide"
       transparent={true}
       visible={isVisible}
-      onRequestClose={closeModal}
-    >
+      onRequestClose={closeModal}>
       <TouchableOpacity
-        style={[styles.modalContainer, { backgroundColor }]} // Arka plan rengini prop ile dinamik olarak değiştir
+        style={[styles.modalContainer, {backgroundColor}]} // Arka plan rengini prop ile dinamik olarak değiştir
         activeOpacity={1}
-        onPressOut={closeModal}
-      >
+        onPressOut={closeModal}>
         <View style={[styles.modalContent, modalContentStyle]}>
           {modalContent}
         </View>
       </TouchableOpacity>
     </Modal>
   );
-}
+};
 
 const styles = StyleSheet.create({
   modalContainer: {

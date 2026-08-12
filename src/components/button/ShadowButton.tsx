@@ -1,13 +1,19 @@
 import React from 'react';
-import { Text, TouchableOpacity, View, Dimensions, StyleSheet } from 'react-native';
-import { Shadow } from 'react-native-shadow-2';  // Shadow bileşenini içe aktarın
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  Dimensions,
+  StyleSheet,
+} from 'react-native';
+import {Shadow} from 'react-native-shadow-2'; // Shadow bileşenini içe aktarın
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const shadowOpt = {
   width: width * 0.8,
   height: 50,
-  color: "#000",
+  color: '#000',
   border: 10,
   radius: 10,
   opacity: 0.3,
@@ -20,20 +26,23 @@ interface ShadowButtonProps {
   title: string;
 }
 
-const ShadowButton: React.FC<ShadowButtonProps> = ({ onPress, title }) => (
+const ShadowButton: React.FC<ShadowButtonProps> = ({onPress, title}) => (
   <View style={styles.shadowContainer}>
-    <Shadow {...shadowOpt} startColor={'#00e0ff'} endColor={'#ff00ff10'} offset={[3, 4]}>
+    <Shadow
+      {...shadowOpt}
+      startColor={'#00e0ff'}
+      endColor={'#ff00ff10'}
+      offset={[3, 4]}>
       <TouchableOpacity style={styles.button} onPress={onPress}>
         <Text style={styles.buttonText}>{title}</Text>
       </TouchableOpacity>
     </Shadow>
-
   </View>
 );
 
 const styles = StyleSheet.create({
   shadowContainer: {
-    width: width * 0.8, 
+    width: width * 0.8,
     alignSelf: 'center',
     marginVertical: Dimensions.get('window').height * 0.02,
   },

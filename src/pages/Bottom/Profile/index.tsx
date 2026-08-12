@@ -1,16 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, Alert, StyleSheet, Image } from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+  Image,
+} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Header from '../../../components/header/Header';
 import styles from './styles';
-import { ScrollView } from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { openInbox, openComposer } from 'react-native-email-link'; // Eklenen kısım
+import {openInbox, openComposer} from 'react-native-email-link'; // Eklenen kısım
 import Share from 'react-native-share';
 import CustomModal from '../../../components/modal/Modal';
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import * as Animatable from 'react-native-animatable';
 
 const MAX_POINTS = 100;
@@ -19,15 +26,15 @@ interface ProfileProps {
   navigation: any;
 }
 
-const Profile: React.FC<ProfileProps> = ({ navigation }) => {
+const Profile: React.FC<ProfileProps> = ({navigation}) => {
   const [userDisplayName, setUserDisplayName] = useState<string>('');
   const [userEmail, setUserEmail] = useState<string>('');
-  const [showSettingsButtons, setShowSettingsButtons] = useState<boolean>(false);
+  const [showSettingsButtons, setShowSettingsButtons] =
+    useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [points, setPoints] = useState<number>(10);
 
   const fill = (points / MAX_POINTS) * 100;
-
 
   const [isRotating, setIsRotating] = useState(true);
   const iconRef = useRef<Animatable.View | null>(null);
@@ -39,9 +46,6 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
 
     return () => clearInterval(interval);
   }, [isRotating]);
-
-
-
 
   useEffect(() => {
     const user = auth().currentUser;
@@ -67,7 +71,10 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     try {
       const user = auth().currentUser;
       if (user && user.email) {
-        const credential = auth.EmailAuthProvider.credential(user.email, 'USER_PASSWORD');
+        const credential = auth.EmailAuthProvider.credential(
+          user.email,
+          'USER_PASSWORD',
+        );
         await user.reauthenticateWithCredential(credential);
         Alert.alert(
           'Hesap Sil',
@@ -86,7 +93,7 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               },
             },
           ],
-          { cancelable: false }
+          {cancelable: false},
         );
       } else {
         throw new Error('Kullanıcı e-posta adresi bulunamadı.');
@@ -125,9 +132,9 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
 
   const provideFeedback = () => {
     openComposer({
-      to: "dilgenieapp91@gmail.com",
-      subject: "Support and Feedback",
-      body: "Merhaba, lütfen geri bildiriminizi buraya yazın."
+      to: 'dilgenieapp91@gmail.com',
+      subject: 'Support and Feedback',
+      body: 'Merhaba, lütfen geri bildiriminizi buraya yazın.',
     });
   };
 
@@ -135,10 +142,9 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     setIsModalVisible(!isModalVisible);
   };
 
-
   return (
     <React.Fragment>
-      <Header title='Profile' />
+      <Header title="Profile" />
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.container}>
           <View style={styles.infoAndIconContainer}>
@@ -148,17 +154,14 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               <Text style={styles.infoTitle}>Email:</Text>
               <Text style={styles.infoText}>{userEmail}</Text>
             </View>
-            <TouchableOpacity
-              style={styles.icon}
-              onPress={openSettings}
-            >
+            <TouchableOpacity style={styles.icon} onPress={openSettings}>
               <Animatable.View
                 ref={iconRef}
                 animation={isRotating ? 'rotate' : undefined}
                 easing="linear"
                 iterationCount="infinite"
                 duration={5000}
-              //  style={styles.icon}
+                //  style={styles.icon}
               >
                 <Icon name="settings" size={32} color="#00e0ff" />
               </Animatable.View>
@@ -168,14 +171,16 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
           <View style={styles.buttonContainer}>
             {showSettingsButtons && (
               <React.Fragment>
-                <Animatable.View
-                  animation="fadeInUp" delay={200}
-                >
-                  <TouchableOpacity onPress={changePassword} style={styles.button}>
+                <Animatable.View animation="fadeInUp" delay={200}>
+                  <TouchableOpacity
+                    onPress={changePassword}
+                    style={styles.button}>
                     <Icon name="lock" size={24} color="#fff" />
                     <Text style={styles.buttonText}>Şifre Değiştir</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={updateProfileInfo} style={styles.button}>
+                  <TouchableOpacity
+                    onPress={updateProfileInfo}
+                    style={styles.button}>
                     <Icon name="edit" size={24} color="#fff" />
                     <Text style={styles.buttonText}>Profil Güncelle</Text>
                   </TouchableOpacity>
@@ -194,7 +199,6 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
                 backgroundColor: '#020825',
                 borderColor: '#5D3FD3',
                 borderWidth: 1,
-
               }}
               modalContent={
                 <View style={styles.circleContainer}>
@@ -204,12 +208,16 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
                     backgroundWidth={14}
                     fill={fill}
                     tintColor="#00e0ff"
-                    backgroundColor="#3d5875"
-                  >
-                    {(fill) => <Text style={styles.points}>{Math.round((MAX_POINTS * fill) / 100)}</Text>}
+                    backgroundColor="#3d5875">
+                    {fill => (
+                      <Text style={styles.points}>
+                        {Math.round((MAX_POINTS * fill) / 100)}
+                      </Text>
+                    )}
                   </AnimatedCircularProgress>
                   <Text style={styles.progressText}>
-                    <Text style={styles.labelText}>Progress:</Text> {points}/{MAX_POINTS}
+                    <Text style={styles.labelText}>Progress:</Text> {points}/
+                    {MAX_POINTS}
                   </Text>
                 </View>
               }
@@ -226,7 +234,9 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
               <Icon name="exit-to-app" size={24} color="#fff" />
               <Text style={styles.buttonText}>Çıkış Yap</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={deleteAccount} style={[styles.button, styles.deleteButton]}>
+            <TouchableOpacity
+              onPress={deleteAccount}
+              style={[styles.button, styles.deleteButton]}>
               <Icon name="delete" size={24} color="#fff" />
               <Text style={styles.buttonText}>Hesabı Sil</Text>
             </TouchableOpacity>

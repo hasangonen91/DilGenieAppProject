@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Alert,
   SafeAreaView,
@@ -9,26 +9,27 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import { useNavigation } from '@react-navigation/native';
-import { GoogleSvg } from '../../../../assets';
+import {useNavigation} from '@react-navigation/native';
+import {GoogleSvg} from '../../../../assets';
 import Video from 'react-native-video';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { ScreenNames } from '../../../../routes/routes.common';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ApplicationStackParamList } from '../../../../types/navigation';
+import {ScreenNames} from '../../../../routes/routes.common';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {ApplicationStackParamList} from '../../../../types/navigation';
 import styles from './styles';
 import ShadowButton from '../../../../components/button/ShadowButton';
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const Login = () => {
   const [email, setEmail] = useState('hasan@gmail.com');
   const [password, setPassword] = useState('123456');
-  const navigation = useNavigation<NativeStackNavigationProp<ApplicationStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<ApplicationStackParamList>>();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
@@ -41,7 +42,7 @@ const Login = () => {
             screen: 'Home',
             params: {
               uid: JSON.parse(userSession).uid,
-              displayName: null
+              displayName: null,
             },
           });
         }
@@ -68,7 +69,7 @@ const Login = () => {
 
         navigation.navigate('BottomTab', {
           screen: 'Home',
-          params: { uid: res.user.uid, displayName: res.user.displayName },
+          params: {uid: res.user.uid, displayName: res.user.displayName},
         });
       })
       .catch(error => console.log(error.message));
@@ -81,8 +82,7 @@ const Login = () => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    >
+      style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <SafeAreaView style={styles.safeArea}>
           <View style={styles.content}>
@@ -127,7 +127,9 @@ const Login = () => {
                   onChangeText={setPassword}
                   secureTextEntry={!passwordVisible}
                 />
-                <TouchableOpacity onPress={togglePasswordVisibility} style={styles.visibilityIcon}>
+                <TouchableOpacity
+                  onPress={togglePasswordVisibility}
+                  style={styles.visibilityIcon}>
                   <Icon
                     name={passwordVisible ? 'eye-off' : 'eye'}
                     size={24}
@@ -141,20 +143,29 @@ const Login = () => {
               <View style={styles.termsContainer}>
                 <TouchableOpacity
                   onPress={() => setTermsAccepted(!termsAccepted)}
-                  style={styles.checkbox}
-                >
+                  style={styles.checkbox}>
                   {termsAccepted ? (
-                    <Icon name="checkbox-marked-outline" size={width * 0.06} color="#5D3FD3" />
+                    <Icon
+                      name="checkbox-marked-outline"
+                      size={width * 0.06}
+                      color="#5D3FD3"
+                    />
                   ) : (
-                    <Icon name="checkbox-blank-outline" size={width * 0.06} color="#ccc" />
+                    <Icon
+                      name="checkbox-blank-outline"
+                      size={width * 0.06}
+                      color="#ccc"
+                    />
                   )}
                 </TouchableOpacity>
                 <View style={styles.termsTextContainer}>
-                  <Text style={styles.termsText}>
-                    Rebember me
-                  </Text>
+                  <Text style={styles.termsText}>Rebember me</Text>
                 </View>
-                <TouchableOpacity onPress={() => {/* Handle forgot password */ }} style={styles.forgotPasswordContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    /* Handle forgot password */
+                  }}
+                  style={styles.forgotPasswordContainer}>
                   <Text style={styles.forgotPasswordText}>
                     Forgot Password?
                   </Text>
@@ -162,19 +173,17 @@ const Login = () => {
               </View>
             </View>
 
-
             <TouchableOpacity onPress={loginSubmit} style={styles.button}>
-                <Text style={styles.buttonText}>Login</Text>
+              <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={() => navigation.navigate(ScreenNames.Register)}
-              style={styles.signupLink}
-            >
-              <Text style={[styles.text, { color: '#5D3FD3' }]}>
+              style={styles.signupLink}>
+              <Text style={[styles.text, {color: '#5D3FD3'}]}>
                 Don't have an account?{'\t'}
               </Text>
-              <Text style={[styles.text, { color: '#fff' }]}>Sign Up</Text>
+              <Text style={[styles.text, {color: '#fff'}]}>Sign Up</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.googleButton}>

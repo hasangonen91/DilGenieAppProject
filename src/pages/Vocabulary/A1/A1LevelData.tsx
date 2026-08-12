@@ -14,7 +14,7 @@ export interface CategoryData {
   en: string;
   tr: string;
   category: {
-    words: { en: string; tr: string; image: string }[];
-    example_sentences: { en: string; tr: string; image: string }[];
+    words: {en: string; tr: string; image: string}[];
+    example_sentences: {en: string; tr: string; image: string}[];
   };
 }

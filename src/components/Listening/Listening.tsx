@@ -1,8 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  Alert,
+} from 'react-native';
 import styles from './styles';
 import Tts from 'react-native-tts';
-import { Question, ListeningData } from './ListeningData';
+import {Question, ListeningData} from './ListeningData';
 
 const Listening: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -16,11 +23,15 @@ const Listening: React.FC = () => {
 
   useEffect(() => {
     const fetchVoices = async () => {
-      const voicesResponse = await fetch('https://raw.githubusercontent.com/hasangonen91/dilgenie/main/voice/voices.json');
+      const voicesResponse = await fetch(
+        'https://raw.githubusercontent.com/hasangonen91/dilgenie/main/voice/voices.json',
+      );
       const voicesData = await voicesResponse.json();
       setVoices(voicesData);
 
-      const questionsResponse = await fetch('https://raw.githubusercontent.com/hasangonen91/dilgenie/main/vocabulary/A1ListeningData.json');
+      const questionsResponse = await fetch(
+        'https://raw.githubusercontent.com/hasangonen91/dilgenie/main/vocabulary/A1ListeningData.json',
+      );
       const questionsData: ListeningData = await questionsResponse.json();
 
       // For simplicity, we're assuming questions are in the 'greetings' category
@@ -50,7 +61,8 @@ const Listening: React.FC = () => {
 
   const checkAnswer = (selectedOption: string) => {
     setSelectedOption(selectedOption);
-    const isCorrectOption = selectedOption === questions[currentQuestionIndex].correctOption;
+    const isCorrectOption =
+      selectedOption === questions[currentQuestionIndex].correctOption;
     setIsCorrect(isCorrectOption);
     if (isCorrectOption) {
       setScore(score + 1);
@@ -65,9 +77,9 @@ const Listening: React.FC = () => {
       setIsCorrect(null);
     } else {
       Alert.alert(
-        "Test Bitti",
+        'Test Bitti',
         `Tebrikler! Testimiz bitti. Skorunuz: ${score + 1}/${questions.length}`,
-        [{ text: "Testi Yeniden Başlat", onPress: restartQuiz }]
+        [{text: 'Testi Yeniden Başlat', onPress: restartQuiz}],
       );
     }
   };
@@ -97,7 +109,7 @@ const Listening: React.FC = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>English Listening Test</Text>
-      <Image source={{ uri: currentQuestion.image }} style={styles.image} />
+      <Image source={{uri: currentQuestion.image}} style={styles.image} />
       <TouchableOpacity style={styles.playButton} onPress={playSentence}>
         <Text style={styles.playButtonText}>Cümleyi Dinle</Text>
       </TouchableOpacity>
@@ -108,23 +120,26 @@ const Listening: React.FC = () => {
             style={[
               styles.optionButton,
               selectedOption === option && {
-                backgroundColor: isCorrect === true ? 'green' : 'red'
-              }
+                backgroundColor: isCorrect === true ? 'green' : 'red',
+              },
             ]}
             onPress={() => checkAnswer(option)}
-            disabled={selectedOption !== null}
-          >
+            disabled={selectedOption !== null}>
             <Text style={styles.optionText}>{option}</Text>
           </TouchableOpacity>
         ))}
       </View>
-      <TouchableOpacity style={styles.translationButton} onPress={toggleTranslation}>
+      <TouchableOpacity
+        style={styles.translationButton}
+        onPress={toggleTranslation}>
         <Text style={styles.translationButtonText}>
           {showTranslation ? 'Çeviriyi Gizle' : 'Çeviriyi Göster'}
         </Text>
       </TouchableOpacity>
       {showTranslation && (
-        <Text style={styles.translationText}>{currentQuestion.translation}</Text>
+        <Text style={styles.translationText}>
+          {currentQuestion.translation}
+        </Text>
       )}
       <View style={styles.buttonContainer}>
         {selectedOption !== null && (
@@ -133,16 +148,11 @@ const Listening: React.FC = () => {
           </TouchableOpacity>
         )}
       </View>
-      <Text style={styles.scoreText}>Skor: {score}/{questions.length}</Text>
+      <Text style={styles.scoreText}>
+        Skor: {score}/{questions.length}
+      </Text>
     </View>
   );
 };
 
 export default Listening;
-
-
-
-
-
-
-

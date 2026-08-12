@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Text, ActivityIndicator, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; 
-import { fetchA1LevelData } from '../../../services/api/base';
-import { A1LevelData, CategoryData } from '../A1/A1LevelData';
+import React, {useState, useEffect} from 'react';
+import {Text, ActivityIndicator, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {fetchA1LevelData} from '../../../services/api/base';
+import {A1LevelData, CategoryData} from '../A1/A1LevelData';
 import TeachingPhase from '../../../components/Teaching/TeachingPhase';
 import GreetingsQuiz from '../../../components/quizComponent/GreetingsQuiz';
 import ContinueModal from '../../../components/modal/ContinueModal/ContinueModal';
 import FinalModal from '../../../components/modal/FinalModal/FinalModal';
 import styles from './styles';
 import MainComponent from '../../../components/MainComponent/MainComponent';
-import { ScreenNames } from '../../../routes/routes.common';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ApplicationStackParamList } from '../../../types/navigation';
+import {ScreenNames} from '../../../routes/routes.common';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {ApplicationStackParamList} from '../../../types/navigation';
 
 const A1level: React.FC = () => {
   const [data, setData] = useState<A1LevelData | null>(null);
@@ -21,12 +21,13 @@ const A1level: React.FC = () => {
   const [isTeachingPhase, setIsTeachingPhase] = useState(true);
   const [isCompleted, setIsCompleted] = useState(false);
   const [showDevamModal, setShowDevamModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState<string>("");
-  const [modalContent, setModalContent] = useState<string>("");
-  const [showFinalModal, setShowFinalModal] = useState(false); 
+  const [modalTitle, setModalTitle] = useState<string>('');
+  const [modalContent, setModalContent] = useState<string>('');
+  const [showFinalModal, setShowFinalModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [indicatorColor, setIndicatorColor] = useState('#00ff00');
-  const navigation = useNavigation<NativeStackNavigationProp<ApplicationStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<ApplicationStackParamList>>();
   const colors = ['#00ff00', '#ff0000', '#00e0ff', '#ffff00', '#ff00ff'];
 
   useEffect(() => {
@@ -38,7 +39,7 @@ const A1level: React.FC = () => {
 
     // Renk değiştirme intervali
     const colorChangeInterval = setInterval(() => {
-      setIndicatorColor((prevColor) => {
+      setIndicatorColor(prevColor => {
         const currentIndex = colors.indexOf(prevColor);
         const nextIndex = (currentIndex + 1) % colors.length;
         return colors[nextIndex];
@@ -50,7 +51,6 @@ const A1level: React.FC = () => {
       clearInterval(colorChangeInterval);
     };
   }, []);
-
 
   useEffect(() => {
     fetchData();
@@ -71,12 +71,16 @@ const A1level: React.FC = () => {
       setData(fetchedData[0]);
     } catch (err) {
       console.error('Error fetching A1 level data:', err);
-      setError('Veri yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
+      setError(
+        'Veri yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.',
+      );
     }
   };
 
   const handleNext = (moveToNext: boolean = false) => {
-    if (!data) return;
+    if (!data) {
+      return;
+    }
 
     const currentCategoryItems = getCategoryItems(currentCategoryIndex);
 
@@ -109,27 +113,37 @@ const A1level: React.FC = () => {
     }
   };
 
-
-  const getCategoryItems = (index: number): { en: string; tr: string; image: string }[] => {
-    if (!data) return [];
+  const getCategoryItems = (
+    index: number,
+  ): {en: string; tr: string; image: string}[] => {
+    if (!data) {
+      return [];
+    }
     switch (index) {
-      case 0: return data.vocabulary.greetings.category.words;
-      case 1: return data.vocabulary.family.category.words;
-      case 2: return data.vocabulary.months.category.words;
-      case 3: return data.vocabulary.years.category.words;
-      case 4: return data.vocabulary.colors_numbers_shapes.category.words;
-      case 5: return data.vocabulary.days.category.words;
-      case 6: return data.vocabulary.places.category.words;
-      case 7: return data.vocabulary.directions.category.words;
-      default: return [];
+      case 0:
+        return data.vocabulary.greetings.category.words;
+      case 1:
+        return data.vocabulary.family.category.words;
+      case 2:
+        return data.vocabulary.months.category.words;
+      case 3:
+        return data.vocabulary.years.category.words;
+      case 4:
+        return data.vocabulary.colors_numbers_shapes.category.words;
+      case 5:
+        return data.vocabulary.days.category.words;
+      case 6:
+        return data.vocabulary.places.category.words;
+      case 7:
+        return data.vocabulary.directions.category.words;
+      default:
+        return [];
     }
   };
 
   if (!data) {
     return <ActivityIndicator size="large" color="#00ff00" />;
   }
-
-
 
   const categories: CategoryData[] = [
     data.vocabulary.greetings,
@@ -161,7 +175,7 @@ const A1level: React.FC = () => {
             visible={showFinalModal}
             onClose={() => {
               setShowFinalModal(false);
-              navigation.navigate(ScreenNames.DragDropQuiz); 
+              navigation.navigate(ScreenNames.DragDropQuiz);
             }}
             title="Tebrikler"
             content="Tebrikler 1.Yarı finale geçtiniz!"
@@ -170,7 +184,9 @@ const A1level: React.FC = () => {
       ) : isTeachingPhase ? (
         <>
           <TeachingPhase
-            currentItem={getCategoryItems(currentCategoryIndex)[currentItemIndex]}
+            currentItem={
+              getCategoryItems(currentCategoryIndex)[currentItemIndex]
+            }
             categoryName={currentCategory}
             currentItemIndex={currentItemIndex}
             totalItems={getCategoryItems(currentCategoryIndex).length}
