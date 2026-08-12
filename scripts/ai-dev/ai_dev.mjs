@@ -342,6 +342,9 @@ Cevap JSON formatında olmalı:
   }
 
   // Commit + push + PR
+  // Git identity (GitHub Actions runner'da ayarlı olmayabilir)
+  sh(`git config user.email "ai-dev-bot@users.noreply.github.com"`);
+  sh(`git config user.name "DilGenie AI Dev Bot"`);
   const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
   const branch = `ai/dev-${date}`;
   const existing = sh(`git branch --list ${branch}`);
