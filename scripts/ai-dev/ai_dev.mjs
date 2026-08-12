@@ -32,6 +32,16 @@ function sh(cmd, opts = {}) {
   return execSync(cmd, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'], ...opts }).trim();
 }
 
+// Komutu çalıştır; hata olursa hatanın stdout+stderr çıktısını döndür, temizse null
+function runQuiet(cmd) {
+  try {
+    sh(cmd);
+    return null;
+  } catch (e) {
+    return String(e.stdout || '') + String(e.stderr || '');
+  }
+}
+
 function read(p) {
   return existsSync(p) ? readFileSync(p, 'utf8') : null;
 }
@@ -221,6 +231,8 @@ Kurallar:
 - Kod yazarken proje stilini takip et (function component, .tsx uzantı, mevcut import düzeni).
 - Eklediğin her şey TypeScript'te derlenmeli ve eslint kurallarına uymalı.
 - Asla App.tsx'teki köklü navigasyonu bozma, yeni ekranı mevcut navigasyon yapısına uygun ekle.
+- REACT NATIVE ORTAMINDA ÇALIŞIYORSUN: localStorage, window, document, navigator (tarayıcı API'leri) YOKTUR. Kalıcı veri için @react-native-async-storage/async-storage (import AsyncStorage from '@react-native-async-storage/async-storage') veya react-native-mmkv kullan.
+- Zustand persist middleware kullanıyorsan storage'ı AsyncStorage olarak ayarla (createJSONStorage(() => AsyncStorage)).
 - Yalnızca JSON cevap ver, başka metin yazma.`;
 
   const userPrompt = `# GÖREV (ROADMAP'ten)
@@ -245,42 +257,75 @@ Cevap JSON formatında olmalı:
   ]
 }`;
 
-  const result = await callModel([
-    { role: 'system', content: systemPrompt },
-    { role: 'user', content: userPrompt },
-  ]);
-
-  console.log(`📝 Özet: ${result.summary || '-'}`);
-  const edits = result.edits || [];
-  if (!edits.length) {
-    console.log('⚠️  Model hiç edit üretmedi, atlıyorum');
-    // ROADMAP'i geri al
-    sh(`git checkout ROADMAP.md`);
-    return;
-  }
-
-  const applied = applyEdits(edits);
-  console.log(`🔧 Uygulanan: ${applied.length} dosya değişikliği`);
-  applied.forEach((a) => console.log('  ' + a));
-
-  // Doğrulama: tsc + eslint (bot'un değiştirdiği dosyalarda)
-  try {
-    sh('npx tsc --noEmit', { timeout: 300000 });
-    console.log('✅ TypeScript derleme başarılı');
-  } catch (e) {
-    console.log(`❌ TypeScript hatası:\n${String(e.stdout || e.message).slice(0, 3000)}`);
-    rollback();
-  }
-
-  try {
-    const changed = edits.map((e) => e.path).filter((p) => p.endsWith('.ts') || p.endsWith('.tsx'));
-    if (changed.length) {
-      sh(`npx eslint ${changed.join(' ')} --fix`, { timeout: 120000 });
-      console.log('✅ ESLint temiz');
+  // En fazla 3 deneme: model ilk üretimde hata yaparsa, hata mesajını verip düzelttir
+  let result;
+  let applied;
+  let lastError = '';
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    const msgs = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt },
+    ];
+    if (attempt > 1) {
+      msgs.push({
+        role: 'assistant',
+        content: JSON.stringify(result && result.edits ? result : { summary: 'önceki üretim', edits: [] }),
+      });
+      msgs.push({
+        role: 'user',
+        content: `Önceki denememdeki kod şu hataları verdi:\n${lastError.slice(0, 4000)}\n\nLütfen aynı görevi YENİDEN üret ama HATALARI DÜZELTEREK. Sadece JSON döndür.`,
+      });
     }
-  } catch (e) {
-    console.log(`❌ ESLint hatası:\n${String(e.stdout || e.message).slice(0, 3000)}`);
-    rollback();
+
+    result = await callModel(msgs);
+    const edits = result.edits || [];
+    if (!edits.length) {
+      console.log(`⚠️  Model edit üretmedi (deneme ${attempt})`);
+      break;
+    }
+
+    try {
+      // Önceki uygulamaları geri al (tekrar uygulamak için temiz başla)
+      try {
+        const changed = edits.map((e) => e.path).filter((p) => read(p) !== null);
+        for (const p of changed) {
+          sh(`git checkout -- ${p} 2>/dev/null || true`);
+        }
+        const created = edits.map((e) => e.path).filter((p) => read(p) === null);
+        for (const p of created) {
+          sh(`rm -f ${p}`);
+        }
+      } catch {}
+      applied = applyEdits(edits);
+      console.log(`🔧 Uygulanan (deneme ${attempt}): ${applied.length} dosya`);
+      applied.forEach((a) => console.log('  ' + a));
+
+      // Doğrulama: tsc + eslint
+      const tscOut = runQuiet('npx tsc --noEmit');
+      if (tscOut !== null) throw new Error(`TypeScript:\n${tscOut.slice(0, 2500)}`);
+
+      const changed = edits.map((e) => e.path).filter((p) => p.endsWith('.ts') || p.endsWith('.tsx'));
+      if (changed.length) {
+        const lintOut = runQuiet(`npx eslint ${changed.join(' ')} --fix`);
+        if (lintOut !== null) throw new Error(`ESLint:\n${lintOut.slice(0, 2500)}`);
+      }
+
+      console.log('✅ TypeScript + ESLint temiz');
+      break; // başarılı
+    } catch (e) {
+      lastError = e.message;
+      console.log(`❌ Deneme ${attempt} doğrulama hatası:\n${lastError.slice(0, 1200)}`);
+      if (attempt === 3) {
+        console.log('↩️  3 deneme de başarısız, değişiklikler geri alınıyor...');
+        rollback();
+      }
+    }
+  }
+
+  if (!applied || !applied.length) {
+    console.log('⚠️  Uygulanabilir değişiklik üretilemedi, bugünlük atlıyorum');
+    sh(`git checkout ROADMAP.md 2>/dev/null || true`);
+    return;
   }
 
   // Commit + push + PR
