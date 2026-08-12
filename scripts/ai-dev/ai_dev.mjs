@@ -285,17 +285,8 @@ Cevap JSON formatında olmalı:
     }
 
     try {
-      // Önceki uygulamaları geri al (tekrar uygulamak için temiz başla)
-      try {
-        const changed = edits.map((e) => e.path).filter((p) => read(p) !== null);
-        for (const p of changed) {
-          sh(`git checkout -- ${p} 2>/dev/null || true`);
-        }
-        const created = edits.map((e) => e.path).filter((p) => read(p) === null);
-        for (const p of created) {
-          sh(`rm -f ${p}`);
-        }
-      } catch {}
+      // Önceki tüm değişiklikleri geri al (tekrar uygulamak için temiz başla)
+      resetWorkingDir();
       applied = applyEdits(edits);
       console.log(`🔧 Uygulanan (deneme ${attempt}): ${applied.length} dosya`);
       applied.forEach((a) => console.log('  ' + a));
@@ -360,18 +351,23 @@ ${applied.map((a) => `- ${a}`).join('\n')}
 
 function rollback() {
   console.log('↩️  Değişiklikler geri alınıyor...');
-  const files = sh('git status --porcelain').split('\n').filter(Boolean).map((l) => l.slice(3));
-  for (const f of files) {
-    if (f) {
-      try {
-        sh(`git checkout -- ${f}`);
-      } catch {
-        /* untracked yeni dosya */
-      }
-    }
-  }
+  resetWorkingDir();
   sh('git checkout -- ROADMAP.md 2>/dev/null || true');
   process.exit(1);
+}
+
+// Çalışma dizinini temiz duruma getir (tüm yerel değişiklikler ve yeni dosyalar)
+function resetWorkingDir() {
+  const files = sh('git status --porcelain').split('\n').filter(Boolean);
+  for (const line of files) {
+    const f = line.slice(3).trim();
+    if (!f) continue;
+    try {
+      sh(`git checkout -- ${f} 2>/dev/null || rm -f ${f}`);
+    } catch {
+      /* yoksay */
+    }
+  }
 }
 
 main().catch((e) => {
