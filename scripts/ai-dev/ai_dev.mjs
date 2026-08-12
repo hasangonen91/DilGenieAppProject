@@ -232,7 +232,12 @@ Kurallar:
 - Eklediğin her şey TypeScript'te derlenmeli ve eslint kurallarına uymalı.
 - Asla App.tsx'teki köklü navigasyonu bozma, yeni ekranı mevcut navigasyon yapısına uygun ekle.
 - REACT NATIVE ORTAMINDA ÇALIŞIYORSUN: localStorage, window, document, navigator (tarayıcı API'leri) YOKTUR. Kalıcı veri için @react-native-async-storage/async-storage (import AsyncStorage from '@react-native-async-storage/async-storage') veya react-native-mmkv kullan.
-- Zustand persist middleware kullanıyorsan storage'ı AsyncStorage olarak ayarla (createJSONStorage(() => AsyncStorage)).
+- Zustand persist kullanımı şu şekilde (BİREBİR bu kalıbı kullan, zustand v4.5.2 kurulu):
+  import { create } from 'zustand';
+  import { persist, createJSONStorage } from 'zustand/middleware';
+  import AsyncStorage from '@react-native-async-storage/async-storage';
+  export const useStore = create(persist((set, get) => ({ ... }), { name: 'kisa-isim', storage: createJSONStorage(() => AsyncStorage), partialize: (s) => ({ kalici-kisimlar }), }));
+  DİKKAT: 'createJSONStorage' yaz (küçük c), sakın 'CreateJSONStorage' yazma.
 - Yalnızca JSON cevap ver, başka metin yazma.`;
 
   const userPrompt = `# GÖREV (ROADMAP'ten)
@@ -269,11 +274,11 @@ Cevap JSON formatında olmalı:
     if (attempt > 1) {
       msgs.push({
         role: 'assistant',
-        content: JSON.stringify(result && result.edits ? result : { summary: 'önceki üretim', edits: [] }),
+        content: JSON.stringify(result || { summary: 'önceki üretim', edits: [] }),
       });
       msgs.push({
         role: 'user',
-        content: `Önceki denememdeki kod şu hataları verdi:\n${lastError.slice(0, 4000)}\n\nLütfen aynı görevi YENİDEN üret ama HATALARI DÜZELTEREK. Sadece JSON döndür.`,
+        content: `Önceki cevabın derleme/lint hataları verdi. İşte hatalar:\n${lastError.slice(0, 4000)}\n\nLütfen BÜYÜK DEĞİŞİKLİK YAPMA — sadece bu hataları düzelten minimal edit'ler üret. Tamamen yeni dosyalar üretme, sadece mevcut hatalı dosyaları düzelt. Sadece JSON döndür.`,
       });
     }
 
