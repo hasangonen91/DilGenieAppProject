@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { SafeAreaView, Text, Button } from 'react-native';
-import { fetchA1LevelData } from '../../../services/api/base';
-import { A1LevelData, CategoryData } from '../A1/A1LevelData';
+import React, {useState, useEffect} from 'react';
+import {SafeAreaView, Text, Button} from 'react-native';
+import {fetchA1LevelData} from '../../../services/api/base';
+import {A1LevelData, CategoryData} from '../A1/A1LevelData';
 import BackHeader from '../../../components/header/BackHeader';
 import TeachingPhase from '../../../components/Teaching/TeachingPhase';
 import GreetingsQuiz from '../../../components/quizComponent/GreetingsQuiz';
@@ -34,12 +34,16 @@ const B2level: React.FC = () => {
       setData(fetchedData[0]);
     } catch (err) {
       console.error('Error fetching A1 level data:', err);
-      setError('Veri yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
+      setError(
+        'Veri yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.',
+      );
     }
   };
 
   const handleNext = () => {
-    if (!data) return;
+    if (!data) {
+      return;
+    }
 
     const currentCategoryItems = getCategoryItems(currentCategoryIndex);
     if (currentItemIndex < currentCategoryItems.length - 1) {
@@ -56,8 +60,12 @@ const B2level: React.FC = () => {
     }
   };
 
-  const getCategoryItems = (index: number): { en: string; tr: string; image: string }[] => {
-    if (!data) return [];
+  const getCategoryItems = (
+    index: number,
+  ): {en: string; tr: string; image: string}[] => {
+    if (!data) {
+      return [];
+    }
     switch (index) {
       case 0:
         return data.vocabulary.greetings.category.words;
@@ -101,7 +109,9 @@ const B2level: React.FC = () => {
     <SafeAreaView style={styles.container}>
       <BackHeader title="B2 Level" />
       {isCompleted ? (
-        <Text style={styles.congratulationsText}>Tebrikler, C1 seviyesine geçtiniz!</Text>
+        <Text style={styles.congratulationsText}>
+          Tebrikler, C1 seviyesine geçtiniz!
+        </Text>
       ) : isTeachingPhase ? (
         <TeachingPhase
           currentItem={getCategoryItems(currentCategoryIndex)[currentItemIndex]}
@@ -111,10 +121,7 @@ const B2level: React.FC = () => {
           onNext={handleNext}
         />
       ) : (
-        <GreetingsQuiz
-          categories={[currentCategory]}
-          onComplete={handleNext}
-        />
+        <GreetingsQuiz categories={[currentCategory]} onComplete={handleNext} />
       )}
     </SafeAreaView>
   );

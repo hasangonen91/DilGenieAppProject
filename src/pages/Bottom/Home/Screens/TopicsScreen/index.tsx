@@ -1,10 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View, Image, Dimensions } from 'react-native';
-import { getImageURL } from '../../../../../services/api/base';
+import React, {useState, useEffect} from 'react';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+  Dimensions,
+} from 'react-native';
+import {getImageURL} from '../../../../../services/api/base';
 import FastImage from 'react-native-fast-image';
 import * as Animatable from 'react-native-animatable';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 interface DataItem {
   id: string;
@@ -13,12 +21,20 @@ interface DataItem {
 }
 
 const data: DataItem[] = [
-  { id: 'Nature', imageName: 'images/topics/nature.png', terms: '30 terms' },
-  { id: 'Science', imageName: 'images/topics/science.jpg', terms: '30 terms' },
-  { id: 'Arts', imageName: 'images/topics/arts.png', terms: '30 terms' },
-  { id: 'Travel', imageName: 'images/topics/travel.png', terms: '30 terms' },
-  { id: 'Daily Life', imageName: 'images/topics/dailyLife.png', terms: '30 terms' },
-  { id: 'Lifestyle', imageName: 'images/topics/lifeStyle.png', terms: '30 terms' },
+  {id: 'Nature', imageName: 'images/topics/nature.png', terms: '30 terms'},
+  {id: 'Science', imageName: 'images/topics/science.jpg', terms: '30 terms'},
+  {id: 'Arts', imageName: 'images/topics/arts.png', terms: '30 terms'},
+  {id: 'Travel', imageName: 'images/topics/travel.png', terms: '30 terms'},
+  {
+    id: 'Daily Life',
+    imageName: 'images/topics/dailyLife.png',
+    terms: '30 terms',
+  },
+  {
+    id: 'Lifestyle',
+    imageName: 'images/topics/lifeStyle.png',
+    terms: '30 terms',
+  },
 ];
 
 const TopicsScreen: React.FC = () => {
@@ -33,18 +49,19 @@ const TopicsScreen: React.FC = () => {
     return () => clearTimeout(timer);
   }, [currentIndex]);
 
-  const renderItem = ({ item, index }: { item: DataItem; index: number }) => (
+  const renderItem = ({item, index}: {item: DataItem; index: number}) => (
     <TouchableOpacity
-      style={[styles.box, selectedItem === item.id ? { borderColor: '#00e0ff' } : null]}
+      style={[
+        styles.box,
+        selectedItem === item.id ? {borderColor: '#00e0ff'} : null,
+      ]}
       onPress={() => {
         setSelectedItem(item.id);
-      }}
-    >
+      }}>
       <Animatable.View
         style={styles.boxContent}
         animation={index === currentIndex ? 'swing' : undefined}
-        duration={1000}
-      >
+        duration={1000}>
         <FastImage
           style={styles.image}
           source={{

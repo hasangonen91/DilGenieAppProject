@@ -1,8 +1,15 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { View, Text, TouchableOpacity, Animated, Dimensions, Image } from 'react-native';
+import React, {useState, useEffect, useMemo, useRef} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Animated,
+  Dimensions,
+  Image,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { fetchCountriesData } from '../../../services/api/base';
+import {fetchCountriesData} from '../../../services/api/base';
 import StartGameModal from '../../../components/modal/GameModal/StartModal';
 import GameOverModal from '../../../components/modal/GameModal/GameOverModal';
 import styles from './styles';
@@ -10,7 +17,7 @@ import BackHeader from '../../../components/header/BackHeader';
 import FIcon from 'react-native-vector-icons/FontAwesome5';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 interface Country {
   country_en: string;
@@ -32,7 +39,8 @@ const QuizScreen: React.FC = () => {
   const [showStartModal, setShowStartModal] = useState<boolean>(true);
   const [answer, setAnswer] = useState<string>('');
   const [hint, setHint] = useState<string>('');
-  const [gameOverModalVisible, setGameOverModalVisible] = useState<boolean>(false);
+  const [gameOverModalVisible, setGameOverModalVisible] =
+    useState<boolean>(false);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [coins, setCoins] = useState<number>(1000);
   const [currentOptions, setCurrentOptions] = useState<string[]>([]);
@@ -63,7 +71,7 @@ const QuizScreen: React.FC = () => {
         toValue: 1,
         duration: 3000,
         useNativeDriver: true,
-      })
+      }),
     ).start();
   }, []);
 
@@ -110,7 +118,9 @@ const QuizScreen: React.FC = () => {
   };
 
   const options = useMemo(() => {
-    if (!quizData[currentQuestion]) return [];
+    if (!quizData[currentQuestion]) {
+      return [];
+    }
 
     const correctAnswer = quizData[currentQuestion].capital_en;
     const otherOptions = quizData
@@ -127,12 +137,12 @@ const QuizScreen: React.FC = () => {
     setSelectedOption(selectedAnswer);
 
     if (answer === selectedAnswer) {
-      setScore((prevScore) => prevScore + 1);
+      setScore(prevScore => prevScore + 1);
       const newCoins = coins + 5;
       setCoins(newCoins);
       saveCoins(newCoins);
     } else {
-      setHearts((prevHearts) => prevHearts - 1);
+      setHearts(prevHearts => prevHearts - 1);
     }
 
     setTimeout(moveToNextQuestion, 1000);
@@ -145,8 +155,8 @@ const QuizScreen: React.FC = () => {
         randomIndex = Math.floor(Math.random() * quizData.length);
       } while (usedIndices.includes(randomIndex));
 
-      setUsedIndices((prevValue) => [...prevValue, currentQuestion]);
-      setQuestionHistory((prevHistory) => [...prevHistory, currentQuestion]);
+      setUsedIndices(prevValue => [...prevValue, currentQuestion]);
+      setQuestionHistory(prevHistory => [...prevHistory, currentQuestion]);
       setCurrentQuestion(randomIndex);
       setSelectedOption(null);
       setTimeLeft(10); // Reset timer for new question
@@ -164,8 +174,10 @@ const QuizScreen: React.FC = () => {
     }
   };
 
-  const usePowerUp = (type: 'fiftyFifty' | 'correctAnswer' | 'retry') => {
-    if (powerUpsUsed[type]) return;
+  const handlePowerUp = (type: 'fiftyFifty' | 'correctAnswer' | 'retry') => {
+    if (powerUpsUsed[type]) {
+      return;
+    }
 
     switch (type) {
       case 'fiftyFifty':
@@ -174,15 +186,19 @@ const QuizScreen: React.FC = () => {
           setCoins(newCoins);
           saveCoins(newCoins);
           const correctAnswer = quizData[currentQuestion].capital_en;
-          const newOptions = options.filter(option =>
-            option === correctAnswer || Math.random() < 0.5
+          const newOptions = options.filter(
+            option => option === correctAnswer || Math.random() < 0.5,
           );
           while (newOptions.length < 2) {
-            const randomOption = options.find(option => !newOptions.includes(option));
-            if (randomOption) newOptions.push(randomOption);
+            const randomOption = options.find(
+              option => !newOptions.includes(option),
+            );
+            if (randomOption) {
+              newOptions.push(randomOption);
+            }
           }
           setCurrentOptions(newOptions);
-          setPowerUpsUsed(prev => ({ ...prev, fiftyFifty: true }));
+          setPowerUpsUsed(prev => ({...prev, fiftyFifty: true}));
         }
         break;
       case 'correctAnswer':
@@ -191,7 +207,7 @@ const QuizScreen: React.FC = () => {
           setCoins(newCoins);
           saveCoins(newCoins);
           handleAnswer(quizData[currentQuestion].capital_en);
-          setPowerUpsUsed(prev => ({ ...prev, correctAnswer: true }));
+          setPowerUpsUsed(prev => ({...prev, correctAnswer: true}));
         }
         break;
       case 'retry':
@@ -201,12 +217,12 @@ const QuizScreen: React.FC = () => {
           saveCoins(newCoins);
           const previousQuestion = questionHistory[questionHistory.length - 1];
           setCurrentQuestion(previousQuestion);
-          setQuestionHistory((prevHistory) => prevHistory.slice(0, -1));
-          setUsedIndices((prevIndices) => prevIndices.slice(0, -1));
+          setQuestionHistory(prevHistory => prevHistory.slice(0, -1));
+          setUsedIndices(prevIndices => prevIndices.slice(0, -1));
           setSelectedOption(null);
           setTimeLeft(10);
           setCurrentOptions([]);
-          setPowerUpsUsed(prev => ({ ...prev, retry: true }));
+          setPowerUpsUsed(prev => ({...prev, retry: true}));
         }
         break;
     }
@@ -223,9 +239,11 @@ const QuizScreen: React.FC = () => {
     let interval: NodeJS.Timeout;
     if (!showScore && gameStarted) {
       interval = setInterval(() => {
-        setTimeLeft((prevTime) => {
-          if (prevTime > 0) return prevTime - 1;
-          setHearts((prevHearts) => prevHearts - 1);
+        setTimeLeft(prevTime => {
+          if (prevTime > 0) {
+            return prevTime - 1;
+          }
+          setHearts(prevHearts => prevHearts - 1);
           return 10;
         });
       }, 1000);
@@ -240,7 +258,7 @@ const QuizScreen: React.FC = () => {
 
       // Start the countdown and progress animation
       const interval = setInterval(() => {
-        setTimeLeft((prevTime) => {
+        setTimeLeft(prevTime => {
           if (prevTime > 0) {
             // Update progress animation
             Animated.timing(progressAnim, {
@@ -261,8 +279,6 @@ const QuizScreen: React.FC = () => {
       return () => clearInterval(interval);
     }
   }, [gameStarted, showScore, currentQuestion]);
-
-
 
   const restartGame = () => {
     setScore(0);
@@ -288,10 +304,14 @@ const QuizScreen: React.FC = () => {
   const renderHeartIcons = () => {
     const heartIcons = [];
     for (let i = 0; i < hearts; i++) {
-      heartIcons.push(<Icon key={i} name="flash-sharp" size={24} color="#FFE047" />);
+      heartIcons.push(
+        <Icon key={i} name="flash-sharp" size={24} color="#FFE047" />,
+      );
     }
     for (let i = hearts; i < 5; i++) {
-      heartIcons.push(<Icon key={i} name="flash-outline" size={24} color="#FFE047" />);
+      heartIcons.push(
+        <Icon key={i} name="flash-outline" size={24} color="#FFE047" />,
+      );
     }
     return heartIcons;
   };
@@ -320,15 +340,19 @@ const QuizScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <BackHeader title='Quiz' />
+      <BackHeader title="Quiz" />
 
       <View style={styles.topContainer}>
-        <View style={styles.heartContainer}>
-          {renderHeartIcons()}
-        </View>
+        <View style={styles.heartContainer}>{renderHeartIcons()}</View>
         <View style={styles.scoreContainer}>
-          <Text style={styles.scoreText}>Max Skor: {maxScore}{'\t'}</Text>
-          <Text style={styles.scoreText}>{'\t'}Skor: {score}{'\t'}</Text>
+          <Text style={styles.scoreText}>
+            Max Skor: {maxScore}
+            {'\t'}
+          </Text>
+          <Text style={styles.scoreText}>
+            {'\t'}Skor: {score}
+            {'\t'}
+          </Text>
           {/* <Text style={styles.timerText}>{'\t'}Süre: {timeLeft}</Text> */}
         </View>
       </View>
@@ -356,57 +380,69 @@ const QuizScreen: React.FC = () => {
           <Text style={styles.coinsText}> {coins}</Text>
         </View>
 
-        <Text style={styles.questionText}>What is the capital of {quizData[currentQuestion]?.country_en}?</Text>
+        <Text style={styles.questionText}>
+          What is the capital of {quizData[currentQuestion]?.country_en}?
+        </Text>
         {quizData[currentQuestion]?.image_url && (
           <Image
-            source={{ uri: quizData[currentQuestion].image_url }}
+            source={{uri: quizData[currentQuestion].image_url}}
             style={styles.countryImage}
-            onError={(e) => console.log('Image loading error:', e.nativeEvent.error)}
+            onError={e =>
+              console.log('Image loading error:', e.nativeEvent.error)
+            }
           />
         )}
         <View style={styles.optionsContainer}>
-          {(currentOptions.length > 0 ? currentOptions : options).map((option, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                styles.optionButton,
-                selectedOption === option
-                  ? isCorrectAnswer(option)
-                    ? styles.correctOption
-                    : styles.incorrectOption
-                  : null,
-              ]}
-              onPress={() => handleAnswer(option)}
-              disabled={selectedOption !== null || hearts === 0}
-            >
-              <Text style={styles.optionText}>{option}</Text>
-            </TouchableOpacity>
-          ))}
+          {(currentOptions.length > 0 ? currentOptions : options).map(
+            (option, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.optionButton,
+                  selectedOption === option
+                    ? isCorrectAnswer(option)
+                      ? styles.correctOption
+                      : styles.incorrectOption
+                    : null,
+                ]}
+                onPress={() => handleAnswer(option)}
+                disabled={selectedOption !== null || hearts === 0}>
+                <Text style={styles.optionText}>{option}</Text>
+              </TouchableOpacity>
+            ),
+          )}
         </View>
       </Animated.View>
 
       <View style={styles.powerUpsContainer}>
         <TouchableOpacity
-          style={[styles.powerUpButton, (powerUpsUsed.fiftyFifty || coins < 30) && styles.powerUpDisabled]}
-          onPress={() => usePowerUp('fiftyFifty')}
-          disabled={powerUpsUsed.fiftyFifty || coins < 30}
-        >
+          style={[
+            styles.powerUpButton,
+            (powerUpsUsed.fiftyFifty || coins < 30) && styles.powerUpDisabled,
+          ]}
+          onPress={() => handlePowerUp('fiftyFifty')}
+          disabled={powerUpsUsed.fiftyFifty || coins < 30}>
           <MIcon name="percent" size={20} color="#fff" />
           <Text style={styles.powerUpText}>50/50</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.powerUpButton, (powerUpsUsed.correctAnswer || coins < 30) && styles.powerUpDisabled]}
-          onPress={() => usePowerUp('correctAnswer')}
-          disabled={powerUpsUsed.correctAnswer || coins < 30}
-        >
+          style={[
+            styles.powerUpButton,
+            (powerUpsUsed.correctAnswer || coins < 30) &&
+              styles.powerUpDisabled,
+          ]}
+          onPress={() => handlePowerUp('correctAnswer')}
+          disabled={powerUpsUsed.correctAnswer || coins < 30}>
           <Icon name="checkmark-circle-outline" size={24} color="#fff" />
           <Text style={styles.powerUpText}>30</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.powerUpButton, (powerUpsUsed.retry || coins < 100) && styles.powerUpDisabled]}
-          onPress={() => usePowerUp('retry')}
-          disabled={powerUpsUsed.retry || coins < 100}
-        >
+          style={[
+            styles.powerUpButton,
+            (powerUpsUsed.retry || coins < 100) && styles.powerUpDisabled,
+          ]}
+          onPress={() => handlePowerUp('retry')}
+          disabled={powerUpsUsed.retry || coins < 100}>
           <Icon name="refresh-outline" size={24} color="#fff" />
           <Text style={styles.powerUpText}>100</Text>
         </TouchableOpacity>

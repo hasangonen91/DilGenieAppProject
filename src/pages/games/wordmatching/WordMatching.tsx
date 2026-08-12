@@ -1,8 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, FlatList, StyleSheet, Image} from 'react-native';
+
+type Country = {
+  name: {common: string; official?: string};
+  capital?: string[];
+  population?: number;
+  flags: {svg: string; png?: string};
+  cca3: string;
+};
 
 const CountriesList = () => {
-  const [countries, setCountries] = useState([]);
+  const [countries, setCountries] = useState<Country[]>([]);
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -18,12 +26,12 @@ const CountriesList = () => {
     fetchCountries();
   }, []);
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({item}: {item: Country}) => (
     <View style={styles.item}>
       <Text style={styles.title}>{item.name.common}</Text>
-      <Text>Capital: {item.capital}</Text>
+      <Text>Capital: {item.capital?.[0]}</Text>
       <Text>Population: {item.population}</Text>
-      <Image source={{ uri: item.flags.svg }} style={styles.flag} />
+      <Image source={{uri: item.flags.svg}} style={styles.flag} />
     </View>
   );
 
@@ -32,7 +40,7 @@ const CountriesList = () => {
       <FlatList
         data={countries}
         renderItem={renderItem}
-        keyExtractor={(item) => item.cca3}
+        keyExtractor={item => item.cca3}
       />
     </View>
   );

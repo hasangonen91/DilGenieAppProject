@@ -5,11 +5,12 @@ export type ApplicationStackParamList = {
   Splash: undefined;
   Login: undefined;
   Register: undefined;
-  BottomTab: undefined;
-  // BottomTab: {
-  //   screen: 'Home';
-  //   params: {uid: string; displayName: string | null};
-  // };
+  BottomTab:
+    | undefined
+    | {
+        screen: 'Home';
+        params: {uid: string; displayName: string | null};
+      };
   Hangman: undefined;
   FlappyBird: undefined;
   WordPuzzle: undefined;

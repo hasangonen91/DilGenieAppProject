@@ -1,20 +1,29 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Animated, View, StyleSheet, Text, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  Animated,
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  Image,
+} from 'react-native';
 import LottieView from 'lottie-react-native';
-import { useNavigation } from '@react-navigation/native';
-import { checkInternetConnection } from '../../../helpers/net/netInfo';
+import {useNavigation} from '@react-navigation/native';
+import {checkInternetConnection} from '../../../helpers/net/netInfo';
 import styles from './styles';
 import BootSplash from 'react-native-bootsplash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ScreenNames } from '../../../routes/routes.common';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ApplicationStackParamList } from '../../../types/navigation';
+import {ScreenNames} from '../../../routes/routes.common';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {ApplicationStackParamList} from '../../../types/navigation';
 
 const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 
 const SplashScreen: React.FC = () => {
   const animationProgress = useRef(new Animated.Value(0));
-  const navigation = useNavigation<NativeStackNavigationProp<ApplicationStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<ApplicationStackParamList>>();
   const [isConnected, setIsConnected] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -68,7 +77,7 @@ const SplashScreen: React.FC = () => {
       {isConnected ? (
         <AnimatedLottieView
           source={require('../../../assets/animations/purplebubble.json')}
-          style={{ width: '100%', height: '100%' }}
+          style={{width: '100%', height: '100%'}}
           progress={animationProgress.current}
           autoPlay
           loop
@@ -77,7 +86,7 @@ const SplashScreen: React.FC = () => {
         <>
           <AnimatedLottieView
             source={require('../../../assets/animations/NoInternet.json')}
-            style={{ width: '100%', height: '100%' }}
+            style={{width: '100%', height: '100%'}}
             progress={animationProgress.current}
             autoPlay
             loop
@@ -90,7 +99,9 @@ const SplashScreen: React.FC = () => {
         </>
       )}
       {!isConnected && (
-        <TouchableOpacity onPress={refreshConnection} style={styles.refreshButton}>
+        <TouchableOpacity
+          onPress={refreshConnection}
+          style={styles.refreshButton}>
           <Text style={styles.refreshButtonText}>Connection problem</Text>
         </TouchableOpacity>
       )}

@@ -1,0 +1,330 @@
+/**
+ * DilGenie AI Dev Bot — OpenRouter üzerinden günlük otomatik geliştirme.
+ *
+ * Akış:
+ *  1. ROADMAP.md'deki ilk `- [ ]` görevi bul
+ *  2. Görevle ilgili dosyaları oku, OpenRouter modeline bağlam olarak gönder
+ *  3. Modelin döndürdüğü edit'leri uygula (her "old" string birebir eşleşmeli)
+ *  4. tsc --noEmit + eslint çalıştır, hata varsa değişiklikleri geri al
+ *  5. Temizse: yeni branch, commit, push, PR aç (ROADMAP görevi [x] yapılır)
+ *
+ * Çalışma ortamı: Node >= 18, git + gh CLI kurulu olmalı.
+ * Env: OPENROUTER_API_KEY (zorunlu), GH_TOKEN (zorunlu), COPYRIGHT_BOT (ops.)
+ */
+
+import { execSync } from 'node:child_process';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
+import path from 'node:path';
+
+const REPO = process.env.GITHUB_REPOSITORY || 'hasangonen91/DilGenieAppProject';
+const BRANCH_BASE = 'main';
+const MODEL = process.env.BOT_MODEL || 'nvidia/nemotron-3-super-120b-a12b:free';
+const API_KEY = process.env.OPENROUTER_API_KEY;
+const BOT_NAME = process.env.BOT_NAME || 'DilGenie AI Dev Bot';
+const MAX_EDITS = 12;
+
+if (!API_KEY) {
+  console.error('❌ OPENROUTER_API_KEY gerekli');
+  process.exit(1);
+}
+
+function sh(cmd, opts = {}) {
+  return execSync(cmd, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'], ...opts }).trim();
+}
+
+function read(p) {
+  return existsSync(p) ? readFileSync(p, 'utf8') : null;
+}
+
+function walk(dir, base = '') {
+  const out = [];
+  for (const entry of readdirSafe(dir)) {
+    const full = path.join(dir, entry.name);
+    const rel = base ? `${base}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) {
+      if (['node_modules', '.git', 'android', 'ios', 'Podfile.lock'].includes(entry.name)) continue;
+      out.push(`${rel}/`);
+      out.push(...walk(full, rel));
+    } else {
+      out.push(rel);
+    }
+  }
+  return out;
+}
+
+// Mevcut açık AI PR var mı? Varsa aynı görev tekrar denenmesin.
+function openAiPrExists() {
+  try {
+    const out = sh(`gh pr list --repo ${REPO} --state open --json headRefName,title --limit 50`);
+    const prs = JSON.parse(out);
+    return prs.some((p) => p.headRefName.startsWith('ai/dev-'));
+  } catch {
+    return false;
+  }
+}
+
+// ROADMAP.md'den ilk yapılmamış görevi çek ve [x] yap
+function pickTask() {
+  const rm = read('ROADMAP.md');
+  if (!rm) throw new Error('ROADMAP.md bulunamadı');
+  const lines = rm.split('\n');
+  let taskText = null;
+  let taskIdx = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].match(/^\s*- \[ \]/)) {
+      taskText = lines[i].replace(/^\s*- \[ \]\s*/, ''); // başlık kısmı
+      taskIdx = i;
+      break;
+    }
+  }
+  if (!taskText) return null; // hepsi bitti
+  // Görev başlığını "**X** — açıklama" formatından ayıkla
+  const m = taskText.match(/^\*\*(.+?)\*\*\s*—\s*(.*)/);
+  const title = m ? m[1].trim() : taskText.split('—')[0].trim();
+  const detail = m ? m[2].trim() : taskText;
+  // ROADMAP'te görevi [x] yap (PR'a dahil edilecek)
+  lines[taskIdx] = lines[taskIdx].replace('- [ ]', '- [x]');
+  writeFileSync('ROADMAP.md', lines.join('\n'));
+  return { title, detail, rawLine: lines[taskIdx] };
+}
+
+// Görev metnindeki yol ifadelerini topla (örn. src/pages/.../*.tsx)
+function taskFiles(detail) {
+  const found = new Set();
+  const re = /[A-Za-z0-9_./\-]+\.(tsx?|jsx?|json)/g;
+  for (const m of detail.matchAll(re)) {
+    const p = m[0].replace(/^\.\//, '');
+    if (existsSync(p) && statSync(p).isFile()) {
+      found.add(p);
+    }
+  }
+  return [...found];
+}
+
+// OpenRouter çağrısı (retry + JSON parse)
+async function callModel(messages, { json = true } = {}) {
+  const body = {
+    model: MODEL,
+    messages,
+    temperature: 0.3,
+    max_tokens: 8000,
+  };
+  if (json) body.response_format = { type: 'json_object' };
+
+  let lastErr;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${API_KEY}`,
+          'HTTP-Referer': `https://github.com/${REPO}`,
+          'X-Title': 'DilGenie AI Dev Bot',
+        },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${(await res.text()).slice(0, 300)}`);
+      const data = await res.json();
+      const text = data.choices?.[0]?.message?.content ?? '';
+      const cleaned = text.replace(/```json\s*/gi, '').replace(/```/g, '').trim();
+      const start = cleaned.indexOf('{');
+      const end = cleaned.lastIndexOf('}');
+      if (start === -1 || end <= start) throw new Error('JSON blok bulunamadı');
+      return JSON.parse(cleaned.slice(start, end + 1));
+    } catch (e) {
+      lastErr = e;
+      console.log(`⚠️  deneme ${attempt} başarısız: ${e.message}`);
+      await new Promise((r) => setTimeout(r, 5000 * attempt));
+    }
+  }
+  throw lastErr;
+}
+
+// Modelin döndürdüğü edit'leri uygula
+function applyEdits(edits) {
+  const applied = [];
+  if (!Array.isArray(edits)) throw new Error('edits bir dizi değil');
+  for (const e of edits) {
+    if (!e || typeof e.path !== 'string') throw new Error('geçersiz edit: path yok');
+    if (e.type === 'create') {
+      if (!e.content) throw new Error(`create ${e.path}: content eksik`);
+      mkdirSync(path.dirname(e.path), { recursive: true });
+      writeFileSync(e.path, e.content);
+      applied.push(`+ ${e.path} (yeni)`);
+    } else if (e.type === 'edit' || (!e.type && e.old !== undefined)) {
+      const oldText = e.old;
+      const newText = e.new;
+      if (typeof oldText !== 'string' || typeof newText !== 'string') {
+        throw new Error(`edit ${e.path}: old/new eksik`);
+      }
+      const cur = read(e.path);
+      if (cur === null) throw new Error(`edit ${e.path}: dosya yok`);
+      const count = cur.split(oldText).length - 1;
+      if (count !== 1) {
+        throw new Error(`edit ${e.path}: 'old' ${count} kez eşleşti (1 olmalı). Model çıktısı hatalı.`);
+      }
+      writeFileSync(e.path, cur.replace(oldText, newText));
+      applied.push(`~ ${e.path}`);
+    } else {
+      throw new Error(`bilinmeyen edit tipi: ${JSON.stringify(e).slice(0, 120)}`);
+    }
+  }
+  return applied;
+}
+
+async function main() {
+  const started = Date.now();
+  console.log(`🤖 ${BOT_NAME} başladı (model: ${MODEL})`);
+
+  // Git başlangıç durumu
+  sh(`git checkout ${BRANCH_BASE} && git pull origin ${BRANCH_BASE}`);
+
+  // Açık AI PR varsa bugün pas geç
+  if (openAiPrExists()) {
+    console.log('⏭️  Açık ai/dev-* PR var, bugün atlıyorum (merge edilmesi bekleniyor)');
+    return;
+  }
+
+  const task = pickTask();
+  if (!task) {
+    console.log('✅ ROADMAP tamamlandı — yapılacak görev kalmadı 🎉');
+    return;
+  }
+  console.log(`🎯 Görev: ${task.title}`);
+
+  // Bağlam topla: dosya ağacı + ilgili dosyalar + package.json + ROADMAP
+  const tree = walk('src').filter((p) => !p.endsWith('.mp4') && !p.endsWith('.png') && !p.endsWith('.ttf')).join('\n');
+  const contextFiles = [...taskFiles(task.detail), 'package.json'];
+  const fileContents = [];
+  for (const f of contextFiles) {
+    const c = read(f);
+    if (c !== null) {
+      fileContents.push(`=== DOSYA: ${f} ===\n${c.slice(0, 20000)}`);
+    }
+  }
+  const roadmap = read('ROADMAP.md') || '';
+
+  const systemPrompt = `Sen ${BOT_NAME}sın. ${REPO} adlı React Native (TypeScript) dil öğrenme uygulamasını geliştiriyorsun.
+Kurallar:
+- Yalnızca verilen bağlamdaki dosyaları ve görevde adı geçen dosyaları değiştir.
+- Yeni dosya gerekiyorsa type:"create" kullan, dosyanın TAM içeriğini ver.
+- Mevcut dosyayı değiştiriyorsan type:"edit" kullan; "old" alanı dosyada BİREBİR ve TAM 1 kez olmalı, "new" ile değiştir.
+- Kod yazarken proje stilini takip et (function component, .tsx uzantı, mevcut import düzeni).
+- Eklediğin her şey TypeScript'te derlenmeli ve eslint kurallarına uymalı.
+- Asla App.tsx'teki köklü navigasyonu bozma, yeni ekranı mevcut navigasyon yapısına uygun ekle.
+- Yalnızca JSON cevap ver, başka metin yazma.`;
+
+  const userPrompt = `# GÖREV (ROADMAP'ten)
+Başlık: ${task.title}
+Ayrıntı: ${task.detail}
+
+# DOSYA AĞACI (src/)
+${tree}
+
+# İLGİLİ DOSYA İÇERİKLERİ
+${fileContents.join('\n\n').slice(0, 120000)}
+
+# ROADMAP (bağlam için)
+${roadmap.slice(0, 4000)}
+
+Cevap JSON formatında olmalı:
+{
+  "summary": "kısa Türkçe özet, ne yaptın",
+  "edits": [
+    {"type": "edit", "path": "dosya/yolu", "old": "mevcut metin (birebir)", "new": "yeni metin"},
+    {"type": "create", "path": "yeni/dosya/yolu", "content": "tam dosya içeriği"}
+  ]
+}`;
+
+  const result = await callModel([
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: userPrompt },
+  ]);
+
+  console.log(`📝 Özet: ${result.summary || '-'}`);
+  const edits = result.edits || [];
+  if (!edits.length) {
+    console.log('⚠️  Model hiç edit üretmedi, atlıyorum');
+    // ROADMAP'i geri al
+    sh(`git checkout ROADMAP.md`);
+    return;
+  }
+
+  const applied = applyEdits(edits);
+  console.log(`🔧 Uygulanan: ${applied.length} dosya değişikliği`);
+  applied.forEach((a) => console.log('  ' + a));
+
+  // Doğrulama: tsc + eslint (bot'un değiştirdiği dosyalarda)
+  try {
+    sh('npx tsc --noEmit', { timeout: 300000 });
+    console.log('✅ TypeScript derleme başarılı');
+  } catch (e) {
+    console.log(`❌ TypeScript hatası:\n${String(e.stdout || e.message).slice(0, 3000)}`);
+    rollback();
+  }
+
+  try {
+    const changed = edits.map((e) => e.path).filter((p) => p.endsWith('.ts') || p.endsWith('.tsx'));
+    if (changed.length) {
+      sh(`npx eslint ${changed.join(' ')} --fix`, { timeout: 120000 });
+      console.log('✅ ESLint temiz');
+    }
+  } catch (e) {
+    console.log(`❌ ESLint hatası:\n${String(e.stdout || e.message).slice(0, 3000)}`);
+    rollback();
+  }
+
+  // Commit + push + PR
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const branch = `ai/dev-${date}`;
+  const existing = sh(`git branch --list ${branch}`);
+  if (existing) sh(`git branch -D ${branch}`);
+  sh(`git checkout -b ${branch}`);
+  sh(`git add -A`);
+  sh(`git commit -m "🤖 ${task.title} (otomatik AI geliştirme)"`);
+  sh(`git push origin ${branch}`);
+
+  const prBody = `## 🤖 Otomatik AI Değişikliği
+**Görev:** ${task.title}
+
+${task.detail}
+
+**Model:** ${MODEL}
+
+**Yapılan değişiklikler:**
+${applied.map((a) => `- ${a}`).join('\n')}
+
+**Özet:** ${result.summary || '-'}
+
+---
+*Bu PR, günlük AI geliştirme botu tarafından otomatik oluşturuldu. Lütfen inceleyip merge et, ROADMAP ilerlemeye devam etsin.*`;
+
+  sh(`gh pr create --repo ${REPO} --base ${BRANCH_BASE} --head ${branch} --title "🤖 AI: ${task.title}" --body "${prBody.replace(/"/g, '\\"')}"`);
+  console.log('🎉 PR açıldı');
+  console.log(`⏱️  Toplam süre: ${((Date.now() - started) / 1000).toFixed(0)} sn`);
+}
+
+function rollback() {
+  console.log('↩️  Değişiklikler geri alınıyor...');
+  const files = sh('git status --porcelain').split('\n').filter(Boolean).map((l) => l.slice(3));
+  for (const f of files) {
+    if (f) {
+      try {
+        sh(`git checkout -- ${f}`);
+      } catch {
+        /* untracked yeni dosya */
+      }
+    }
+  }
+  sh('git checkout -- ROADMAP.md 2>/dev/null || true');
+  process.exit(1);
+}
+
+main().catch((e) => {
+  console.error(`💥 Hata: ${e.message}`);
+  try {
+    sh('git checkout -- ROADMAP.md 2>/dev/null || true');
+  } catch {}
+  process.exit(1);
+});

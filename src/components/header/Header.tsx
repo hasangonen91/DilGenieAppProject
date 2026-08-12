@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, Dimensions } from 'react-native';
+import {StyleSheet, Text, View, Image, Dimensions} from 'react-native';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 interface HeaderProps {
   title: string;
@@ -9,16 +9,18 @@ interface HeaderProps {
   textColor?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, backgroundColor = '#020825', textColor = '#fff' }) => {
+const Header: React.FC<HeaderProps> = ({
+  title,
+  backgroundColor = '#020825',
+  textColor = '#fff',
+}) => {
   return (
-    <View style={[styles.header, { backgroundColor }]}>
+    <View style={[styles.header, {backgroundColor}]}>
       <View style={styles.imageContainer}>
-        <View
-          style={[styles.middleImage, { borderWidth: 0 }]}
-        />
+        <View style={[styles.middleImage, {borderWidth: 0}]} />
       </View>
       <View style={styles.textContainer}>
-        <Text style={[styles.title, { color: textColor }]}>{title}</Text>
+        <Text style={[styles.title, {color: textColor}]}>{title}</Text>
       </View>
       <View style={styles.imageContainer}>
         <Image
@@ -62,7 +64,7 @@ const styles = StyleSheet.create({
   middleImage: {
     width: '100%',
     height: '100%',
-    borderRadius: width * 0.018, 
+    borderRadius: width * 0.018,
     borderWidth: 1,
     borderColor: '#5D3FD3',
   },

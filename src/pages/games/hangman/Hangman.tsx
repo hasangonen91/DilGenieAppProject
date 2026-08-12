@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, BackHandler } from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import {View, Text, BackHandler} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Keyboard from './Keyboard';
 import styles from './styles';
@@ -31,9 +31,12 @@ const HangmanGame: React.FC = () => {
   const [showGameOverModal, setShowGameOverModal] = useState<boolean>(false);
 
   const puzzles: Puzzle[] = [
-    { answer: 'JAVASCRIPT', hint: 'A programming language' },
-    { answer: 'PYTHON', hint: 'A popular programming language' },
-    { answer: 'REACT', hint: 'A JavaScript library for building user interfaces' },
+    {answer: 'JAVASCRIPT', hint: 'A programming language'},
+    {answer: 'PYTHON', hint: 'A popular programming language'},
+    {
+      answer: 'REACT',
+      hint: 'A JavaScript library for building user interfaces',
+    },
   ];
 
   const init = () => {
@@ -76,18 +79,24 @@ const HangmanGame: React.FC = () => {
     let newLives = lives;
 
     if (answer.toUpperCase().includes(letter)) {
-      answer.toUpperCase().split('').forEach((value, index) => {
-        if (value === letter) {
-          newLettersLeft[index] = letter;
-          newCorrect++;
-        }
-      });
+      answer
+        .toUpperCase()
+        .split('')
+        .forEach((value, index) => {
+          if (value === letter) {
+            newLettersLeft[index] = letter;
+            newCorrect++;
+          }
+        });
     } else {
       newWrong++;
       newLives--;
     }
 
-    if (newLettersLeft.join('').replace(/\*/g, ' ').toUpperCase() === answer.toUpperCase()) {
+    if (
+      newLettersLeft.join('').replace(/\*/g, ' ').toUpperCase() ===
+      answer.toUpperCase()
+    ) {
       newScore++;
       setScore(newScore);
 
@@ -114,7 +123,7 @@ const HangmanGame: React.FC = () => {
 
     if (timer > 0) {
       intervalId = setInterval(() => {
-        setTimer((prevTimer) => {
+        setTimer(prevTimer => {
           if (prevTimer <= 1) {
             clearInterval(intervalId);
             setShowGameOverModal(true);
@@ -151,7 +160,11 @@ const HangmanGame: React.FC = () => {
       <View style={styles.dashes}>
         {lettersLeft.map((letter, index) => (
           <View style={styles.dashItemContainer} key={index}>
-            {letter === '*' ? <Text style={styles.dashBlankItem}> </Text> : <Text style={styles.dashItem}>{letter}</Text>}
+            {letter === '*' ? (
+              <Text style={styles.dashBlankItem}> </Text>
+            ) : (
+              <Text style={styles.dashItem}>{letter}</Text>
+            )}
           </View>
         ))}
       </View>
@@ -168,12 +181,10 @@ const HangmanGame: React.FC = () => {
 
   return (
     <React.Fragment>
-      <BackHeader title='Hangman' />
+      <BackHeader title="Hangman" />
       <View style={styles.container}>
         <View style={styles.topContainer}>
-          <View style={styles.heartContainer}>
-            {renderHeartIcons()}
-          </View>
+          <View style={styles.heartContainer}>{renderHeartIcons()}</View>
           <View style={styles.scoreContainer}>
             <Text style={styles.scoreText}>Max Skor: {maxScore}</Text>
             <Text style={styles.scoreText}>Skor: {score}</Text>
@@ -183,16 +194,32 @@ const HangmanGame: React.FC = () => {
         <View style={styles.hangmanContainer}>
           <HangmanTree wrong={wrong} />
         </View>
-        <View style={styles.dashesContainer}>
-          {renderDashes()}
-        </View>
+        <View style={styles.dashesContainer}>{renderDashes()}</View>
         <View style={styles.hintContainer}>
           <Text style={styles.hintText}>Hint: {hint}</Text>
         </View>
-        <Keyboard onPressKey={validate} usedLetters={usedLetters} resetTrigger={keyboardResetTrigger} />
+        <Keyboard
+          onPressKey={validate}
+          usedLetters={usedLetters}
+          resetTrigger={keyboardResetTrigger}
+        />
       </View>
-      <StartGameModal visible={showStartModal} onStart={() => { setShowStartModal(false); init(); }} />
-      <GameOverModal visible={showGameOverModal} onRestart={() => { setShowGameOverModal(false); init(); }} answer={answer} hint={hint} />
+      <StartGameModal
+        visible={showStartModal}
+        onStart={() => {
+          setShowStartModal(false);
+          init();
+        }}
+      />
+      <GameOverModal
+        visible={showGameOverModal}
+        onRestart={() => {
+          setShowGameOverModal(false);
+          init();
+        }}
+        answer={answer}
+        hint={hint}
+      />
     </React.Fragment>
   );
 };

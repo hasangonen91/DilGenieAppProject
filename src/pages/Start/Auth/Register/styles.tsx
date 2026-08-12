@@ -1,6 +1,6 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -82,10 +82,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     shadowColor: '#00e0ff',
     shadowOpacity: 1,
-    shadowOffset: { width: 2, height: 2 },
+    shadowOffset: {width: 2, height: 2},
     shadowRadius: 10,
     elevation: 5,
-
   },
   buttonText: {
     color: '#fff',
@@ -153,7 +152,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     shadowColor: '#00e0ff',
     shadowOpacity: 1,
-    shadowOffset: { width: 2, height: 2 },
+    shadowOffset: {width: 2, height: 2},
     shadowRadius: 8,
     elevation: 3,
   },

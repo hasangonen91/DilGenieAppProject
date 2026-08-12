@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert, Dimensions } from 'react-native';
+import React, {useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+  Dimensions,
+} from 'react-native';
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const WORD = 'REACT'; // Tahmin edilmesi gereken kelime
 const HINT = 'Bir JavaScript kütüphanesi.'; // Kullanıcıya verilen ipucu
 
-const shuffleArray = (array) => {
-  let shuffledArray = array.slice();
+const shuffleArray = (array: string[]) => {
+  const shuffledArray = array.slice();
   for (let i = shuffledArray.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
@@ -15,13 +22,19 @@ const shuffleArray = (array) => {
   return shuffledArray;
 };
 
-const App = () => {
-  const [shuffledWord, setShuffledWord] = useState(shuffleArray(WORD.split('')));
-  const [selectedLetters, setSelectedLetters] = useState([]);
-  const [guessedWord, setGuessedWord] = useState(Array(WORD.length).fill(''));
+type SelectedLetter = {letter: string; index: number};
 
-  const handleLetterPress = (letter, index) => {
-    const newSelectedLetters = [...selectedLetters, { letter, index }];
+const App = () => {
+  const [shuffledWord, setShuffledWord] = useState<string[]>(
+    shuffleArray(WORD.split('')),
+  );
+  const [selectedLetters, setSelectedLetters] = useState<SelectedLetter[]>([]);
+  const [guessedWord, setGuessedWord] = useState<string[]>(
+    Array(WORD.length).fill(''),
+  );
+
+  const handleLetterPress = (letter: string, index: number) => {
+    const newSelectedLetters = [...selectedLetters, {letter, index}];
     setSelectedLetters(newSelectedLetters);
 
     const newShuffledWord = [...shuffledWord];
@@ -34,7 +47,7 @@ const App = () => {
     setGuessedWord(newGuessedWord);
   };
 
-  const handleSelectedLetterPress = (letter, index) => {
+  const handleSelectedLetterPress = (letter: string, index: number) => {
     const newSelectedLetters = selectedLetters.filter((_, i) => i !== index);
     setSelectedLetters(newSelectedLetters);
 
@@ -67,7 +80,10 @@ const App = () => {
       <Text style={styles.hint}>İpucu: {HINT}</Text>
       <View style={styles.puzzleContainer}>
         {guessedWord.map((letter, index) => (
-          <TouchableOpacity key={index} style={styles.puzzleBox} onPress={() => handleSelectedLetterPress(letter, index)}>
+          <TouchableOpacity
+            key={index}
+            style={styles.puzzleBox}
+            onPress={() => handleSelectedLetterPress(letter, index)}>
             <Text style={styles.puzzleLetter}>{letter}</Text>
           </TouchableOpacity>
         ))}
@@ -77,8 +93,7 @@ const App = () => {
           <TouchableOpacity
             key={index}
             style={styles.letterBox}
-            onPress={() => handleLetterPress(letter, index)}
-          >
+            onPress={() => handleLetterPress(letter, index)}>
             <Text style={styles.letter}>{letter}</Text>
           </TouchableOpacity>
         ))}

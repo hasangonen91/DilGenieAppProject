@@ -1,4 +1,3 @@
-
 // import React, { useState, useEffect } from 'react';
 // import { SafeAreaView, Text } from 'react-native';
 // import { fetchA1LevelData } from '../../../services/api/base';
@@ -98,17 +97,17 @@
 
 // export default B2level;
 
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import {StyleSheet, Text, View} from 'react-native';
+import React from 'react';
 
 const WordSorting = () => {
   return (
     <View>
       <Text>WordSorting</Text>
     </View>
-  )
-}
+  );
+};
 
-export default WordSorting
+export default WordSorting;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
