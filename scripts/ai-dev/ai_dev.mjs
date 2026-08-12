@@ -238,6 +238,8 @@ Kurallar:
   import AsyncStorage from '@react-native-async-storage/async-storage';
   export const useStore = create(persist((set, get) => ({ ... }), { name: 'kisa-isim', storage: createJSONStorage(() => AsyncStorage), partialize: (s) => ({ kalici-kisimlar }), }));
   DİKKAT: 'createJSONStorage' yaz (küçük c), sakın 'CreateJSONStorage' yazma.
+- ASLA test dosyası yazma: __tests__ klasörü, *.test.ts, *.spec.ts YASAK. Sadece production kaynak kodu üret.
+- Görev bir "altyapı"/"modül" ise production dosyalarının TAMAMINI tek seferde üret (servis, tipler, store). Import ettiğin her dosyayı mutlaka create et, eksik bırakma.
 - Yalnızca JSON cevap ver, başka metin yazma.`;
 
   const userPrompt = `# GÖREV (ROADMAP'ten)
@@ -272,17 +274,30 @@ Cevap JSON formatında olmalı:
       { role: 'user', content: userPrompt },
     ];
     if (attempt > 1) {
+      // Hatalı dosyaların mevcut içeriklerini topla (düzeltme için bağlam)
+      const errPaths = [...new Set((lastError.match(/src\/[A-Za-z0-9_./\-]+\.(ts|tsx|js|jsx)/g) || []))];
+      const errContents = [];
+      for (const p of errPaths.slice(0, 5)) {
+        const c = read(p);
+        if (c !== null) errContents.push(`=== ${p} ===\n${c.slice(0, 15000)}`);
+      }
       msgs.push({
         role: 'assistant',
         content: JSON.stringify(result || { summary: 'önceki üretim', edits: [] }),
       });
       msgs.push({
         role: 'user',
-        content: `Önceki cevabın derleme/lint hataları verdi. İşte hatalar:\n${lastError.slice(0, 4000)}\n\nLütfen BÜYÜK DEĞİŞİKLİK YAPMA — sadece bu hataları düzelten minimal edit'ler üret. Tamamen yeni dosyalar üretme, sadece mevcut hatalı dosyaları düzelt. Sadece JSON döndür.`,
+        content: `Önceki cevabın derleme/lint hataları verdi. İşte hatalar:\n${lastError.slice(0, 4000)}\n\n${
+          errContents.length
+            ? `Hatalı dosyaların GÜNCEL içerikleri (üzerlerine düzeltme yap):\n${errContents.join('\n\n').slice(0, 60000)}`
+            : '(Hatalı dosya içeriği bulunamadı, önceki cevabındaki dosyaları koru.)'
+        }\n\nLütfen BU DOSYALAR ÜZERİNDEN minimal düzeltme edit'leri üret (type:"edit" ile old→new). Sadece hataları gider, büyük değişiklik yapma, yeni dosya üretme. Sadece JSON döndür.`,
       });
     }
 
     result = await callModel(msgs);
+    // Deneme 2+: modelin edit'leri mevcut dosya içeriklerine göre üretildiği için,
+    // uygulamadan önce önceki denemede oluşturulan DEĞİŞİMleri koru (silme).
     const edits = result.edits || [];
     if (!edits.length) {
       console.log(`⚠️  Model edit üretmedi (deneme ${attempt})`);
@@ -290,8 +305,10 @@ Cevap JSON formatında olmalı:
     }
 
     try {
-      // Önceki tüm değişiklikleri geri al (tekrar uygulamak için temiz başla)
-      resetWorkingDir();
+      // Deneme 1: temiz başla. Deneme 2+: mevcut dosyaları koru, sadece düzeltme üzerine kur.
+      if (attempt === 1) {
+        resetWorkingDir();
+      }
       applied = applyEdits(edits);
       console.log(`🔧 Uygulanan (deneme ${attempt}): ${applied.length} dosya`);
       applied.forEach((a) => console.log('  ' + a));
