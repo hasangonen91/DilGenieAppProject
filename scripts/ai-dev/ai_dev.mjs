@@ -281,11 +281,11 @@ Cevap JSON formatında olmalı:
   ]
 }`;
 
-  // En fazla 3 deneme: model ilk üretimde hata yaparsa, hata mesajını verip düzelttir
+  // En fazla 4 deneme: model ilk üretimde hata yaparsa, hata mesajını verip düzelttir
   let result;
   let applied;
   let lastError = '';
-  for (let attempt = 1; attempt <= 3; attempt++) {
+  for (let attempt = 1; attempt <= 4; attempt++) {
     const msgs = [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userPrompt },
@@ -345,8 +345,8 @@ Cevap JSON formatında olmalı:
     } catch (e) {
       lastError = e.message;
       console.log(`❌ Deneme ${attempt} doğrulama hatası:\n${lastError.slice(0, 1200)}`);
-      if (attempt === 3) {
-        console.log('↩️  3 deneme de başarısız, değişiklikler geri alınıyor...');
+      if (attempt === 4) {
+        console.log('↩️  4 deneme de başarısız, değişiklikler geri alınıyor...');
         rollback();
       }
     }
