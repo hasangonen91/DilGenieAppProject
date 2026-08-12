@@ -125,7 +125,7 @@ async function callModel(messages, { json = true } = {}) {
     model: MODEL,
     messages,
     temperature: 0.3,
-    max_tokens: 8000,
+    max_tokens: 16000,
   };
   if (json) body.response_format = { type: 'json_object' };
 
@@ -312,13 +312,21 @@ Cevap JSON formatında olmalı:
       });
     }
 
-    result = await callModel(msgs);
+    try {
+      result = await callModel(msgs);
+    } catch (e) {
+      lastError = e.message;
+      console.log(`❌ Deneme ${attempt} model hatası: ${lastError.slice(0, 500)}`);
+      // model hatası da olsa denemelere devam et (callModel kendi içinde 3 kez dener)
+      continue;
+    }
     // Deneme 2+: modelin edit'leri mevcut dosya içeriklerine göre üretildiği için,
     // uygulamadan önce önceki denemede oluşturulan DEĞİŞİMleri koru (silme).
     const edits = result.edits || [];
     if (!edits.length) {
+      lastError = 'Model edit üretmedi (boş edits dizisi)';
       console.log(`⚠️  Model edit üretmedi (deneme ${attempt})`);
-      break;
+      continue;
     }
 
     try {
