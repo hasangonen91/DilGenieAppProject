@@ -191,6 +191,40 @@ function applyEdits(edits) {
   return applied;
 }
 
+// Web araştırması: görev başlığından anahtar kelimelerle DuckDuckGo'da arama yap,
+// sonuçları kısa bağlam olarak döndür (model için bilgi kaynağı)
+async function webResearch(taskTitle) {
+  const keywords = taskTitle
+    .replace(/^\[.*?\]\s*/, '')
+    .replace(/[^\w\sÇĞİÖŞÜçğıöşü]/g, ' ')
+    .trim();
+  if (keywords.length < 6) return '';
+  const queries = [
+    `duolingo babbel language learning app ${keywords}`,
+    `english vocabulary ${keywords} common words list`,
+  ];
+  const results = [];
+  for (const q of queries.slice(0, 2)) {
+    try {
+      const url = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(q)}`;
+      const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' } });
+      if (!res.ok) continue;
+      const html = await res.text();
+      // <a class="result__a">...</a> başlıklarını ve snippet'lerini çıkar
+      const links = [...html.matchAll(/result__a[^>]*>(.*?)<\/a>/g)].slice(0, 5)
+        .map((m) => m[1].replace(/<[^>]+>/g, '').replace(/&[^;]+;/g, ' ').trim())
+        .filter(Boolean);
+      const snips = [...html.matchAll(/result__snippet[^>]*>(.*?)<\/a>/g)].slice(0, 5)
+        .map((m) => m[1].replace(/<[^>]+>/g, '').replace(/&[^;]+;/g, ' ').trim())
+        .filter(Boolean);
+      results.push(`Sorgu: ${q}\n${links.map((l, i) => `- ${l}${snips[i] ? ': ' + snips[i] : ''}`).join('\n')}`);
+    } catch (e) {
+      // sessizce geç
+    }
+  }
+  return results.join('\n\n');
+}
+
 async function main() {
   const started = Date.now();
   console.log(`🤖 ${BOT_NAME} başladı (model: ${MODEL})`);
@@ -223,8 +257,15 @@ async function main() {
   }
   const roadmap = read('ROADMAP.md') || '';
 
+  // Web araştırması: görev başlığından anahtar kelimelerle sektörel/best-practice bilgisi topla
+  const research = await webResearch(task.title);
+
   const systemPrompt = `Sen ${BOT_NAME}sın. ${REPO} adlı React Native (TypeScript) dil öğrenme uygulamasını geliştiriyorsun.
 Kurallar:
+- Bu PREMIUM bir dil öğrenme uygulaması: Duolingo / Babbel / Busuu seviyesinde kalite hedefle. Kod kalitesi, UX ve estetik profesyonel olmalı.
+- ASLA emoji kullanma (kod, yorum, metin, UI string, log — her yerde YASAK). Yalnızca UTF-8 metin sembolleri kullanılabilir. UI'daki simgeler için metin/ikon kütüphanesi kullan.
+- TEMA SADAKATİ: Uygulamanın mevcut renk paletini, stil yapısını ve tasarım dilini KORU. Mevcut stil dosyalarını (styles.tsx) temel al, yeni renkler/desenler dayatma. Mevcut tema ile uyumlu ilerle.
+- Önce MEVCUT dosyaları incele, mevcut kod stiline ve bileşen yapısına saygı göster. Gereksiz değişiklik yapma.
 - Yalnızca verilen bağlamdaki dosyaları ve görevde adı geçen dosyaları değiştir.
 - Yeni dosya gerekiyorsa type:"create" kullan, dosyanın TAM içeriğini ver.
 - Mevcut dosyayı değiştiriyorsan type:"edit" kullan; "old" alanı dosyada BİREBİR ve TAM 1 kez olmalı, "new" ile değiştir.
@@ -257,11 +298,16 @@ Kurallar:
   Not: 'create<MyState>()(...)' CURRIED form zorunlu (iki parantez). düz 'create(persist(...))' yazma, TS hatası verir. createJSONStorage küçük c ile.
 - ASLA test dosyası yazma: __tests__ klasörü, *.test.ts, *.spec.ts YASAK. Sadece production kaynak kodu üret.
 - Görev bir "altyapı"/"modül" ise production dosyalarının TAMAMINI tek seferde üret (servis, tipler, store). Import ettiğin her dosyayı mutlaka create et, eksik bırakma.
+- Veri ekleme görevlerinde (kelime, soru, kategori): MEVCUT veri formatına ve seviye/bağlama uygun, dilbilgisi doğru, gerçekçi ve kullanışlı içerik üret. Kaliteyi düşürme, tekrara düşme.
+- Verilen "WEB ARAŞTIRMASI" bölümündeki bilgileri görevi yaparken dikkate al.
 - Yalnızca JSON cevap ver, başka metin yazma.`;
 
   const userPrompt = `# GÖREV (ROADMAP'ten)
 Başlık: ${task.title}
 Ayrıntı: ${task.detail}
+
+# WEB ARAŞTIRMASI (görevle ilgili güncel best practice / içerik önerisi)
+${research || '(araştırma yapılamadı, mevcut bilgiyle ilerle)'}
 
 # DOSYA AĞACI (src/)
 ${tree}
