@@ -369,7 +369,7 @@ Cevap JSON formatında olmalı:
   sh(`git checkout -b ${branch}`);
   sh(`git add -A`);
   sh(`git commit -m "🤖 ${task.title} (otomatik AI geliştirme)"`);
-  sh(`git push origin ${branch}`);
+  sh(`git push --force-with-lease origin ${branch} 2>/dev/null || git push origin ${branch}`);
 
   const prBody = `## 🤖 Otomatik AI Değişikliği
 **Görev:** ${task.title}
