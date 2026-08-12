@@ -386,7 +386,9 @@ ${applied.map((a) => `- ${a}`).join('\n')}
 ---
 *Bu PR, günlük AI geliştirme botu tarafından otomatik oluşturuldu. Lütfen inceleyip merge et, ROADMAP ilerlemeye devam etsin.*`;
 
-  sh(`gh pr create --repo ${REPO} --base ${BRANCH_BASE} --head ${branch} --title "🤖 AI: ${task.title}" --body "${prBody.replace(/"/g, '\\"')}"`);
+  // Body'yi dosyaya yaz (backtick/Türkçe karakter shell kaçışını önler)
+  writeFileSync('/tmp/pr-body.md', prBody, 'utf8');
+  sh(`gh pr create --repo ${REPO} --base ${BRANCH_BASE} --head ${branch} --title "🤖 AI: ${task.title}" --body-file /tmp/pr-body.md`);
   console.log('🎉 PR açıldı');
   console.log(`⏱️  Toplam süre: ${((Date.now() - started) / 1000).toFixed(0)} sn`);
 }
