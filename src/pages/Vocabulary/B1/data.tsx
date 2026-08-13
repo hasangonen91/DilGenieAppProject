@@ -115,7 +115,7 @@ const data = {
         {
           key: 1,
           en: 'My mother is a teacher.',
-          tr: 'Annemi bir öğretmen.',
+          tr: 'Annem bir öğretmen.',
           image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
         },
         {
