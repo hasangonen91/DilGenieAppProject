@@ -37,6 +37,47 @@ const HangmanGame: React.FC = () => {
       answer: 'REACT',
       hint: 'A JavaScript library for building user interfaces',
     },
+    {answer: 'ANGULAR', hint: 'A TypeScript-based web application framework'},
+    {
+      answer: 'VUEJS',
+      hint: 'A progressive JavaScript framework for building UIs',
+    },
+    {
+      answer: 'NODEJS',
+      hint: "A JavaScript runtime built on Chrome's V8 engine",
+    },
+    {
+      answer: 'MONGODB',
+      hint: 'A source-available cross-platform document-oriented database program',
+    },
+    {
+      answer: 'EXPRESSJS',
+      hint: 'A minimal and flexible Node.js web application framework',
+    },
+    {
+      answer: 'DJANGO',
+      hint: 'A high-level Python web framework that encourages rapid development',
+    },
+    {
+      answer: 'FLASK',
+      hint: 'A lightweight WSGI web application framework in Python',
+    },
+    {
+      answer: 'LARAVEL',
+      hint: 'A PHP web framework with expressive, elegant syntax',
+    },
+    {
+      answer: 'SPRING',
+      hint: 'An application framework and inversion of control container for the Java platform',
+    },
+    {
+      answer: 'RUBYONRAILS',
+      hint: 'A server-side web application framework written in Ruby',
+    },
+    {
+      answer: 'ASPNET',
+      hint: 'A free web framework for building great websites and web applications',
+    },
   ];
 
   const init = () => {
