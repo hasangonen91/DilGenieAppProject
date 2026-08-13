@@ -144,6 +144,80 @@ const data = {
         },
       ],
     },
+    daily_routines: {
+      en: 'Daily Routines',
+      tr: 'Günlük Rutinler',
+      words: [
+        {
+          key: 12,
+          en: 'Wake up',
+          tr: 'Uyanmak',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 13,
+          en: 'Brush teeth',
+          tr: 'Diş fırçalama',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 14,
+          en: 'Take a shower',
+          tr: 'Duş almak',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 15,
+          en: 'Have breakfast',
+          tr: 'Kahvaltı yapmak',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 16,
+          en: 'Go to work',
+          tr: 'İşe gitmek',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 17,
+          en: 'Go to bed',
+          tr: 'Yatmak',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+      ],
+      example_sentences: [
+        {
+          key: 1,
+          en: "I usually wake up at 7 o'clock in the morning.",
+          tr: "Normalde sabah 7'de uyanırım.",
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 2,
+          en: 'She brushes her teeth after every meal.',
+          tr: 'Her öğleden sonra dişlerini fırçalar.',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+      ],
+      questions: [
+        {
+          key: 1,
+          question_en: 'What do you do after you wake up in the morning?',
+          question_tr: 'Sabah uyandıktan sonra ne yaparsın?',
+          answer_en: 'Brush teeth',
+          answer_tr: 'Diş fırçalama',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 2,
+          question_en: 'When do you usually have breakfast?',
+          question_tr: 'Normalde kahvaltıyı ne zaman yaparsın?',
+          answer_en: 'In the morning',
+          answer_tr: 'Sabahları',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+      ],
+    },
   },
 };
 
