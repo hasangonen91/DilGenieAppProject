@@ -299,6 +299,7 @@ Kurallar:
   );
   Not: 'create<MyState>()(...)' CURRIED form zorunlu (iki parantez). düz 'create(persist(...))' yazma, TS hatası verir. createJSONStorage küçük c ile.
 - ASLA test dosyası yazma: __tests__ klasörü, *.test.ts, *.spec.ts YASAK. Sadece production kaynak kodu üret.
+- Güncelleme/dağıtım: projede react-native-livepatch (CodePush'un ücretsiz alternatifi, JS/asset anında güncelleme) ve react-native-starship (kablosuz deploy) paketleri VAR. import { LivePatch } from 'react-native-livepatch' ile LivePatch.configure + sync() kullanılabilir. Bu paketlerin modüllerine kendi istediğin gibi import yapabilirsin.
 - Görev bir "altyapı"/"modül" ise production dosyalarının TAMAMINI tek seferde üret (servis, tipler, store). Import ettiğin her dosyayı mutlaka create et, eksik bırakma.
 - Veri ekleme görevlerinde (kelime, soru, kategori): MEVCUT veri formatına ve seviye/bağlama uygun, dilbilgisi doğru, gerçekçi ve kullanışlı içerik üret. Kaliteyi düşürme, tekrara düşme.
 - Verilen "WEB ARAŞTIRMASI" bölümündeki bilgileri görevi yaparken dikkate al.

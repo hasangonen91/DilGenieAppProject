@@ -1,0 +1,40 @@
+name: LivePatch Push
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  push-update:
+    name: JS guncellemesi LivePatch ile yayinla
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Bagimliliklar
+        run: npm install --legacy-peer-deps
+
+      - name: LivePatch bundle uret ve GitHub Releases'e yukle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          npx livepatch push --upload github --repo "${{ github.repository }}"
+
+      - name: Son commit'e durum yorumu
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          BODY="Aninda JS guncellemesi LivePatch ile yayinlandi (merkez: [Run](${RUN_URL})). Telefondaki uygulama bir sonraki acilista kendini gunceller."
+          gh api -X POST "repos/${{ github.repository }}/commits/${{ github.sha }}/comments" \
+            -f body="$BODY" 2>/dev/null || true
