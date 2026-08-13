@@ -70,6 +70,80 @@ const data = {
         },
       ],
     },
+    family: {
+      en: 'Family',
+      tr: 'Aile',
+      words: [
+        {
+          key: 6,
+          en: 'Mother',
+          tr: 'Anne',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 7,
+          en: 'Father',
+          tr: 'Baba',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 8,
+          en: 'Sister',
+          tr: 'Kız kardeş',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 9,
+          en: 'Brother',
+          tr: 'Erkek kardeş',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 10,
+          en: 'Grandmother',
+          tr: 'Büyükanne',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 11,
+          en: 'Grandfather',
+          tr: 'Dede',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+      ],
+      example_sentences: [
+        {
+          key: 1,
+          en: 'My mother is a teacher.',
+          tr: 'Annemi bir öğretmen.',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 2,
+          en: 'I visit my grandparents every weekend.',
+          tr: 'Her hafta sonu dedem ve büyükanemi ziyaret ederim.',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+      ],
+      questions: [
+        {
+          key: 1,
+          question_en: "What do you call your mother's sister?",
+          question_tr: 'Amcanın kız kardeşi ne denir?',
+          answer_en: 'Aunt',
+          answer_tr: 'Hala',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 2,
+          question_en: "Who is your father's father?",
+          question_tr: 'Babanın babası kimdir?',
+          answer_en: 'Grandfather',
+          answer_tr: 'Dede',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+      ],
+    },
   },
 };
 
