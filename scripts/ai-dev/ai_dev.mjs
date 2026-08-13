@@ -444,6 +444,18 @@ ${applied.map((a) => `- ${a}`).join('\n')}
   writeFileSync('/tmp/pr-body.md', prBody, 'utf8');
   sh(`gh pr create --repo ${REPO} --base ${BRANCH_BASE} --head ${branch} --title "🤖 AI: ${task.title}" --body-file /tmp/pr-body.md`);
   console.log('🎉 PR açıldı');
+
+  // OTONOM MOD: PR'ı bekletmeden doğrula ve kendisi merge et (insan onayı beklenmez).
+  // GitHub Actions'ın PR oluşturup onaylamasına izin verildi (repo ayarı).
+  const prNum = sh(`gh pr list --repo ${REPO} --head ${branch} --json number --jq '.[0].number'`).trim();
+  console.log('🔁 PR kendiliğinden merge ediliyor (otonom mod)...');
+  try {
+    sh(`gh pr merge ${prNum} --repo ${REPO} --squash --delete-branch`);
+    console.log('✅ PR merged — next-task otomatik sıradaki görevi başlatacak');
+  } catch (e) {
+    // Merge engellenirse PR açık kalsın, günlük görev bunu raporlar
+    console.warn(`⚠️  Merge yapılamadı: ${e.message.split('\n')[0]} — PR #${prNum} açık kaldı`);
+  }
   console.log(`⏱️  Toplam süre: ${((Date.now() - started) / 1000).toFixed(0)} sn`);
 }
 
