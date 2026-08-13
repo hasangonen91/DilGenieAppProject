@@ -5,6 +5,10 @@
 > Hatasız merge edilen görevler `- [x]` işaretlenip bir sonraki göreve geçilir.
 > Görev eklerken formatı bozma, başına/kategorisini koru.
 
+## Öncelikli (Kullanıcı Deneyimi)
+
+- [ ] **Hızlı Giriş (Login Yenileme)** — `src/pages/Start/Auth/Login/index.tsx` ve `src/pages/Start/Auth/Register/index.tsx` dosyalarını baştan sona yenile: (1) Giriş ekranına **"Google ile Devam Et"** butonunu çalışır hale getir (mevcut `GoogleSvg` asset'i var, Firebase `signInWithCredential` + GoogleSignin entegrasyonu planı yaz, paket kurulumu gerekiyorsa kodu ekle ama `package.json`'a zorunlu eklemeler için yorum bırak); (2) **auto-login**: kullanıcı session'ı varsa login ekranında 0.5 sn beklemeden direkt `BottomTab`'e geç, mevcut `checkUserSession`'ı hızlandır; (3) **misafir girişi**: "Daha sonra" / misafir olarak devam butonu ekle, `uid: 'guest'` ile app'i açtırsın. Mevcut tema/stili koru, `styles.tsx`'i yeniden kullan.
+
 ## Veri Genişletme (Kolay — modelin kesin yapabileceği)
 
 - [x] **B1 Kelime Verisi: Yeni Kategori Ekle (family)** — `src/pages/Vocabulary/B1/data.tsx` dosyasındaki `vocabulary` objesine `greetings` ile aynı formatta yeni bir `family` kategorisi ekle (`en`, `tr`, `words` dizisinde en az 6 `{key, en, tr, image}`, `example_sentences` en az 2, `questions` en az 2). `key` numaralarını greetings'ten sonra devam ettir (5'ten itibaren). Mevcut yapıyı ve image URL'lerini birebir taklit et.
@@ -13,6 +17,11 @@
 - [ ] **Quiz Veri Seti Genişletme** — `src/pages/games/quiz/quizData.ts` dosyasındaki `quizData` dizisine 8 yeni başkent sorusu ekle (mevcut format: `{question, options[4], answer}`). `answer` değeri `options` dizisinde bulunmalı, sorular farklı ülkelerden olsun ve mevcutlarla tekrar olmasın.
 - [ ] **C1 Vocabulary Veri Genişletme** — `src/pages/Vocabulary/C1/data.tsx` dosyasındaki `greetings` kategorisinin `words` dizisine 5 yeni `{en, tr}` kelime ekle. `en` İngilizce, `tr` Türkçe, C1 seviyesine uygun olmalı. Mevcut formatı birebir takip et.
 - [ ] **Quiz liderData Genişletme** — `src/pages/games/quiz/leaderData.ts` dosyasındaki veri yapısını incele, `questions` veya `surveys` alanına 5 yeni kayıt ekle. Mevcut formatı takip et, sıra/kod numaralarını boşluk bırakmadan devam ettir.
+
+## Kod Kalitesi (Bot denetimi)
+
+- [ ] **Kod Hata Taraması (Round 1)** — Tüm `src/` klasörünü tara: (1) `console.log` ile kalmış debug kodlarını tespit et; (2) kullanılmayan import/state değişkenlerini bul; (3) `try/catch` içinde sessizce yutulan hataları işaretle; (4) `any` tip kullanımını azalt. Bulduğun hataları düzelt, özet raporu PR body'sinde ver. Küçük adımlı, güvenli düzeltmeler yap — davranışı değiştirme.
+- [ ] **Component Mimarisi İyileştirme** — `src/components/` klasörünü incele: (1) 2 dosyadan uzun olan bileşenleri küçük parçalara böl (örn. `GreetingsQuiz`, `TeachingPhase`); (2) tekrarlanan UI pattern'lerini (buton, kart, modal) ortak bileşene çıkar; (3) props tiplerini `interface` ile tanımla, `any` kullanma. Davranışı bozmadan yapısal iyileştirme yap, tüm import'ları güncelle.
 
 ## Oyun İyileştirmeleri (Orta)
 
