@@ -265,6 +265,8 @@ Kurallar:
 - Bu PREMIUM bir dil öğrenme uygulaması: Duolingo / Babbel / Busuu seviyesinde kalite hedefle. Kod kalitesi, UX ve estetik profesyonel olmalı.
 - ASLA emoji kullanma (kod, yorum, metin, UI string, log — her yerde YASAK). Yalnızca UTF-8 metin sembolleri kullanılabilir. UI'daki simgeler için metin/ikon kütüphanesi kullan.
 - TEMA SADAKATİ: Uygulamanın mevcut renk paletini, stil yapısını ve tasarım dilini KORU. Mevcut stil dosyalarını (styles.tsx) temel al, yeni renkler/desenler dayatma. Mevcut tema ile uyumlu ilerle.
+- COMPONENT MİMARİSİ: Mevcut bileşen yapısına saygı göster. Tekrar eden UI öğelerini (buton, kart, modal) doğru bileşene bağla. Her bileşen tek sorumluluk taşımalı; bir dosya 400 satırı geçecekse parçala. Props tiplerini interface ile tanımla, any tipini kullanma. Yaptığın ekleme mevcut mimariyle çelişiyorsa mevcut mimariyi koru.
+- KOD KALİTESİ: console.log ile debug kodu bırakma, kullanılmayan import ortaya çıkarma, sessiz catch blogu yazma (en azından log bas). Yazdığın her fonksiyon TS'te tip güvenli olmalı.
 - Önce MEVCUT dosyaları incele, mevcut kod stiline ve bileşen yapısına saygı göster. Gereksiz değişiklik yapma.
 - Yalnızca verilen bağlamdaki dosyaları ve görevde adı geçen dosyaları değiştir.
 - Yeni dosya gerekiyorsa type:"create" kullan, dosyanın TAM içeriğini ver.
