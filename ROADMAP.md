@@ -14,8 +14,6 @@
 ## Öncelikli (Kullanıcı Deneyimi)
 
 - [x] **Misafir Girişi Butonu** — `src/pages/Start/Auth/Login/index.tsx` dosyasının giriş formunun altına "Daha sonra" / "Misafir olarak devam et" butonu ekle. Butona basınca uygulama `uid: 'guest'` ile direkt ana ekrana (`BottomTab`) geçsin. Mevcut `login` fonksiyonundaki navigasyon mantığını takip et, `styles.tsx`'teki uygun stilini kullan. Sadece bu butonu ekle, başka şey değiştirme.
-- [ ] **Google İle Devam Et Butonu** — `src/pages/Start/Auth/Login/index.tsx` ve `src/pages/Start/Auth/Register/index.tsx` dosyalarında Firefox config'i olan `GoogleSvg` asset'ini kullanarak "Google ile Devam Et" butonunu görsel olarak ekle. Tıklama davranışı için Firebase `signInWithCredential` + `@react-native-google-signin/google-signin` import'larını hazırla (GoogleSignin.configure + signIn sonrası credential oluşturma kodunu yaz), ama butona basınca şimdilik uyarı göstersin (alert) — tam çalışan entegrasyon sonraki görevde.
-- [ ] **Auto-Login Hızlandırma** — `src/pages/Start/Auth/Login/index.tsx` dosyasındaki `checkUserSession` fonksiyonunu düzenle: kullanıcının kayıtlı session'ı varsa beklemeden direkt `BottomTab`'e yönlendirilsin. Mevcut `AsyncStorage` veri okuma dizisini en aza indir (tek seferde `MultiGet` kullan) — davranışı bozma, sadece hızlandır.
 
 ## Veri Genişletme (Kolay — modelin kesin yapabileceği)
 
@@ -51,3 +49,7 @@
 - [ ] **Hata Yakalama (Error Boundary)** — Uygulama genelinde crash yerine kullanıcıya hata ekranı göstersin diye global ErrorBoundary bileşeni ekle. Loglama için basit bir utility yaz.
 - [ ] **Firestore Servis Katmanı** — `src/services/firebase/firestoreService` benzeri servis katmanı oluştur: tüm istekleri tek yerde topla, hata yönetimini merkezileştir (try/catch + kullanıcı dostu hata mesajı). Mevcut ekranlardaki dağınık Firestore çağrılarını bu servise taşı.
 - [ ] **Test Dosyaları Ekleme** — `__tests__/` altına kritik utility fonksiyonları için unit testler ekle (örn. quiz skor hesaplama, çeviri yükleyici). Jest ile çalışmalı.
+## Ertele (Login/Entegrasyon — diğer görevler bitince)
+
+- [ ] **Google İle Devam Et Butonu** — `src/pages/Start/Auth/Login/index.tsx` ve `src/pages/Start/Auth/Register/index.tsx` dosyalarında Firefox config'i olan `GoogleSvg` asset'ini kullanarak "Google ile Devam Et" butonunu görsel olarak ekle. Tıklama davranışı için Firebase `signInWithCredential` + `@react-native-google-signin/google-signin` import'larını hazırla (GoogleSignin.configure + signIn sonrası credential oluşturma kodunu yaz), ama butona basınca şimdilik uyarı göstersin (alert) — tam çalışan entegrasyon sonraki görevde.
+- [ ] **Auto-Login Hızlandırma** — `src/pages/Start/Auth/Login/index.tsx` dosyasındaki `checkUserSession` fonksiyonunu düzenle: kullanıcının kayıtlı session'ı varsa beklemeden direkt `BottomTab`'e yönlendirilsin. Mevcut `AsyncStorage` veri okuma dizisini en aza indir (tek seferde `MultiGet` kullan) — davranışı bozma, sadece hızlandır.
