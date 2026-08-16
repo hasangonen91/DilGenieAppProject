@@ -99,4 +99,44 @@ export const quizData = [
     options: ['Bangkok', 'Chiang Mai', 'Phuket', 'Pattaya'],
     answer: 'Bangkok',
   },
+  {
+    question: 'What is the capital of the United States?',
+    options: ['New York', 'Los Angeles', 'Washington, D.C.', 'Chicago'],
+    answer: 'Washington, D.C.',
+  },
+  {
+    question: 'What is the capital of the United Kingdom?',
+    options: ['Manchester', 'London', 'Birmingham', 'Edinburgh'],
+    answer: 'London',
+  },
+  {
+    question: 'What is the capital of Italy?',
+    options: ['Milan', 'Rome', 'Venice', 'Naples'],
+    answer: 'Rome',
+  },
+  {
+    question: 'What is the capital of Spain?',
+    options: ['Barcelona', 'Madrid', 'Seville', 'Valencia'],
+    answer: 'Madrid',
+  },
+  {
+    question: 'What is the capital of Australia?',
+    options: ['Sydney', 'Melbourne', 'Canberra', 'Brisbane'],
+    answer: 'Canberra',
+  },
+  {
+    question: 'What is the capital of India?',
+    options: ['Mumbai', 'New Delhi', 'Bangalore', 'Kolkata'],
+    answer: 'New Delhi',
+  },
+  {
+    question: 'What is the capital of Russia?',
+    options: ['Saint Petersburg', 'Moscow', 'Kazan', 'Vladivostok'],
+    answer: 'Moscow',
+  },
+  {
+    question: 'What is the capital of Greece?',
+    options: ['Thessaloniki', 'Patras', 'Heraklion', 'Athens'],
+    answer: 'Athens',
+  },
 ];
