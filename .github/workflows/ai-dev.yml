@@ -2,8 +2,8 @@ name: AI Dev Bot
 
 on:
   schedule:
-    # Her gece Türkiye saatiyle 06:00'da (UTC 03:00)
-    - cron: '0 3 * * *'
+    # Günde 4 kez (her 6 saatte bir) çalışır — geceleri dahil sürekli üretim
+    - cron: '0 */6 * * *'
   workflow_dispatch: # Manuel tetikleme için "Run workflow" butonu
 
 permissions:
