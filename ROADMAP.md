@@ -5,6 +5,8 @@
 > Hatasız merge edilen görevler `- [x]` işaretlenip bir sonraki göreve geçilir.
 > Görev eklerken formatı bozma, başına/kategorisini koru.
 
+- [ ] **Görev: Quiz ekranina skor tablosu ekle** — Kullanıcının Telegram üzerinden istediği geliştirme. Mevcut mimariye uygun, küçük ve test edilebilir ol.
+
 ## Öncelikli (Kullanıcı Deneyimi)
 
 - [x] **Misafir Girişi Butonu** — `src/pages/Start/Auth/Login/index.tsx` dosyasının giriş formunun altına "Daha sonra" / "Misafir olarak devam et" butonu ekle. Butona basınca uygulama `uid: 'guest'` ile direkt ana ekrana (`BottomTab`) geçsin. Mevcut `login` fonksiyonundaki navigasyon mantığını takip et, `styles.tsx`'teki uygun stilini kullan. Sadece bu butonu ekle, başka şey değiştirme.
