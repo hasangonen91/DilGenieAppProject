@@ -190,6 +190,16 @@ const Login = () => {
               <GoogleSvg width={24} height={24} />
               <Text style={styles.googleButtonText}>Login with Google</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('BottomTab', {
+                  screen: 'Home',
+                  params: {uid: 'guest', displayName: null},
+                })
+              }
+              style={styles.button}>
+              <Text style={styles.buttonText}>Misafir olarak devam et</Text>
+            </TouchableOpacity>
           </View>
         </SafeAreaView>
       </ScrollView>
