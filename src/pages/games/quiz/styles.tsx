@@ -200,6 +200,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  scoreSummary: {
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  scoreSummaryTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  scoreSummaryBest: {
+    fontSize: 16,
+    color: '#666',
+    marginTop: 2,
+  },
+  scoreSummaryRow: {
+    fontSize: 14,
+    color: '#888',
+    marginTop: 4,
+  },
 });
 
 export default styles;
