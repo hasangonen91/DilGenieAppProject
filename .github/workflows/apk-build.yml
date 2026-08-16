@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build-apk:
-    name: Debug APK uret
+    name: Release APK uret
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -33,9 +33,9 @@ jobs:
       - name: Bagimliliklari kur
         run: npm install --legacy-peer-deps
 
-      - name: Debug APK derle
+      - name: Release APK derle
         working-directory: android
-        run: ./gradlew assembleDebug --no-daemon
+        run: ./gradlew assembleRelease --no-daemon
         env:
           ORG_GRADLE_PROJECT_newArchEnabled: "false"
 
@@ -44,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dilgenie-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: android/app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
 
       - name: En son commit'e APK durum yorumu bırak
@@ -55,7 +55,7 @@ jobs:
           SHA="${{ github.sha }}"
           RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           BODY="## APK Hazir - Test Et!
-          En son AI gelistirmesi ile debug APK derlendi.
+          En son AI gelistirmesi ile release APK derlendi.
           Artifact su sayfadan indir: [Actions - dilgenie-apk](${RUN_URL})"
           gh api -X POST "repos/${{ github.repository }}/commits/${SHA}/comments" \
             -f body="$BODY" 2>/dev/null || true
@@ -64,4 +64,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release upload apk-latest android/app/build/outputs/apk/debug/app-debug.apk --repo ${{ github.repository }} --clobber
+          gh release upload apk-latest android/app/build/outputs/apk/release/app-release.apk --repo ${{ github.repository }} --clobber
