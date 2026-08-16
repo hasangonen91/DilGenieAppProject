@@ -64,6 +64,12 @@ const data: DataItem[] = [
     terms: '30 terms',
     screenName: 'CrossWordPuzzle',
   },
+  {
+    id: 'Video Listening',
+    imageName: 'images/game/video.png',
+    terms: 'Video lesson',
+    screenName: 'VideoListening',
+  },
 ];
 
 const PlayGround: React.FC = () => {

@@ -22,6 +22,7 @@ import {
   C2level,
 } from '../pages/Vocabulary';
 import DragDropQuiz from '../pages/Vocabulary/A1/DragDropQuiz/DragDropQuiz';
+import VideoListening from '../components/Videolistening/VideoListening';
 import {ApplicationStackParamList} from '../types/navigation';
 import BottomTab from './Bottom/BottomTab';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -106,6 +107,10 @@ function ApplicationNavigator() {
         <Stack.Screen name={ScreenNames.B2level} component={B2level} />
         <Stack.Screen name={ScreenNames.C1level} component={C1level} />
         <Stack.Screen name={ScreenNames.C2level} component={C2level} />
+        <Stack.Screen
+          name={ScreenNames.VideoListening}
+          component={VideoListening}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -70,6 +70,40 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#2C3E50',
+    marginTop: 10,
+  },
+  categoryScreen: {
+    justifyContent: 'flex-start',
+    paddingTop: 20,
+    width: width * 0.9,
+  },
+  categoryList: {
+    paddingBottom: 30,
+  },
+  categoryButton: {
+    backgroundColor: '#3498DB',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  categoryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+  categoryCount: {
+    color: '#EAF2F8',
+    fontSize: 13,
+  },
+  backText: {
+    fontSize: 15,
+    color: '#3498DB',
+    fontWeight: '600',
+    marginBottom: 5,
+    alignSelf: 'flex-start',
   },
   buttonContainer: {
     marginTop: 20,

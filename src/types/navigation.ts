@@ -26,6 +26,7 @@ export type ApplicationStackParamList = {
   B2level: undefined;
   C1level: undefined;
   C2level: undefined;
+  VideoListening: undefined;
 };
 
 export type NavigationProp<T extends keyof ApplicationStackParamList> =

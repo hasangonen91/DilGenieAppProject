@@ -12,13 +12,9 @@ export interface CategoryData {
   questions: Question[];
 }
 
+// Kategoriler dinamik olarak dilgenie repo'sundan gelir (A1ListeningData.json).
+// [key: string] index signature sayesinde yeni kategoriler (animals, food_drinks...)
+// ekstra tip tanımı gerektirmeden çalışır.
 export interface ListeningData {
-  greetings: CategoryData;
-  family: CategoryData;
-  months: CategoryData;
-  years: CategoryData;
-  colors_numbers_shapes: CategoryData;
-  days: CategoryData;
-  places: CategoryData;
-  directions: CategoryData;
+  [key: string]: CategoryData;
 }

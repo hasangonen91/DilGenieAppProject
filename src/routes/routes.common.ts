@@ -23,4 +23,5 @@ export enum ScreenNames {
   B2level = 'B2level',
   C1level = 'C1level',
   C2level = 'C2level',
+  VideoListening = 'VideoListening',
 }
