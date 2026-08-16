@@ -417,8 +417,10 @@ Cevap JSON formatında olmalı:
 
   // Commit + push + PR
   // Git identity (GitHub Actions runner'da ayarlı olmayabilir)
-  sh(`git config user.email "ai-dev-bot@users.noreply.github.com"`);
-  sh(`git config user.name "DilGenie AI Dev Bot"`);
+  // NOT: 'ai-dev-bot@users.noreply.github.com' EMAIL'i GitHub'da TANIMLI bir AI-DEV-BOT hesabına ait!
+  // Yabancı hesabın commit'leri gibi görünmesin diye hasangonen91 hesabının noreply emailini kullan.
+  sh(`git config user.email "45069041+hasangonen91@users.noreply.github.com"`);
+  sh(`git config user.name "HASAN GÖNEN"`);
   const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
   const branch = `ai/dev-${date}`;
   const existing = sh(`git branch --list ${branch}`);

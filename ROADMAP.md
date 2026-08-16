@@ -7,7 +7,9 @@
 
 ## Öncelikli (Kullanıcı Deneyimi)
 
-- [ ] **Hızlı Giriş (Login Yenileme)** — `src/pages/Start/Auth/Login/index.tsx` ve `src/pages/Start/Auth/Register/index.tsx` dosyalarını baştan sona yenile: (1) Giriş ekranına **"Google ile Devam Et"** butonunu çalışır hale getir (mevcut `GoogleSvg` asset'i var, Firebase `signInWithCredential` + GoogleSignin entegrasyonu planı yaz); (2) **auto-login**: kullanıcı session'ı varsa login ekranında 0.5 sn beklemeden direkt `BottomTab`'e geç, mevcut `checkUserSession`'ı hızlandır; (3) **misafir girişi**: "Daha sonra" / misafir olarak devam butonu ekle, `uid: 'guest'` ile app'i açtırsın. Mevcut tema/stili koru, `styles.tsx`'i yeniden kullan.
+- [ ] **Misafir Girişi Butonu** — `src/pages/Start/Auth/Login/index.tsx` dosyasının giriş formunun altına "Daha sonra" / "Misafir olarak devam et" butonu ekle. Butona basınca uygulama `uid: 'guest'` ile direkt ana ekrana (`BottomTab`) geçsin. Mevcut `login` fonksiyonundaki navigasyon mantığını takip et, `styles.tsx`'teki uygun stilini kullan. Sadece bu butonu ekle, başka şey değiştirme.
+- [ ] **Google İle Devam Et Butonu** — `src/pages/Start/Auth/Login/index.tsx` ve `src/pages/Start/Auth/Register/index.tsx` dosyalarında Firefox config'i olan `GoogleSvg` asset'ini kullanarak "Google ile Devam Et" butonunu görsel olarak ekle. Tıklama davranışı için Firebase `signInWithCredential` + `@react-native-google-signin/google-signin` import'larını hazırla (GoogleSignin.configure + signIn sonrası credential oluşturma kodunu yaz), ama butona basınca şimdilik uyarı göstersin (alert) — tam çalışan entegrasyon sonraki görevde.
+- [ ] **Auto-Login Hızlandırma** — `src/pages/Start/Auth/Login/index.tsx` dosyasındaki `checkUserSession` fonksiyonunu düzenle: kullanıcının kayıtlı session'ı varsa beklemeden direkt `BottomTab`'e yönlendirilsin. Mevcut `AsyncStorage` veri okuma dizisini en aza indir (tek seferde `MultiGet` kullan) — davranışı bozma, sadece hızlandır.
 
 ## Veri Genişletme (Kolay — modelin kesin yapabileceği)
 
