@@ -178,11 +178,31 @@ function applyEdits(edits) {
       }
       const cur = read(e.path);
       if (cur === null) throw new Error(`edit ${e.path}: dosya yok`);
-      const count = cur.split(oldText).length - 1;
+      let count = cur.split(oldText).length - 1;
+      let actualText = oldText;
       if (count !== 1) {
-        throw new Error(`edit ${e.path}: 'old' ${count} kez eşleşti (1 olmalı). Model çıktısı hatalı.`);
+        // Fuzzy fallback: whitespace farklarını yok say (satır içi boşlukları ve satır sonlarını normalize et)
+        const norm = (s) => s.replace(/\s+/g, ' ').trim();
+        const nOld = norm(oldText), nCur = norm(cur);
+        const idx = nCur.indexOf(nOld);
+        if (idx !== -1) {
+          // Normalize edilmiş konumdan gerçek bloğu çıkar (uzunluk tahmini ile)
+          const startReal = cur.slice(0, idx).length;
+          const endReal = cur.indexOf('\n', startReal + oldText.length * 2);
+          const realBlock = cur.slice(startReal, endReal === -1 ? undefined : endReal);
+          const realCount = cur.split(realBlock).length - 1;
+          if (realCount === 1) {
+            count = 1;
+            actualText = realBlock;
+          }
+        }
       }
-      writeFileSync(e.path, cur.replace(oldText, newText));
+      if (count !== 1) {
+        const snippet = oldText.slice(0, 80).replace(/\n/g, ' ');
+        const nearMatches = cur.split('\n').filter((l) => l.trim() && snippet.split(' ').filter((w) => w.length > 3).every((w) => l.includes(w))).slice(0, 3).join(' || ');
+        throw new Error(`edit ${e.path}: 'old' ${count} kez eşleşti (1 olmalı). Aranan: "${snippet}". Dosyadaki benzer satırlar: ${nearMatches || '(yok — model yanlış dosya versiyonu kullanıyor olabilir, old alanını dosyanın en son halinden birebir kopyala)'}`);
+      }
+      writeFileSync(e.path, cur.replace(actualText, newText));
       applied.push(`~ ${e.path}`);
     } else {
       throw new Error(`bilinmeyen edit tipi: ${JSON.stringify(e).slice(0, 120)}`);
@@ -271,6 +291,7 @@ Kurallar:
 - Yalnızca verilen bağlamdaki dosyaları ve görevde adı geçen dosyaları değiştir.
 - Yeni dosya gerekiyorsa type:"create" kullan, dosyanın TAM içeriğini ver.
 - Mevcut dosyayı değiştiriyorsan type:"edit" kullan; "old" alanı dosyada BİREBİR ve TAM 1 kez olmalı, "new" ile değiştir.
+- EDIT STRATEJİSİ (KRİTİK): "old" seçerken dosyadan BİREBİR kopyaladığın, benzersiz ve KISA (1-10 satır) bir blok seç. Sonunucu eklemek istiyorsan "old" olarak dosyanın SON 3 satırını (örn. '});' ve 'export default styles;') birebir ver, "new" olarak aynı blok + senin eklemeni ver. Asla uzun bloklar kopyalama (10+ satır), asla tahmin üretme, asla boşluk/satır farkı değiştirme.
 - Kod yazarken proje stilini takip et (function component, .tsx uzantı, mevcut import düzeni).
 - Eklediğin her şey TypeScript'te derlenmeli ve eslint kurallarına uymalı.
 - Asla App.tsx'teki köklü navigasyonu bozma, yeni ekranı mevcut navigasyon yapısına uygun ekle.
