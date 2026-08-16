@@ -52,6 +52,24 @@
 - [ ] **Hata Yakalama (Error Boundary)** — Uygulama genelinde crash yerine kullanıcıya hata ekranı göstersin diye global ErrorBoundary bileşeni ekle. Loglama için basit bir utility yaz.
 - [ ] **Firestore Servis Katmanı** — `src/services/firebase/firestoreService` benzeri servis katmanı oluştur: tüm istekleri tek yerde topla, hata yönetimini merkezileştir (try/catch + kullanıcı dostu hata mesajı). Mevcut ekranlardaki dağınık Firestore çağrılarını bu servise taşı.
 - [ ] **Test Dosyaları Ekleme** — `__tests__/` altına kritik utility fonksiyonları için unit testler ekle (örn. quiz skor hesaplama, çeviri yükleyici). Jest ile çalışmalı.
+
+## Görsel Zenginleştirme (Premium Uygulama Hissi)
+- [ ] **Kelime Görselleri: Kendi Asset Yönetimi** — `src/assets/images/vocabulary/` klasörü oluştur. Mevcut `random-image-pepebigotes.vercel.app` linkleri yerine, her kategori için uygun (CC0/royalty-free) görsel asset ekle. `scripts/cefr/cefr_words.json` kelimelerine göre: her kelime için uygun görsel URL'i veya yerel dosya yolu üret. Görseller `https://images.unsplash.com` veya `https://cdn.jsdelivr.net/gh/` üzerinden sabit linklerle eklensin (hotlink korumasız). 10 kategori × 6 kelime = 60 görsel başlangıç.
+- [ ] **Oyun İçin Sprite/Asset Paketi** — `src/assets/images/games/` klasörü. Hangman, Quiz, FlappyBird, WordCompletion oyunları için uygun görseller (karakter, arka plan, buton, ikon). Format: `.webp` veya `.png`, sabit URL. Her oyun için en az 3 asset.
+- [ ] **Splash Screen & App İkonu** — `src/assets/images/app/` klasörü: `splash.png` (1080x1920), `icon.png` (1024x1024), `adaptive-icon.png`. Renk paleti uygulamanın temasıyla tutarlı. Expo/config plugin ile `app.json`'a ekle.
+- [ ] **Kategori Kapak Görselleri** — Her seviye (A1-C2) ana sayfada gösterilecek kapak görseli. `src/assets/images/levels/A1.png` ... `C2.png`. Tema: renkli, minimal, öğrenme hissiyatı veren.
+
+## Yeni Oyun Geliştirme (Core Gameplay)
+- [ ] **Memory Game (Kart Eşleştirme)** — `src/pages/games/memory/` klasörü. 4x4 grid, kelime-çeviri eşleştirme. CEFR seviyesine göre kart sayısı (A1: 8 çift, C2: 16 çift). `scripts/cefr/cefr_words.json`'dan seviyeye uygun kelimeleri çek. Skor + süre + hamle sayısı. `Animated` API ile kart çevirme animasyonu.
+- [ ] **Word Builder (Harf Sıralama)** — `src/pages/games/wordbuilder/` klasörü. Verilen karışık harflerden kelime oluştur. CEFR seviyesine göre kelime uzunluğu (A1: 3-4 harf, C2: 7-9 harf). IPucu: kelime türü + tanım. Süre sayacı + puan.
+- [ ] **Listening Challenge (Sesli Kelime Tanıma)** — `src/pages/games/listening/` klasörü. Web Speech API (veya expo-speech) ile kelime oku, kullanıcı 4 seçenekten doğru görseli/çeviriyi seçsin. CEFR seviyesine göre kelime havuzu. Skor + streaks.
+- [ ] **Sentence Scramble (Cümle Kurma)** — `src/pages/games/sentencescramble/` klasörü. Karışık kelimelerden doğru cümle oluştur. `scripts/cefr/cefr_words.json`'dan `example_sentences` veya basit şablon cümleler. Seviye: A1 (SVO), B2 (karmaşık).
+
+## Mevcut Oyun İyileştirmeleri (Polishing)
+- [ ] **Hangman: Animasyonlu Adam Asma** — Mevcut `src/pages/games/hangman/Hangman.tsx` de: yanlış harf başına vücut parçası çizimi (canvas/svg), sonucunda tam adam asma animasyonu. `styles.tsx`'e ekle.
+- [ ] **Quiz: Zamanlayıcı Görsel Geri Bildirim** — `src/pages/games/quiz/Quiz.tsx`: kalan süre < 5sn ise daire kırmızıya dönsün, pulse animasyonu. Doğru/yanlış anında yeşil/kırmızı flash + ses (expo-av).
+- [ ] **FlappyBird: Seviye Temalı Engeller** — `src/pages/games/flappybird/`: Engeller kelime kartı şeklinde, geçince kelime + çeviri göster. Yüksek skor AsyncStorage.
+- [ ] **WordCompletion: Çoklu Seviye Desteği** — `src/pages/games/wordcompletion/WordCompletion.tsx`: CEFR seviyesi seçimi (A1-C2), seviyeye göre kelime havuzu (`scripts/cefr/cefr_words.json`).
 ## Ertele (Login/Entegrasyon — diğer görevler bitince)
 
 - [ ] **Google İle Devam Et Butonu** — `src/pages/Start/Auth/Login/index.tsx` ve `src/pages/Start/Auth/Register/index.tsx` dosyalarında Firefox config'i olan `GoogleSvg` asset'ini kullanarak "Google ile Devam Et" butonunu görsel olarak ekle. Tıklama davranışı için Firebase `signInWithCredential` + `@react-native-google-signin/google-signin` import'larını hazırla (GoogleSignin.configure + signIn sonrası credential oluşturma kodunu yaz), ama butona basınca şimdilik uyarı göstersin (alert) — tam çalışan entegrasyon sonraki görevde.
