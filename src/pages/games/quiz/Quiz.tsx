@@ -10,6 +10,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {fetchCountriesData} from '../../../services/api/base';
+import {leaderData} from './leaderData';
 import StartGameModal from '../../../components/modal/GameModal/StartModal';
 import GameOverModal from '../../../components/modal/GameModal/GameOverModal';
 import styles from './styles';
@@ -447,6 +448,18 @@ const QuizScreen: React.FC = () => {
           <Text style={styles.powerUpText}>100</Text>
         </TouchableOpacity>
       </View>
+
+      {score > 0 && showScore && (
+        <View style={styles.scoreSummary}>
+          <Text style={styles.scoreSummaryTitle}>Skorun: {score}</Text>
+          <Text style={styles.scoreSummaryBest}>En İyi: {maxScore}</Text>
+          {leaderData.slice(0, 3).map(item => (
+            <Text key={item.name} style={styles.scoreSummaryRow}>
+              {item.name} - {item.score}
+            </Text>
+          ))}
+        </View>
+      )}
 
       <GameOverModal
         visible={gameOverModalVisible}

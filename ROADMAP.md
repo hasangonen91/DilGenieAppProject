@@ -5,7 +5,7 @@
 > Hatasız merge edilen görevler `- [x]` işaretlenip bir sonraki göreve geçilir.
 > Görev eklerken formatı bozma, başına/kategorisini koru.
 
-- [ ] **Quiz Sonuç Skor Özeti** — `src/pages/games/quiz/Quiz.tsx` dosyasında `<GameOverModal` render edilmeden hemen ÖNCE (dosya sonuna doğru) bir skor özeti görünümü ekle.
+- [x] **Quiz Sonuç Skor Özeti** — `src/pages/games/quiz/Quiz.tsx` dosyasında `<GameOverModal` render edilmeden hemen ÖNCE (dosya sonuna doğru) bir skor özeti görünümü ekle.
   - Mevcut state kavramları: `score`, `maxScore`, `showScore`. `score > 0 && showScore` koşuluyla göster. `styles.tsx` içindeki mevcut stil kavramlarına uy, yeni stil tanımlaman gerekirse `styles.tsx` dosyasına `scoreSummary` adında yeni stil ekle.
   - Görünüm: `Skorun: {score}` ve `En İyi: {maxScore}` yazıları ve altına `src/pages/games/quiz/leaderData.ts` dosyasındaki `leaderData` dizisinin ilk 3 öğesini `name - score` olarak listele.
   - `import { leaderData } from './leaderData';` ifadesini Quiz.tsx'e ekle. Başka hiçbir dosyayı değiştirme, sadece Quiz.tsx + styles.tsx.
