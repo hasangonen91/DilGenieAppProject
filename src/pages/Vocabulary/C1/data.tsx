@@ -209,4 +209,194 @@ interface A1LevelData {
     };
   };
 }
-export default A1LevelData;
+export const C1Data: A1LevelData = {
+  vocabulary: {
+    en: 'Vocabulary',
+    tr: 'Kelime',
+    greetings: {
+      en: 'Greetings',
+      tr: 'Selamlar',
+      words: [
+        {en: 'Hello', tr: 'Merhaba'},
+        {en: 'Goodbye', tr: 'Güle güle'},
+        {en: 'Please', tr: 'Lütfen'},
+        {en: 'Thank you', tr: 'Teşekkür ederim'},
+        {en: 'Sorry', tr: 'Üzgünüm'},
+        {en: 'Exterior', tr: 'Dış cephe'},
+        {en: 'Cloak', tr: 'Paletö'},
+        {en: 'Timid', tr: 'Korkak'},
+        {en: 'Reluctantly', tr: 'İsteiksizce'},
+        {en: 'Concur', tr: 'Katılırmak'},
+      ],
+      example_sentences: [
+        {
+          en: 'The exterior of the building was recently renovated.',
+          tr: 'Bina dış cepheleri récemment yenilendi.',
+        },
+        {
+          en: 'She wore a warm cloak during the winter hike.',
+          tr: 'Kış yürüyüşünde sıcak bir paletö giydi.',
+        },
+        {
+          en: 'He felt timid speaking in front of the large audience.',
+          tr: 'Büyük bir önönün önünde konuşurken korkak hissetti.',
+        },
+        {
+          en: 'She reluctantly agreed to help with the project.',
+          tr: 'Projeyle yardım etmeyi isteksizce kabul etti.',
+        },
+        {
+          en: 'The committee members concur with the proposed changes.',
+          tr: 'Komite üyeleri önerilen değişikliklerle katılırmakta.',
+        },
+      ],
+    },
+    family: {en: 'Family', tr: 'Aile', words: [], example_sentences: []},
+    time_dates: {
+      en: 'Time & Dates',
+      tr: 'Zaman ve Tarihler',
+      days: {en: 'Days', tr: 'Günler', words: []},
+      months: {en: 'Months', tr: 'Aylar', words: []},
+      example_sentences: [],
+    },
+    places_directions: {
+      en: 'Places & Directions',
+      tr: 'Yerler ve Yönler',
+      words: [],
+      example_sentences: [],
+    },
+    food_drinks: {
+      en: 'Food & Drinks',
+      tr: 'Yiyecek ve İçecek',
+      words: [],
+      example_sentences: [],
+    },
+    colors_numbers_shapes: {
+      en: 'Colors, Numbers & Shapes',
+      tr: 'Renkler, Sayılar ve Şekiller',
+      colors: {en: 'Colors', tr: 'Renkler', words: []},
+      numbers: {en: 'Numbers', tr: 'Sayılar', words: []},
+      shapes: {en: 'Shapes', tr: 'Şekiller', words: []},
+      example_sentences: [],
+    },
+  },
+  grammar: {
+    en: 'Grammar',
+    tr: 'Gramer',
+    pronouns: {
+      en: 'Pronouns',
+      tr: 'Zamirler',
+      words: [],
+      example_sentences: [],
+    },
+    basic_verbs: {
+      en: 'Basic Verbs',
+      tr: 'Temel Fiiller',
+      words: [],
+      example_sentences: [],
+    },
+    adjectives_adverbs: {
+      en: 'Adjectives & Adverbs',
+      tr: 'Sıfatlar ve Zarflar',
+      adjectives: {en: 'Adjectives', tr: 'Sıfatlar', words: []},
+      adverbs: {en: 'Adverbs', tr: 'Zarflar', words: []},
+      example_sentences: [],
+    },
+    sentence_structures: {
+      en: 'Sentence Structures',
+      tr: 'Cümle Yapıları',
+      positive: {
+        en: 'Positive',
+        tr: 'Olumlu',
+        structure: {en: 'Subject + Verb + Object', tr: 'Özne + Fiil + Nesne'},
+        example: {en: 'She reads books.', tr: 'O kitaplar okur.'},
+      },
+      negative: {
+        en: 'Negative',
+        tr: 'Olumsuz',
+        structure: {
+          en: 'Subject + do/does not + Verb + Object',
+          tr: 'Özne + does/do not + Fiil + Nesne',
+        },
+        example: {en: 'She does not read books.', tr: 'O kitaplar okumaz.'},
+      },
+      question: {
+        en: 'Question',
+        tr: 'Soru',
+        structure: {
+          en: 'Do/Does + Subject + Verb + Object + ?',
+          tr: 'Does/Do + Özne + Fiil + Nesne + ?',
+        },
+        example: {en: 'Does she read books?', tr: 'O kitaplar okur mu?'},
+      },
+    },
+    present_tense: {
+      en: 'Present Tense',
+      tr: 'Şimdiki Zaman',
+      simple_present: {
+        en: 'Simple Present',
+        tr: 'Basit Şimdiki',
+        structure: {
+          en: 'Subject + Verb (base form) + Object',
+          tr: 'Özne + Fiil (kök) + Nesne',
+        },
+        example: {en: 'He works at a bank.', tr: 'O bir bankada çalışır.'},
+      },
+      present_continuous: {
+        en: 'Present Continuous',
+        tr: 'Şimdiki Süreklı',
+        structure: {
+          en: 'Subject + am/is/are + Verb-ing + Object',
+          tr: 'Özne + am/is/are + Fiil-ing + Nesne',
+        },
+        example: {en: 'They are playing football.', tr: 'Olar futbol oynuyor.'},
+      },
+    },
+    prepositions: {
+      en: 'Prepositions',
+      tr: 'Edatlar',
+      words: [],
+      example_sentences: [],
+    },
+  },
+  speaking_listening: {
+    en: 'Speaking & Listening',
+    tr: 'Konuşma & Dinleme',
+    listening_exercises: {
+      en: 'Listening Exercises',
+      tr: 'Dinleme Alıştırmaları',
+      exercises: [],
+    },
+    speaking_practices: {
+      en: 'Speaking Practices',
+      tr: 'Konuşma Pratikleri',
+      practices: [],
+    },
+  },
+  reading_writing: {
+    en: 'Reading & Writing',
+    tr: 'Okuma & Yazma',
+    reading_texts: {en: 'Reading Texts', tr: 'Okuma Metinleri', texts: []},
+    writing_exercises: {
+      en: 'Writing Exercises',
+      tr: 'Yazma Alıştırmaları',
+      exercises: [],
+    },
+  },
+  interactive_activities_games: {
+    en: 'Interactive Activities & Games',
+    tr: 'Etkileşimli Etkinlikler & Oyunlar',
+    activities: [],
+  },
+  cultural_content: {
+    en: 'Cultural Content',
+    tr: 'Kültürel İçerik',
+    topics: [],
+  },
+  progress_tracking: {
+    en: 'Progress Tracking',
+    tr: 'İlerleme Takibi',
+    achievements: {en: 'Achievements', tr: 'Başarılar', list: []},
+  },
+};
+export default C1Data;
