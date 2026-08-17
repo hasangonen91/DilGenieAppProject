@@ -365,5 +365,25 @@
         }
       }
     }
-  ]
+  ],
+  "work": {
+    "en": "Work",
+    "tr": "İş",
+    "words": [
+      {"key":1,"en":"employment","tr":"işgällik","image":"https://example.com/images/employment.png"},
+      {"key":2,"en":"colleague","tr":"meslektaş","image":"https://example.com/images/colleague.png"},
+      {"key":3,"en":"salary","tr":"maaş","image":"https://example.com/images/salary.png"},
+      {"key":4,"en":"deadline","tr":"son tarih","image":"https://example.com/images/deadline.png"},
+      {"key":5,"en":"manager","tr":"yönetici","image":"https://example.com/images/manager.png"},
+      {"key":6,"en":"negotiate","tr":"müzakeret etmek","image":"https://example.com/images/negotiate.png"}
+    ],
+    "example_sentences": [
+      "She started her employment at the company last month.",
+      "My colleague helped me finish the project on time."
+    ],
+    "questions": [
+      {"question":"What is the salary range for this position?","options":["Low","Medium","High","Not specified"],"answer":3},
+      {"question":"Who do you report to in your team?","options":["Colleague","Manager","Client","Supplier"],"answer":1}
+    ]
+  }
 }
