@@ -30,7 +30,7 @@
 ## Kod Kalitesi (Bot denetimi)
 
 - [x] **Kod Hata Taraması (Round 1)** — Tüm `src/` klasörünü tara: (1) `console.log` ile kalmış debug kodlarını tespit et; (2) kullanılmayan import/state değişkenlerini bul; (3) `try/catch` içinde sessizce yutulan hataları işaretle; (4) `any` tip kullanımını azalt. Bulduğun hataları düzelt, özet raporu PR body'sinde ver. Küçük adımlı, güvenli düzeltmeler yap — davranışı değiştirme.
-- [ ] **Component Mimarisi İyileştirme** — `src/components/` klasörünü incele: (1) 2 dosyadan uzun olan bileşenleri küçük parçalara böl (örn. `GreetingsQuiz`, `TeachingPhase`); (2) tekrarlanan UI pattern'lerini (buton, kart, modal) ortak bileşene çıkar; (3) props tiplerini `interface` ile tanımla, `any` kullanma. Davranışı bozmadan yapısal iyileştirme yap, tüm import'ları güncelle.
+- [x] **Component Mimarisi İyileştirme** — `src/components/` klasörünü incele: (1) 2 dosyadan uzun olan bileşenleri küçük parçalara böl (örn. `GreetingsQuiz`, `TeachingPhase`); (2) tekrarlanan UI pattern'lerini (buton, kart, modal) ortak bileşene çıkar; (3) props tiplerini `interface` ile tanımla, `any` kullanma. Davranışı bozmadan yapısal iyileştirme yap, tüm import'ları güncelle.
 
 ## Oyun İyileştirmeleri (Orta)
 

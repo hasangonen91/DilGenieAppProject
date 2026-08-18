@@ -65,7 +65,8 @@
     "react-native-video-player": "^0.14.0",
     "yarn": "^1.22.22",
     "zustand": "^4.5.2",
-    "react-native-livepatch": "^0.4.1"
+    "react-native-livepatch": "^0.4.1",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
