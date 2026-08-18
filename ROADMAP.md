@@ -25,7 +25,7 @@
 - [x] **Hangman Kelime Havuzu Genişletme** — `src/pages/games/hangman/Hangman.tsx` dosyasındaki `puzzles` dizisine 12 yeni `{answer, hint}` ekle (mevcut 3 kelime: JAVASCRIPT, PYTHON, REACT). İpucuları İngilizce olsun, cevaplar İngilizce ve büyük harf. `answer` alanını boşluk içermesin.
 - [x] **Quiz Veri Seti Genişletme** — `src/pages/games/quiz/quizData.ts` dosyasındaki `quizData` dizisine 8 yeni başkent sorusu ekle (mevcut format: `{question, options[4], answer}`). `answer` değeri `options` dizisinde bulunmalı, sorular farklı ülkelerden olsun ve mevcutlarla tekrar olmasın.
 - [x] **C1 Vocabulary Veri Genişletme** — `src/pages/Vocabulary/C1/data.tsx` dosyasındaki `greetings` kategorisinin `words` dizisine 5 yeni `{en, tr}` kelime ekle. `en` İngilizce, `tr` Türkçe, C1 seviyesine uygun olmalı. Mevcut formatı birebir takip et.
-- [ ] **Quiz liderData Genişletme** — `src/pages/games/quiz/leaderData.ts` dosyasındaki veri yapısını incele, `questions` veya `surveys` alanına 5 yeni kayıt ekle. Mevcut formatı takip et, sıra/kod numaralarını boşluk bırakmadan devam ettir.
+- [x] **Quiz liderData Genişletme** — `src/pages/games/quiz/leaderData.ts` dosyasındaki veri yapısını incele, `questions` veya `surveys` alanına 5 yeni kayıt ekle. Mevcut formatı takip et, sıra/kod numaralarını boşluk bırakmadan devam ettir.
 
 ## Kod Kalitesi (Bot denetimi)
 
