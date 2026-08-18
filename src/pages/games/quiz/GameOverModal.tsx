@@ -1,5 +1,13 @@
-import React from 'react';
-import {View, Text, TouchableOpacity, Modal, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  StyleSheet,
+  TextInput,
+} from 'react-native';
+import {leaderData} from './leaderData';
 
 interface GameOverModalProps {
   visible: boolean;
@@ -14,6 +22,13 @@ const GameOverModal: React.FC<GameOverModalProps> = ({
   onRestart,
   onClose,
 }) => {
+  const [username, setUsername] = useState('');
+  const handleSaveScore = () => {
+    if (username.trim()) {
+      leaderData.push({name: username.trim(), score});
+    }
+    onClose();
+  };
   return (
     <Modal
       animationType="slide"
@@ -24,6 +39,18 @@ const GameOverModal: React.FC<GameOverModalProps> = ({
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Game Over!</Text>
           <Text style={styles.modalText}>Your Score: {score}</Text>
+          <TextInput
+            style={styles.usernameInput}
+            placeholder="Enter your name"
+            value={username}
+            onChangeText={setUsername}
+            maxLength={20}
+          />
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={handleSaveScore}>
+            <Text style={styles.buttonText}>Save Score</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.modalButton} onPress={onRestart}>
             <Text style={styles.buttonText}>Restart</Text>
           </TouchableOpacity>
@@ -78,6 +105,14 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  usernameInput: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 8,
+    margin: 10,
+    width: 200,
+    borderRadius: 5,
   },
 });
 
