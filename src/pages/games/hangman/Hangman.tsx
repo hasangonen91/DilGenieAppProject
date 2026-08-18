@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, BackHandler} from 'react-native';
+import {View, Text, BackHandler, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Keyboard from './Keyboard';
 import styles from './styles';
@@ -18,6 +18,7 @@ const HangmanGame: React.FC = () => {
   const [maxScore, setMaxScore] = useState<number>(0);
   const [answer, setAnswer] = useState<string>('');
   const [hint, setHint] = useState<string>('');
+  const [showHint, setShowHint] = useState<boolean>(false);
   const [correct, setCorrect] = useState<number>(0);
   const [wrong, setWrong] = useState<number>(0);
   const [usedLetters, setUsedLetters] = useState<string[]>([]);
@@ -231,13 +232,23 @@ const HangmanGame: React.FC = () => {
             <Text style={styles.scoreText}>Skor: {score}</Text>
             <Text style={styles.timerText}>Süre: {timer}</Text>
           </View>
+          <TouchableOpacity
+            style={{
+              marginTop: 10,
+              padding: 10,
+              backgroundColor: '#4CAF50',
+              borderRadius: 5,
+            }}
+            onPress={() => setShowHint(!showHint)}>
+            <Text style={{color: 'white', fontWeight: 'bold'}}>İpucu</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.hangmanContainer}>
           <HangmanTree wrong={wrong} />
         </View>
         <View style={styles.dashesContainer}>{renderDashes()}</View>
         <View style={styles.hintContainer}>
-          <Text style={styles.hintText}>Hint: {hint}</Text>
+          {showHint && <Text style={styles.hintText}>Hint: {hint}</Text>}
         </View>
         <Keyboard
           onPressKey={validate}

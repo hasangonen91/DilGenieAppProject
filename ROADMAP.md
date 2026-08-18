@@ -34,7 +34,7 @@
 
 ## Oyun İyileştirmeleri (Orta)
 
-- [ ] **Hangman İpucu Butonu** — `src/pages/games/hangman/Hangman.tsx` dosyasına "İpucu" (hint) butonu ekle. Butona basınca puzzle'ın hint alanını gösteren küçük bir text görünür hale gelsin. Mevcut `hint` state'ini ve `styles.tsx`'teki uygun stili kullan, mevcut oyun akışını bozma.
+- [x] **Hangman İpucu Butonu** — `src/pages/games/hangman/Hangman.tsx` dosyasına "İpucu" (hint) butonu ekle. Butona basınca puzzle'ın hint alanını gösteren küçük bir text görünür hale gelsin. Mevcut `hint` state'ini ve `styles.tsx`'teki uygun stili kullan, mevcut oyun akışını bozma.
 - [ ] **Quiz Kullanıcı Adı Girişi** — `src/pages/games/quiz/GameOverModal.tsx` dosyasında skor kaydı öncesi kullanıcıdan isim alan bir `TextInput` ekle. `leaderData.ts` yapısına uygun kayıt oluştur. Modal yapısını bozma.
 - [ ] **WordCompletion Geri Bildirimi** — `src/pages/games/wordcompletion/WordCompletion.tsx` dosyasında cevap doğru/yanlış olduğunda ekranda renkli bir geri bildirim metni göster. Mevcut `styles.tsx` yapısına uygun stil ekle, oyun mantığını değiştirme.
 - [ ] **FlappyBird Yüksek Skor Kaydı** — `src/pages/games/flappybird/` dosyalarını incele, AsyncStorage ile en yüksek skoru kaydet ve oyun sonunda göster. Paket kurulumu GEREKMİYOR — uygulamada AsyncStorage zaten kurulu mu kontrol et, yoksa `@react-native-async-storage/async-storage` importu kullanılıyorsa doğrudan kullan.
