@@ -85,6 +85,12 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
   },
+  feedbackText: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginTop: 12,
+    textAlign: 'center',
+  },
 });
 
 export default styles;

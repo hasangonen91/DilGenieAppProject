@@ -235,6 +235,19 @@ const App: React.FC = () => {
                 </TouchableOpacity>
               ))}
             </View>
+            {selectedAnswer !== null && (
+              <Text style={[
+                styles.feedbackText,
+                {
+                  color:
+                    selectedAnswer === countries[currentQuestion].capital
+                      ? '#28a745'
+                      : '#dc3545',
+                },
+              ]}>
+                {selectedAnswer === countries[currentQuestion].capital ? 'Doğru!' : 'Yanlış!'}
+              </Text>
+            )}
           </ScrollView>
         </>
       ) : null}
