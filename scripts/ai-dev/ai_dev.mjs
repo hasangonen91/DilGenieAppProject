@@ -194,6 +194,10 @@ async function callModel(messages, { json = true } = {}) {
       if (start === -1 || end <= start) throw new Error('JSON blok bulunamadı');
       return JSON.parse(cleaned.slice(start, end + 1));
     } catch (e) {
+      // 429 rate limit: deneme yapma, anında fırlat — görev koruması main()'de
+      if (e.message.includes('429') || /rate limit/i.test(e.message)) {
+        throw e;
+      }
       lastErr = e;
       console.log(`⚠️  deneme ${attempt} başarısız: ${e.message}`);
       await new Promise((r) => setTimeout(r, 5000 * attempt));
