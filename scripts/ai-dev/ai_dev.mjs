@@ -179,7 +179,13 @@ async function callModel(messages, { json = true } = {}) {
         },
         body: JSON.stringify(body),
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}: ${(await res.text()).slice(0, 300)}`);
+      if (!res.ok) {
+        const errText = await res.text();
+        if (res.status === 429 || /rate limit/i.test(errText)) {
+          throw new Error(`HTTP 429 rate limit: ${errText.slice(0, 200)}`);
+        }
+        throw new Error(`HTTP ${res.status}: ${errText.slice(0, 300)}`);
+      }
       const data = await res.json();
       const text = data.choices?.[0]?.message?.content ?? '';
       const cleaned = text.replace(/```json\s*/gi, '').replace(/```/g, '').trim();
