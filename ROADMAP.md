@@ -41,7 +41,7 @@
 
 ## Çekirdek Modüller (Zor — modele büyük değişiklik yaptırma)
 
-- [ ] **Kelime Kartları (Flashcards) Modülü** — Vocabulary ekranına kart çevirme (flip) animasyonlu flashcard modu ekle. `src/pages/Vocabulary/B1/B1level.tsx` ekranına basit bir flip butonu ekle, `src/pages/Vocabulary/B1/data.tsx`'teki kelimeleri kullan. Karmaşık animasyon yerine `Animated` API ile basit scale/opacity geçişi yap.
+- [ ] **B2 Kelime Verisi: yeni 'education' Kategorisi** — `src/pages/Vocabulary/B2/data.json` dosyasındaki mevcut yapıya (A1level objesi) aynı formatta `education` adında yeni kategori ekle. Kelimeleri `scripts/cefr/turkce_kelimeler.json` dosyasından level B2 olanlardan seç (eğitim temalı: academic, education, student, lesson, exam, knowledge). `tr` anlamını ve örnek cümleyi turkce_kelimeler.json'daki `tr` ve `example` alanlarından BİREBİR kullan, kendin uydurma. `words` en az 6, `example_sentences` en az 2, `questions` en az 2. Mevcut JSON yapısını birebir koru, başka dosyaya dokunma, tasarımı değiştirme.
 - [ ] **Günlük Hedef & Streak Sayaçları** — Ana ekrana günlük öğrenme hedefi (örn. 10 yeni kelime) ve yanma (streak) göstergesi ekle. İlerlemeyi AsyncStorage'a kaydet, bugün kaç kelime öğrendiğini göster.
 - [ ] **Karanlık / Açık Tema Desteği** — `src/theme/` altına basit bir tema objesi ekle (renk paleti), mevcut ekranlardaki hardcoded renklerden birkaçını bu objeyle değiştir. Tüm ekranları dönüştürmeye çalışma, sadece 2-3 dosyada örnek kullanım göster.
 
@@ -58,6 +58,9 @@
 - [ ] **Oyun İçin Sprite/Asset Paketi** — `src/assets/images/games/` klasörü. Hangman, Quiz, FlappyBird, WordCompletion oyunları için uygun görseller (karakter, arka plan, buton, ikon). Format: `.webp` veya `.png`, sabit URL. Her oyun için en az 3 asset.
 - [ ] **Splash Screen & App İkonu** — `src/assets/images/app/` klasörü: `splash.png` (1080x1920), `icon.png` (1024x1024), `adaptive-icon.png`. Renk paleti uygulamanın temasıyla tutarlı. Expo/config plugin ile `app.json`'a ekle.
 - [ ] **Kategori Kapak Görselleri** — Her seviye (A1-C2) ana sayfada gösterilecek kapak görseli. `src/assets/images/levels/A1.png` ... `C2.png`. Tema: renkli, minimal, öğrenme hissiyatı veren.
+
+
+- [ ] **Basit Oyun: Kelime Bulmaca (Simple Word Search)** — `src/pages/games/wordsearch/` klasörü oluştur. 6x6 harf ızgarasında 4 kelime bul (İngilizce). Kelimeleri `scripts/cefr/turkce_kelimeler.json` dosyasından A1 seviyesinden seç (3-5 harfli). Kelime bulunca altında Türkçe anlamı göster (turkce_kelimeler.json `tr` alanından). Mevcut oyun ekranlarının stilini taklit et (`styles.tsx` benzeri), tema renklerini kullan (#020825 koyu arka plan). Navigasyona Games ekranından ekle.
 
 ## Yeni Oyun Geliştirme (Core Gameplay)
 - [ ] **Memory Game (Kart Eşleştirme)** — `src/pages/games/memory/` klasörü. 4x4 grid, kelime-çeviri eşleştirme. CEFR seviyesine göre kart sayısı (A1: 8 çift, C2: 16 çift). `scripts/cefr/cefr_words.json`'dan seviyeye uygun kelimeleri çek. Skor + süre + hamle sayısı. `Animated` API ile kart çevirme animasyonu.

@@ -137,6 +137,25 @@ function cefrPool(title, detail) {
   }
 }
 
+// Türkçe anlamlı kelime havuzu (ingilizce-kursu.gen.tr — 1531 kelime, seviye+tr+örnek cümle).
+// Veri görevinde bot TÜRKÇE anlamı ve örnek cümleyi BURADAN alır, kendisi uydurmaz.
+function trPool(title, detail) {
+  const both = (title + ' ' + detail).toUpperCase();
+  const lvl = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].find((l) => both.includes(l));
+  if (!lvl) return null;
+  const path = 'scripts/cefr/turkce_kelimeler.json';
+  if (!existsSync(path)) return null;
+  try {
+    const all = JSON.parse(readFileSync(path, 'utf8'));
+    const pool = Object.values(all).filter((w) => (w.level || '').toUpperCase() === lvl).slice(0, 300);
+    if (!pool.length) return null;
+    const lines = pool.map((w) => `${w.en} = ${w.tr}  (orn: ${w.example})`);
+    return `SEVIYE ${lvl} TURKCE ANLAM HAVUZU (ingilizce-kursu.gen.tr — hazır çeviri + örnek cümle). Veri görevinde kelimelerin TURKCE anlamını ve örnek cumleyi SADECE bu listeye göre yaz, kendin uydurma:\n${lines.join('\n')}`;
+  } catch (e) {
+    return null;
+  }
+}
+
 // OpenRouter çağrısı (retry + JSON parse)
 async function callModel(messages, { json = true } = {}) {
   const body = {
@@ -365,6 +384,9 @@ ${roadmap.slice(0, 4000)}
 # CEFR KELİME HAVUZU (resmi kaynak — kelime görevlerinde zorunlu)
 ${cefrPool(task.title, task.detail) || '(seviye tespit edilemedi veya havuz bulunamadı)'}
 
+# TÜRKÇE ANLAM HAVUZU (hazır çeviri — veri görevlerinde zorunlu)
+${trPool(task.title, task.detail) || '(seviye tespit edilemedi veya havuz bulunamadı)'}
+
 Cevap JSON formatında olmalı:
 {
   "summary": "kısa Türkçe özet, ne yaptın",
@@ -454,8 +476,7 @@ Cevap JSON formatında olmalı:
   }
 
   if (!applied || !applied.length) {
-    console.log('⚠️  Uygulanabilir değişiklik üretilemedi, bugünlük atlıyorum');
-    sh(`git checkout ROADMAP.md 2>/dev/null || true`);
+    console.log('⚠️  Uygulanabilir değişiklik üretilemedi, görev kapalı sayıldı (ROADMAP [x] kaldı)');
     return;
   }
 
@@ -509,9 +530,10 @@ ${applied.map((a) => `- ${a}`).join('\n')}
 }
 
 function rollback() {
-  console.log('↩️  Değişiklikler geri alınıyor...');
+  console.log('↩️  Değişiklikler geri alınıyor... (ROADMAP korunur — görev [x] kalır ki bot takılmasın)');
   resetWorkingDir();
-  sh('git checkout -- ROADMAP.md 2>/dev/null || true');
+  // ROADMAP.md'i GERİ ALMA: pickTask zaten görevi [x] yaptı. Fail olsa bile görev
+  // kapalı sayılır, böylece bot aynı zor görevde her run'da takılı kalmaz.
   process.exit(1);
 }
 
@@ -531,8 +553,5 @@ function resetWorkingDir() {
 
 main().catch((e) => {
   console.error(`💥 Hata: ${e.message}`);
-  try {
-    sh('git checkout -- ROADMAP.md 2>/dev/null || true');
-  } catch {}
   process.exit(1);
 });
