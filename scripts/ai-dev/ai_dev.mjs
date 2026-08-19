@@ -432,7 +432,12 @@ Cevap JSON formatında olmalı:
     } catch (e) {
       lastError = e.message;
       console.log(`❌ Deneme ${attempt} model hatası: ${lastError.slice(0, 500)}`);
-      // model hatası da olsa denemelere devam et (callModel kendi içinde 3 kez dener)
+      // 429 / rate limit: geçici durum — görevi GERİ AL (kaybolmasın), bugünlük dur
+      if (lastError.includes('429') || lastError.toLowerCase().includes('rate limit')) {
+        sh('git checkout ROADMAP.md 2>/dev/null || true');
+        console.log('⏸️  OpenRouter rate limit aşıldı (429). Görev geri alındı, görev kaybolmadı. Cron sonra tekrar deneyecek.');
+        process.exit(0);
+      }
       continue;
     }
     // Deneme 2+: modelin edit'leri mevcut dosya içeriklerine göre üretildiği için,
