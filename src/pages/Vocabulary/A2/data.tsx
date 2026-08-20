@@ -64,6 +64,64 @@ const data = {
         },
       ],
     },
+    food_and_drink: {
+      en: 'Food and Drink',
+      tr: 'Yiyecek ve İçecek',
+      words: [
+        {
+          key: 1,
+          en: 'bread',
+          tr: 'ekmek',
+          image: require('../assets/images/food_and_drink/bread.png'),
+        },
+        {
+          key: 2,
+          en: 'water',
+          tr: 'su',
+          image: require('../assets/images/food_and_drink/water.png'),
+        },
+        {
+          key: 3,
+          en: 'milk',
+          tr: 'süt',
+          image: require('../assets/images/food_and_drink/milk.png'),
+        },
+        {
+          key: 4,
+          en: 'apple',
+          tr: 'elma',
+          image: require('../assets/images/food_and_drink/apple.png'),
+        },
+        {
+          key: 5,
+          en: 'rice',
+          tr: 'pirinç',
+          image: require('../assets/images/food_and_drink/rice.png'),
+        },
+        {
+          key: 6,
+          en: 'chicken',
+          tr: 'tavuk',
+          image: require('../assets/images/food_and_drink/chicken.png'),
+        },
+      ],
+      example_sentences: [
+        'I eat bread with cheese every morning.',
+        'She drinks water after running.',
+      ],
+      questions: [
+        {
+          question: 'Which word means "ekmek" in Turkish?',
+          options: ['water', 'milk', 'bread', 'rice'],
+          answer: 'bread',
+        },
+        {
+          question: 'Which word means "süt"?',
+          options: ['apple', 'chicken', 'milk', 'bread'],
+          answer: 'milk',
+        },
+      ],
+    },
   },
 };
 
