@@ -5,12 +5,13 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Image,
   Dimensions,
 } from 'react-native';
 import {getImageURL} from '../../../../../services/api/base';
 import FastImage from 'react-native-fast-image';
 import * as Animatable from 'react-native-animatable';
+import CustomModal from '../../../../../components/modal/Modal';
+import TopicWordsList from '../../../../../components/topicWords/TopicWordsList';
 
 const {width, height} = Dimensions.get('window');
 
@@ -55,14 +56,12 @@ const data: DataItem[] = [
 
 const PopularsScreen: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
-  const [animationsPlayed, setAnimationsPlayed] = useState(false);
 
   const renderItem = ({item, index}: {item: DataItem; index: number}) => (
     <Animatable.View
       animation={'slideInUp'}
       duration={1000}
-      delay={index * 200}
-      onAnimationEnd={() => setAnimationsPlayed(true)}>
+      delay={index * 200}>
       <TouchableOpacity
         style={[
           styles.box,
@@ -86,19 +85,35 @@ const PopularsScreen: React.FC = () => {
   );
 
   return (
-    <FlatList
-      data={data}
-      renderItem={renderItem}
-      keyExtractor={item => item.id}
-      style={{
-        flex: 1,
-        width: width,
-        backgroundColor: 'blue',
-      }}
-      contentContainerStyle={styles.container}
-      numColumns={2}
-      showsVerticalScrollIndicator={false}
-    />
+    <View style={{flex: 1, backgroundColor: '#020825'}}>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        style={{
+          flex: 1,
+          width: width,
+          backgroundColor: '#020825',
+        }}
+        contentContainerStyle={styles.container}
+        numColumns={2}
+        showsVerticalScrollIndicator={false}
+      />
+      <CustomModal
+        isVisible={selectedItem !== null}
+        closeModal={() => setSelectedItem(null)}
+        modalContent={
+          selectedItem ? (
+            <TopicWordsList
+              topic={selectedItem}
+              onClose={() => setSelectedItem(null)}
+              onLearn={() => {}}
+            />
+          ) : null
+        }
+        modalContentStyle={{height: height * 0.7, backgroundColor: '#020825'}}
+      />
+    </View>
   );
 };
 
