@@ -385,5 +385,25 @@
       {"question":"What is the salary range for this position?","options":["Low","Medium","High","Not specified"],"answer":3},
       {"question":"Who do you report to in your team?","options":["Colleague","Manager","Client","Supplier"],"answer":1}
     ]
+  },
+  "education": {
+    "en": "Education",
+    "tr": "Eğitim",
+    "words": [
+      {"key":1,"en":"academic","tr":"akademik","image":""},
+      {"key":2,"en":"education","tr":"eğitim","image":""},
+      {"key":3,"en":"student","tr":"öğrenci","image":""},
+      {"key":4,"en":"lesson","tr":"ders","image":""},
+      {"key":5,"en":"exam","tr":"sınav","image":""},
+      {"key":6,"en":"knowledge","tr":"bilgi","image":""}
+    ],
+    "example_sentences": [
+      "She is pursuing an academic career in biology.",
+      "The education system needs reform."
+    ],
+    "questions": [
+      {"en":"What does 'academic' mean?","options":["akademik","spor","müzik","sanat"],"answer":"akademik"},
+      {"en":"Which word means 'sınav'?","options":["lesson","exam","homework","project"],"answer":"exam"}
+    ]
   }
 }
