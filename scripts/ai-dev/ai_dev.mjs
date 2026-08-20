@@ -137,20 +137,20 @@ function cefrPool(title, detail) {
   }
 }
 
-// Türkçe anlamlı kelime havuzu (ingilizce-kursu.gen.tr — 1531 kelime, seviye+tr+örnek cümle).
-// Veri görevinde bot TÜRKÇE anlamı ve örnek cümleyi BURADAN alır, kendisi uydurmaz.
+// Türkçe anlamlı kelime havuzu (hazir_kelimeler.json — 3386 kelime, seviye+tr+örnek cümle+Türkçe çeviri).
+// Veri görevinde bot TÜRKÇE anlamı ve örnek cümleyi BURADAN alır, kendisi uydurmaz/çeviri yapmaz.
 function trPool(title, detail) {
   const both = (title + ' ' + detail).toUpperCase();
   const lvl = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].find((l) => both.includes(l));
   if (!lvl) return null;
-  const path = 'scripts/cefr/turkce_kelimeler.json';
+  const path = 'scripts/cefr/hazir_kelimeler.json';
   if (!existsSync(path)) return null;
   try {
     const all = JSON.parse(readFileSync(path, 'utf8'));
-    const pool = Object.values(all).filter((w) => (w.level || '').toUpperCase() === lvl).slice(0, 300);
+    const pool = Object.values(all).filter((w) => (w.level || '').toUpperCase() === lvl).slice(0, 400);
     if (!pool.length) return null;
-    const lines = pool.map((w) => `${w.en} = ${w.tr}  (orn: ${w.example})`);
-    return `SEVIYE ${lvl} TURKCE ANLAM HAVUZU (ingilizce-kursu.gen.tr — hazır çeviri + örnek cümle). Veri görevinde kelimelerin TURKCE anlamını ve örnek cumleyi SADECE bu listeye göre yaz, kendin uydurma:\n${lines.join('\n')}`;
+    const lines = pool.map((w) => `${w.en} = ${w.tr}  (orn: ${w.example}${w.example_tr ? ' | tr: ' + w.example_tr : ''})`);
+    return `SEVIYE ${lvl} TURKCE ANLAM HAVUZU (hazir_kelimeler.json — hazır çeviri + örnek cümle). Veri görevinde kelimelerin TURKCE anlamını, örnek cumleyi ve cumle cevirisini SADECE bu listeye göre yaz, asla kendin ceviri/uydurma yapma:\n${lines.join('\n')}`;
   } catch (e) {
     return null;
   }
@@ -372,7 +372,8 @@ Kurallar:
 - Güncelleme/dağıtım: projede react-native-livepatch (CodePush'un ücretsiz alternatifi, JS/asset anında güncelleme) ve react-native-starship (kablosuz deploy) paketleri VAR. import { LivePatch } from 'react-native-livepatch' ile LivePatch.configure + sync() kullanılabilir. Bu paketlerin modüllerine kendi istediğin gibi import yapabilirsin.
 - Görev bir "altyapı"/"modül" ise production dosyalarının TAMAMINI tek seferde üret (servis, tipler, store). Import ettiğin her dosyayı mutlaka create et, eksik bırakma.
 - Veri ekleme görevlerinde (kelime, soru, kategori): MEVCUT veri formatına ve seviye/bağlama uygun, dilbilgisi doğru, gerçekçi ve kullanışlı içerik üret. Kaliteyi düşürme, tekrara düşme.
-- KELİME SEVİYESİ KAYNAĞI (ZORUNLU): Kelime/veri görevlerinde kelimeleri KENDİN UYDURMA. 'scripts/cefr/cefr_words.json' dosyasını oku (resmi CEFR-J Vocabulary Profile, 8653 kelime). Kelime seçerken: görevin seviyesi (A1/A2/B1/B2/C1/C2) ile dosyadaki 'level' alanı BİREBİR eşleşmeli. 'level' alanı kelimenin resmi CEFR seviyesidir. Örn. A2 görevinde yalnızca 'level' değeri A2 olan kelimeleri kullan. Kelimenin Türkçe çevirisini sözlükteki karşılığına uygun olarak KENDİN üret (çeviri uydurma serbest, ama kabul görmüş karşılık olmalı). Kelime seçimini dosyaya göre yap, dosyada olmayan kelimeyi AYNI GÖREVDE kullanma.
+- KELİME SEVİYESİ KAYNAĞI (ZORUNLU): Kelime/veri görevlerinde kelimeleri KENDİN UYDURMA. 'scripts/cefr/cefr_words.json' dosyasını oku (resmi CEFR-J Vocabulary Profile, 8653 kelime). Kelime seçerken: görevin seviyesi (A1/A2/B1/B2/C1/C2) ile dosyadaki 'level' alanı BİREBİR eşleşmeli. 'level' alanı kelimenin resmi CEFR seviyesidir. Örn. A2 görevinde yalnızca 'level' değeri A2 olan kelimeleri kullan. Kelime seçimini dosyaya göre yap, dosyada olmayan kelimeyi AYNI GÖREVDE kullanma.
+- TÜRKÇE ÇEVİRİ YASAK (ZORUNLU): Kelime/veri görevlerinde kelimelerin TÜRKÇE karşılığını ve örnek cümleyi ASLA KENDİN ÜRETME. 'scripts/cefr/hazir_kelimeler.json' dosyasındaki hazır 'tr', 'example' ve 'example_tr' alanlarını BİREBİR kullan. Havuzda olmayan bir kelimeye Türkçe karşılık yazman gerekirse o kelimeyi kullanma, başka kelime seç.
 - Kelime görevinde çalışırken 'scripts/cefr/cefr_words.json' içeriğinin tamamını (veya seviyeye uygun büyük bir kısmını) okuduğunu varsay; sistem bağlamında yoksa bile dosyayı okuduğunu düşün.
 - Verilen "WEB ARAŞTIRMASI" bölümündeki bilgileri görevi yaparken dikkate al.
 - Yalnızca JSON cevap ver, başka metin yazma.`;

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import * as Progress from 'react-native-progress';
 import styles from './styles';
+import {speak} from '../../utils/speech';
 
 interface TeachingPhaseProps {
   currentItem: {
@@ -27,6 +28,13 @@ const TeachingPhase: React.FC<TeachingPhaseProps> = ({
 }) => {
   const progress = (currentItemIndex + 1) / totalItems;
 
+  // Her yeni kelimede otomatik telaffuz
+  useEffect(() => {
+    if (currentItem.en) {
+      speak(currentItem.en);
+    }
+  }, [currentItem.en]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>
@@ -45,7 +53,10 @@ const TeachingPhase: React.FC<TeachingPhaseProps> = ({
       {currentItem.image && (
         <Image style={styles.image} source={{uri: currentItem.image}} />
       )}
-      <Text style={styles.text}>{currentItem.en}</Text>
+      {/* Kelimeye dokununca tekrar telaffuz */}
+      <TouchableOpacity onPress={() => speak(currentItem.en)}>
+        <Text style={styles.text}>{currentItem.en}</Text>
+      </TouchableOpacity>
       <Text style={styles.translation}>{currentItem.tr}</Text>
       <View style={styles.okButtonContainer}>
         <TouchableOpacity style={styles.okButton} onPress={onNext}>

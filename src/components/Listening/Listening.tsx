@@ -8,8 +8,8 @@ import {
   Alert,
 } from 'react-native';
 import styles from './styles';
-import Tts from 'react-native-tts';
 import {Question, ListeningData, CategoryData} from './ListeningData';
+import {setupSpeech, speak} from '../../utils/speech';
 
 const LISTENING_URL =
   'https://raw.githubusercontent.com/hasangonen91/dilgenie/main/vocabulary/A1ListeningData.json';
@@ -47,7 +47,6 @@ const Listening: React.FC = () => {
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  const [voices, setVoices] = useState<any[]>([]);
   const [questionsData, setQuestionsData] = useState<ListeningData | null>(
     null,
   );
@@ -56,17 +55,15 @@ const Listening: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    // Kaliteli TTS sesini bir kez kur
+    setupSpeech();
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        const [voicesRes, questionsRes] = await Promise.all([
-          fetch(
-            'https://raw.githubusercontent.com/hasangonen91/dilgenie/main/voice/voices.json',
-          ),
-          fetch(LISTENING_URL),
-        ]);
-        const voicesData = await voicesRes.json();
+        const [questionsRes] = await Promise.all([fetch(LISTENING_URL)]);
         const data: ListeningData = await questionsRes.json();
-        setVoices(voicesData);
         setQuestionsData(data);
       } catch (e) {
         Alert.alert('Hata', 'Veriler yüklenemedi: ' + (e as Error).message);
@@ -76,20 +73,6 @@ const Listening: React.FC = () => {
     };
     fetchData();
   }, []);
-
-  useEffect(() => {
-    const setupTts = async () => {
-      if (voices.length > 0) {
-        try {
-          await Tts.setDefaultLanguage(voices[0].language);
-          await Tts.setDefaultVoice(voices[0].id);
-        } catch (e) {
-          // ses kurulumu başarısız olabilir, test devam eder
-        }
-      }
-    };
-    setupTts();
-  }, [voices]);
 
   const selectCategory = (key: string) => {
     if (!questionsData) return;
@@ -112,7 +95,7 @@ const Listening: React.FC = () => {
 
   const playSentence = () => {
     if (questions.length > 0) {
-      Tts.speak(questions[currentQuestionIndex].question);
+      speak(questions[currentQuestionIndex].question);
     }
   };
 

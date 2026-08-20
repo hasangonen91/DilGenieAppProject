@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import Tts from 'react-native-tts';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
+import {setupSpeech, speak} from '../../utils/speech';
 
 const data = {
   questions: [
@@ -36,15 +36,14 @@ const ListeningFilling: React.FC = () => {
   const [showFullSentence, setShowFullSentence] = useState<boolean>(false);
 
   useEffect(() => {
-    // TTS ayarlarını yap
-    Tts.setDefaultLanguage('en-US');
-    Tts.setDefaultVoice('com.apple.ttsbundle.Samantha-compact');
+    // Kaliteli TTS sesini bir kez kur
+    setupSpeech();
   }, []);
 
   const playSentence = () => {
     // Kullanıcıya tam cümleyi dinlet
     const sentence = data.questions[currentQuestionIndex].fullSentence;
-    Tts.speak(sentence);
+    speak(sentence);
   };
 
   const checkAnswer = () => {
