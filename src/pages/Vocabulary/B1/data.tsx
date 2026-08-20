@@ -218,6 +218,80 @@ const data = {
         },
       ],
     },
+    shopping: {
+      en: 'Shopping',
+      tr: 'Alışveriş',
+      words: [
+        {
+          key: 18,
+          en: 'price',
+          tr: 'fiyat',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 19,
+          en: 'buy',
+          tr: 'almak',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 20,
+          en: 'sell',
+          tr: 'satmak',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 21,
+          en: 'cheap',
+          tr: 'ucuz',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 22,
+          en: 'expensive',
+          tr: 'pahalı',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 23,
+          en: 'shop',
+          tr: 'mağaza',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+      ],
+      example_sentences: [
+        {
+          key: 1,
+          en: 'The price of this shirt is too high.',
+          tr: 'Bu gömmenin fiyatı çok yüksek.',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 2,
+          en: 'I want to buy a new phone.',
+          tr: 'Yeni bir telefon almak istiyorum.',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+      ],
+      questions: [
+        {
+          key: 1,
+          question_en: 'What is the opposite of "expensive"?',
+          question_tr: '"Pahalı"ın zıttı nedir?',
+          answer_en: 'cheap',
+          answer_tr: 'ucuz',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+        {
+          key: 2,
+          question_en: 'Where do you go to buy groceries?',
+          question_tr: 'Market alışverişi yapmak için nereye gidersin?',
+          answer_en: 'shop',
+          answer_tr: 'mağaza',
+          image: 'https://random-image-pepebigotes.vercel.app/api/random-image',
+        },
+      ],
+    },
   },
 };
 
