@@ -18,10 +18,12 @@ let isConfigured = false;
 
 // iOS/Android'de mevcut en kaliteli İngilizce sesi seç
 export async function setupSpeech() {
-  if (isConfigured) return;
+  if (isConfigured) {
+    return;
+  }
   try {
     // Sessiz modda da çalsın
-    Tts.setIgnoreSilentSwitch?.(true);
+    Tts.setIgnoreSilentSwitch?.('ignore');
 
     const voices = await Tts.voices();
     if (voices && voices.length > 0) {
@@ -44,8 +46,14 @@ export async function setupSpeech() {
       const best = enVoices
         .filter(v => !String(v.id).includes('compact'))
         .sort((a, b) => {
-          const qa = a.quality === 'enhanced' || a.quality === 'premium' ? 2 : 0;
-          const qb = b.quality === 'enhanced' || b.quality === 'premium' ? 2 : 0;
+          const qa =
+            String(a.quality) === 'enhanced' || String(a.quality) === 'premium'
+              ? 2
+              : 0;
+          const qb =
+            String(b.quality) === 'enhanced' || String(b.quality) === 'premium'
+              ? 2
+              : 0;
           return qb - qa;
         })[0];
       if (best) {
@@ -72,7 +80,9 @@ export async function setupSpeech() {
 
 // Cümleyi konuş
 export function speak(text: string) {
-  if (!text) return;
+  if (!text) {
+    return;
+  }
   Tts.stop();
   Tts.speak(text);
 }

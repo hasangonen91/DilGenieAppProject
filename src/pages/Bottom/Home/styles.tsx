@@ -126,6 +126,33 @@ const styles = StyleSheet.create({
     color: '#999999',
     marginTop: 5,
   },
+  goalStreakContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginBottom: 20,
+  },
+  goalText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+  },
+  streakText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#0066cc',
+  },
+  learnButton: {
+    backgroundColor: '#28a745',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+  },
+  learnButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
 });
 
 export default styles;
