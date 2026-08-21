@@ -1,11 +1,11 @@
 # DilGenie Kalite Denetim Raporu
 
-> Otomatik oluşturuldu: 2026-08-21 00:06 UTC
+> Otomatik oluşturuldu: 2026-08-21 06:07 UTC
 > Model gerektirmez: tsc/eslint dışı statik kontroller (CI ayrıca tsc+eslint koşuyor).
 
 ## Özet
 
-- Taranan dosya: **123**
+- Taranan dosya: **126**
 - Emoji/sembol görsel ihlali: **2**
 - console.log debug kodu: **19**
 - `any` tipi kullanımı: **15**
@@ -39,7 +39,7 @@
 - `src/pages/games/wordsorting/WordSorting.tsx:46`
 - `src/routes/ApplicationNavigator.tsx:47`
 - `src/services/api/base.tsx:82`
-- `src/utils/speech.ts:68`
+- `src/utils/speech.ts:76`
 
 ## 400+ Satır Dosyalar (component mimarisi ihlali adayı)
 
