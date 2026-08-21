@@ -51,7 +51,7 @@
 
 ## Performans & Bakım (İleri — model zorlanabilir)
 
-- [ ] **SRS (Aralıklı Tekrar) Altyapısı** — Kelime tekrarı için spaced repetition motoru ekle. `src/services/srs/` klasörü oluştur, basit bir FSRS benzeri algoritma (kart, kolaylık faktörü, aralık günü, son gözden geçirme) yaz. Kullanıcı cevabına göre (again/hard/good/easy) aralığı güncelle. Zustand store (`src/store/`) ile kelime kartlarını yönet.
+- [x] **SRS (Aralıklı Tekrar) Altyapısı** — Kelime tekrarı için spaced repetition motoru ekle. `src/services/srs/` klasörü oluştur, basit bir FSRS benzeri algoritma (kart, kolaylık faktörü, aralık günü, son gözden geçirme) yaz. Kullanıcı cevabına göre (again/hard/good/easy) aralığı güncelle. Zustand store (`src/store/`) ile kelime kartlarını yönet.
 - [ ] **Import Yolu Düzenleme (Alias)** — Uzun bağıl importları (`../../../components/...`) temizlemek için `tsconfig.json` + babel module-resolver alias (örn. `@/` → `src/`) ekle. Tüm dosyalardaki importları yeni yapıya taşı.
 - [ ] **Hata Yakalama (Error Boundary)** — Uygulama genelinde crash yerine kullanıcıya hata ekranı göstersin diye global ErrorBoundary bileşeni ekle. Loglama için basit bir utility yaz.
 - [ ] **Firestore Servis Katmanı** — `src/services/firebase/firestoreService` benzeri servis katmanı oluştur: tüm istekleri tek yerde topla, hata yönetimini merkezileştir (try/catch + kullanıcı dostu hata mesajı). Mevcut ekranlardaki dağınık Firestore çağrılarını bu servise taşı.
