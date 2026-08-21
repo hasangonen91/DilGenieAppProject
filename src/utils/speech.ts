@@ -86,3 +86,7 @@ export function speak(text: string) {
   Tts.stop();
   Tts.speak(text);
 }
+
+export const logError = (error: Error, errorInfo: {componentStack: string}) => {
+  console.error('ErrorBoundary caught an error:', error, errorInfo);
+};
