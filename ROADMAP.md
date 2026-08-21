@@ -46,7 +46,7 @@
 ## Çekirdek Modüller (Zor — modele büyük değişiklik yaptırma)
 
 - [x] **B2 Kelime Verisi: yeni 'education' Kategorisi** — `src/pages/Vocabulary/B2/data.json` dosyasındaki mevcut yapıya (A1level objesi) aynı formatta `education` adında yeni kategori ekle. Kelimeleri `scripts/cefr/turkce_kelimeler.json` dosyasından level B2 olanlardan seç (eğitim temalı: academic, education, student, lesson, exam, knowledge). `tr` anlamını ve örnek cümleyi turkce_kelimeler.json'daki `tr` ve `example` alanlarından BİREBİR kullan, kendin uydurma. `words` en az 6, `example_sentences` en az 2, `questions` en az 2. Mevcut JSON yapısını birebir koru, başka dosyaya dokunma, tasarımı değiştirme.
-- [ ] **Günlük Hedef & Streak Sayaçları** — Ana ekrana günlük öğrenme hedefi (örn. 10 yeni kelime) ve yanma (streak) göstergesi ekle. İlerlemeyi AsyncStorage'a kaydet, bugün kaç kelime öğrendiğini göster.
+- [x] **Günlük Hedef & Streak Sayaçları** — Ana ekrana günlük öğrenme hedefi (örn. 10 yeni kelime) ve yanma (streak) göstergesi ekle. İlerlemeyi AsyncStorage'a kaydet, bugün kaç kelime öğrendiğini göster.
 - [ ] **Karanlık / Açık Tema Desteği** — `src/theme/` altına basit bir tema objesi ekle (renk paleti), mevcut ekranlardaki hardcoded renklerden birkaçını bu objeyle değiştir. Tüm ekranları dönüştürmeye çalışma, sadece 2-3 dosyada örnek kullanım göster.
 
 ## Performans & Bakım (İleri — model zorlanabilir)
