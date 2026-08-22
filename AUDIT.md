@@ -1,6 +1,6 @@
 # DilGenie Kalite Denetim Raporu
 
-> Otomatik oluşturuldu: 2026-08-21 18:06 UTC
+> Otomatik oluşturuldu: 2026-08-22 00:05 UTC
 > Model gerektirmez: tsc/eslint dışı statik kontroller (CI ayrıca tsc+eslint koşuyor).
 
 ## Özet
