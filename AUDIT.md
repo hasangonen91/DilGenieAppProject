@@ -1,14 +1,14 @@
 # DilGenie Kalite Denetim Raporu
 
-> Otomatik oluşturuldu: 2026-08-22 00:05 UTC
+> Otomatik oluşturuldu: 2026-08-22 06:04 UTC
 > Model gerektirmez: tsc/eslint dışı statik kontroller (CI ayrıca tsc+eslint koşuyor).
 
 ## Özet
 
-- Taranan dosya: **126**
+- Taranan dosya: **127**
 - Emoji/sembol görsel ihlali: **2**
 - console.log debug kodu: **19**
-- `any` tipi kullanımı: **15**
+- `any` tipi kullanımı: **28**
 - 400+ satır dosya: **2**
 - TODO/FIXME işareti: **0**
 
