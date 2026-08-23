@@ -1,167 +1,114 @@
-import React, {useRef, useState} from 'react';
-import Swiper from 'react-native-deck-swiper';
-import {Button, StyleSheet, Text, View} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {SafeAreaView, Text, View, ActivityIndicator} from 'react-native';
+import {fetchC2LevelData} from '../../../services/api/base';
+import BackHeader from '../../../components/header/BackHeader';
+import TeachingPhase from '../../../components/Teaching/TeachingPhase';
+import GreetingsQuiz from '../../../components/quizComponent/GreetingsQuiz';
+import styles from './styles';
 
-// demo purposes only
-function* range(start: number, end: number) {
-  for (let i = start; i <= end; i++) {
-    yield i;
-  }
+interface CategoryData {
+  en: string;
+  tr: string;
+  category: {
+    words: {en: string; tr: string; image: string}[];
+    example_sentences: {en: string; tr: string; image: string}[];
+  };
 }
 
-const Example = () => {
-  const [cards, setCards] = useState<number[]>([...range(1, 50)]);
-  const [swipedAllCards, setSwipedAllCards] = useState(false);
-  const [swipeDirection, setSwipeDirection] = useState('');
-  const [cardIndex, setCardIndex] = useState(0);
-  const swiperRef = useRef<Swiper<number>>(null);
+const C2level: React.FC = () => {
+  const [categories, setCategories] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
+  const [currentItemIndex, setCurrentItemIndex] = useState(0);
+  const [isTeachingPhase, setIsTeachingPhase] = useState(true);
+  const [isCompleted, setIsCompleted] = useState(false);
 
-  const renderCard = (card: number, index: number) => {
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const fetchedData = await fetchC2LevelData();
+      if (!fetchedData?.length) {
+        throw new Error('empty');
+      }
+      const vocab = fetchedData[0].vocabulary;
+      const cats: any[] = Object.entries(vocab)
+        .filter(([key]) => !['en', 'tr'].includes(key))
+        .map(([, value]) => value);
+      setCategories(cats);
+    } catch (err) {
+      console.error('Error fetching C2 level data:', err);
+      setError(
+        'Veri yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.',
+      );
+    }
+  };
+
+  const handleNext = () => {
+    if (!categories.length) {
+      return;
+    }
+    const currentCategoryItems =
+      categories[currentCategoryIndex]?.category.words ?? [];
+    if (currentItemIndex < currentCategoryItems.length - 1) {
+      setCurrentItemIndex(currentItemIndex + 1);
+    } else if (isTeachingPhase) {
+      setIsTeachingPhase(false);
+      setCurrentItemIndex(0);
+    } else if (currentCategoryIndex < categories.length - 1) {
+      setCurrentCategoryIndex(currentCategoryIndex + 1);
+      setCurrentItemIndex(0);
+      setIsTeachingPhase(true);
+    } else {
+      setIsCompleted(true);
+    }
+  };
+
+  if (error) {
     return (
-      <View style={styles.card}>
-        <Text style={styles.text}>
-          {card} - {index}
-        </Text>
-      </View>
+      <SafeAreaView style={styles.container}>
+        <BackHeader title="C2 Level" />
+        <Text style={styles.congratulationsText}>{error}</Text>
+      </SafeAreaView>
     );
-  };
+  }
 
-  const onSwiped = (type: string) => {
-    console.log(`on swiped ${type}`);
-  };
+  if (!categories.length) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <BackHeader title="C2 Level" />
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <ActivityIndicator size="large" color="#00e0ff" />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
-  const onSwipedAllCards = () => {
-    setSwipedAllCards(true);
-  };
-
-  const swipeLeft = () => {
-    swiperRef.current?.swipeLeft();
-  };
+  const currentCategory = categories[currentCategoryIndex];
+  const currentItems = currentCategory.category.words;
 
   return (
-    <View style={styles.container}>
-      <Swiper
-        ref={swiperRef}
-        onSwiped={() => onSwiped('general')}
-        onSwipedLeft={() => onSwiped('left')}
-        onSwipedRight={() => onSwiped('right')}
-        onSwipedTop={() => onSwiped('top')}
-        onSwipedBottom={() => onSwiped('bottom')}
-        onTapCard={swipeLeft}
-        cards={cards}
-        cardIndex={cardIndex}
-        cardVerticalMargin={80}
-        renderCard={renderCard}
-        onSwipedAll={onSwipedAllCards}
-        stackSize={3}
-        stackSeparation={15}
-        backgroundColor="black"
-        overlayLabels={{
-          bottom: {
-            title: 'BLEAH',
-            style: {
-              label: {
-                backgroundColor: 'black',
-                borderColor: 'black',
-                color: 'white',
-                borderWidth: 1,
-              },
-              wrapper: {
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              },
-            },
-          },
-          left: {
-            title: 'YANLIŞ',
-            style: {
-              label: {
-                backgroundColor: 'black',
-                borderColor: 'black',
-                color: 'red',
-                borderWidth: 1,
-              },
-              wrapper: {
-                flexDirection: 'column',
-                alignItems: 'flex-end',
-                justifyContent: 'flex-start',
-                marginTop: 30,
-                marginLeft: -30,
-              },
-            },
-          },
-          right: {
-            title: 'DOĞRU',
-            style: {
-              label: {
-                backgroundColor: 'black',
-                borderColor: 'black',
-                color: 'green',
-                borderWidth: 1,
-              },
-              wrapper: {
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-                justifyContent: 'flex-start',
-                marginTop: 30,
-                marginLeft: 30,
-              },
-            },
-          },
-          top: {
-            title: 'SUPER LIKE',
-            style: {
-              label: {
-                backgroundColor: 'black',
-                borderColor: 'black',
-                color: 'white',
-                borderWidth: 1,
-              },
-              wrapper: {
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              },
-            },
-          },
-        }}
-        animateOverlayLabelsOpacity
-        animateCardOpacity
-        swipeBackCard
-      />
-      <Button
-        onPress={() => swiperRef.current?.swipeBack()}
-        title="Swipe Back"
-      />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <BackHeader title="C2 Level" />
+      {isCompleted ? (
+        <Text style={styles.congratulationsText}>
+          Tebrikler, C2 seviyesini tamamladınız! 🎉
+        </Text>
+      ) : isTeachingPhase ? (
+        <TeachingPhase
+          currentItem={categories[currentCategoryIndex].category.words[currentItemIndex]}
+          categoryName={categories[currentCategoryIndex]}
+          currentItemIndex={currentItemIndex}
+          totalItems={categories[currentCategoryIndex].category.words.length}
+          onNext={handleNext}
+        />
+      ) : (
+        <GreetingsQuiz categories={[categories[currentCategoryIndex]]} onComplete={handleNext} />
+      )}
+    </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'red',
-  },
-  card: {
-    flex: 1,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: 'red',
-    justifyContent: 'center',
-    backgroundColor: 'red',
-  },
-  text: {
-    textAlign: 'center',
-    fontSize: 50,
-    backgroundColor: 'transparent',
-  },
-  done: {
-    textAlign: 'center',
-    fontSize: 30,
-    color: 'white',
-    backgroundColor: 'transparent',
-  },
-});
-
-export default Example;
+export default C2level;

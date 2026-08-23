@@ -1,14 +1,27 @@
 import React, {useState, useEffect} from 'react';
-import {SafeAreaView, View, Text} from 'react-native';
-import {fetchA1LevelQuestions} from '../../../services/api/base';
-import {A1LevelQuestion, QuestionData} from './A1levelQuestions';
+import {SafeAreaView, Text, View, ActivityIndicator} from 'react-native';
+import {fetchC1LevelData} from '../../../services/api/base';
 import BackHeader from '../../../components/header/BackHeader';
-import DragDropQuizComponent from '../../../components/dragDrop/DragDropQuizComponent';
+import TeachingPhase from '../../../components/Teaching/TeachingPhase';
+import GreetingsQuiz from '../../../components/quizComponent/GreetingsQuiz';
 import styles from './styles';
 
+interface CategoryData {
+  en: string;
+  tr: string;
+  category: {
+    words: {en: string; tr: string; image: string}[];
+    example_sentences: {en: string; tr: string; image: string}[];
+  };
+}
+
 const C1level: React.FC = () => {
-  const [data, setData] = useState<A1LevelQuestion | null>(null);
+  const [categories, setCategories] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
+  const [currentItemIndex, setCurrentItemIndex] = useState(0);
+  const [isTeachingPhase, setIsTeachingPhase] = useState(true);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -16,51 +29,84 @@ const C1level: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const fetchedData = await fetchA1LevelQuestions();
-      setData(fetchedData[0]);
+      const fetchedData = await fetchC1LevelData();
+      if (!fetchedData?.length) {
+        throw new Error('empty');
+      }
+      const vocab = fetchedData[0].vocabulary;
+      const cats: any[] = Object.entries(vocab)
+        .filter(([key]) => !['en', 'tr'].includes(key))
+        .map(([, value]) => value);
+      setCategories(cats);
     } catch (err) {
-      console.error('Error fetching A1 level data:', err);
+      console.error('Error fetching C1 level data:', err);
       setError(
         'Veri yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.',
       );
     }
   };
 
-  const handleFinish = () => {
-    console.log('Quiz finished!');
-  };
-
-  const formatQuestions = (data: A1LevelQuestion | null) => {
-    if (!data) {
-      return [];
+  const handleNext = () => {
+    if (!categories.length) {
+      return;
     }
-    const categories = Object.keys(data.questions) as Array<
-      keyof typeof data.questions
-    >;
-    return categories.reduce((acc: any[], category) => {
-      const questionData: QuestionData = data.questions[category];
-      if (
-        questionData &&
-        questionData.category &&
-        questionData.category.questions
-      ) {
-        const formattedQuestions = questionData.category.questions.map(q => ({
-          sentence: q.sentence,
-          options: q.options,
-          answer: q.answer,
-        }));
-        return [...acc, ...formattedQuestions];
-      }
-      return acc;
-    }, []);
+    const currentCategoryItems =
+      categories[currentCategoryIndex]?.category.words ?? [];
+    if (currentItemIndex < currentCategoryItems.length - 1) {
+      setCurrentItemIndex(currentItemIndex + 1);
+    } else if (isTeachingPhase) {
+      setIsTeachingPhase(false);
+      setCurrentItemIndex(0);
+    } else if (currentCategoryIndex < categories.length - 1) {
+      setCurrentCategoryIndex(currentCategoryIndex + 1);
+      setCurrentItemIndex(0);
+      setIsTeachingPhase(true);
+    } else {
+      setIsCompleted(true);
+    }
   };
 
-  const questions = formatQuestions(data);
+  if (error) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <BackHeader title="C1 Level" />
+        <Text style={styles.congratulationsText}>{error}</Text>
+      </SafeAreaView>
+    );
+  }
+
+  if (!categories.length) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <BackHeader title="C1 Level" />
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <ActivityIndicator size="large" color="#00e0ff" />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  const currentCategory = categories[currentCategoryIndex];
+  const currentItems = currentCategory.category.words;
 
   return (
     <SafeAreaView style={styles.container}>
       <BackHeader title="C1 Level" />
-      <DragDropQuizComponent questions={questions} onFinish={handleFinish} />
+      {isCompleted ? (
+        <Text style={styles.congratulationsText}>
+          Tebrikler, C1 seviyesini tamamladınız! 🎉
+        </Text>
+      ) : isTeachingPhase ? (
+        <TeachingPhase
+          currentItem={categories[currentCategoryIndex].category.words[currentItemIndex]}
+          categoryName={categories[currentCategoryIndex]}
+          currentItemIndex={currentItemIndex}
+          totalItems={categories[currentCategoryIndex].category.words.length}
+          onNext={handleNext}
+        />
+      ) : (
+        <GreetingsQuiz categories={[categories[currentCategoryIndex]]} onComplete={handleNext} />
+      )}
     </SafeAreaView>
   );
 };

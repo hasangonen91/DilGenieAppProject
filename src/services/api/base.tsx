@@ -70,6 +70,38 @@ const fetchA1LevelData = async (): Promise<A1LevelData[]> => {
   }
 };
 
+
+const fetchC2LevelData = async (): Promise<any[]> => {
+  try {
+    const response = await fetch(baseURL + 'vocabulary/C2level.json');
+    if (!response.ok) {
+      throw new Error(
+        'Network response was not ok - HTTP Status: ' + response.status,
+      );
+    }
+    const json = await response.json();
+    return json.C2level;
+  } catch (error) {
+    console.error('Error fetching C2 level data:', error);
+    return [];
+  }
+};
+
+const fetchC1LevelData = async (): Promise<any[]> => {
+  try {
+    const response = await fetch(baseURL + 'vocabulary/C1level.json');
+    if (!response.ok) {
+      throw new Error(
+        'Network response was not ok - HTTP Status: ' + response.status,
+      );
+    }
+    const json = await response.json();
+    return json.C1level;
+  } catch (error) {
+    console.error('Error fetching C1 level data:', error);
+    return [];
+  }
+};
 const fetchA1LevelQuestions = async (): Promise<A1LevelQuestion[]> => {
   try {
     const response = await fetch(baseURL + 'vocabulary/A1levelQuestions.json');
@@ -109,5 +141,7 @@ export {
   getImageURL,
   fetchA1LevelData,
   fetchA1LevelQuestions,
+  fetchC1LevelData,
+  fetchC2LevelData,
   fetchB2LevelData,
 };

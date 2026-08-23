@@ -1,0 +1,26 @@
+    q(['The novel is a masterpiece of modern', '', '.'], [{id:'1',text:'fiction'},{id:'2',text:'cooking'},{id:'3',text:'traffic'}], 'fiction'),
+    q(['Careful observation leads to', '', '.'], [{id:'1',text:'discovery'},{id:'2',text:'dinner'},{id:'3',text:'deadline'}], 'discovery'),
+    q(['Every challenge brings an', '', '.'], [{id:'1',text:'opportunity'},{id:'2',text:'umbrella'},{id:'3',text:'error'}], 'opportunity'),
+    q(['Failure is a step towards', '', '.'], [{id:'1',text:'success'},{id:'2',text:'sleep'},{id:'3',text:'lunch'}], 'success'),
+    q(['Old systems quickly become', '', '.'], [{id:'1',text:'obsolete'},{id:'2',text:'renewable'},{id:'3',text:'sustainable'}], 'obsolete'),
+  ],
+  C1: [
+    q(['Your perception shapes your', '', '.'], [{id:'1',text:'reality'},{id:'2',text:'regulation'},{id:'3',text:'resilience'}], 'reality'),
+    q(['The study shows a', '', 'improvement.'], [{id:'1',text:'significant'},{id:'2',text:'melancholy'},{id:'3',text:'virtual'}], 'significant'),
+    q(['New legislation limits carbon', '', '.'], [{id:'1',text:'emissions'},{id:'2',text:'initiatives'},{id:'3',text:'serenity'}], 'emissions'),
+    q(['Please prioritize the urgent', '', '.'], [{id:'1',text:'tasks'},{id:'2',text:'trends'},{id:'3',text:'criteria'}], 'tasks'),
+    q(['They use cutting-edge', '', '.'], [{id:'1',text:'technology'},{id:'2',text:'composure'},{id:'3',text:'ambiguity'}], 'technology'),
+    q(['The theory derives from earlier', '', '.'], [{id:'1',text:'research'},{id:'2',text:'negotiation'},{id:'3',text:'clarification'}], 'research'),
+    q(['She faced the crisis with', '', '.'], [{id:'1',text:'composure'},{id:'2',text:'vulnerability'},{id:'3',text:'ambiguity'}], 'composure'),
+    q(['Urbanization affects the natural', '', '.'], [{id:'1',text:'habitat'},{id:'2',text:'criterion'},{id:'3',text:'consistency'}], 'habitat'),
+    q(['Let me clarify my main', '', '.'], [{id:'1',text:'point'},{id:'2',text:'implication'},{id:'3',text:'advocacy'}], 'point'),
+    q(['Intuition often guides good', '', '.'], [{id:'1',text:'decisions'},{id:'2',text:'discourses'},{id:'3',text:'breakthroughs'}], 'decisions'),
+  ],
+  C2: [
+    q(['Her meticulous work earned global', '', '.'], [{id:'1',text:'respect'},{id:'2',text:'irony'},{id:'3',text:'panic'}], 'respect'),
+    q(['Change is inevitable in every', '', '.'], [{id:'1',text:'industry'},{id:'2',text:'allegory'},{id:'3',text:'aesthetic'}], 'industry'),
+    q(['Furthermore, the data supports our', '', '.'], [{id:'1',text:'claim'},{id:'2',text:'narrative'},{id:'3',text:'ethics'}], 'claim'),
+    q(['There is a stark contrast between the two', '', '.'], [{id:'1',text:'reports'},{id:'2',text:'paradoxes'},{id:'3',text:'satires'}], 'reports'),
+    s('It was sheer luck that nobody was hurt.', ''), // dummy
+  ],
+};
