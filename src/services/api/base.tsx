@@ -87,10 +87,27 @@ const fetchA1LevelQuestions = async (): Promise<A1LevelQuestion[]> => {
   }
 };
 
+const fetchB2LevelData = async (): Promise<any[]> => {
+  try {
+    const response = await fetch(baseURL + 'vocabulary/B2level.json');
+    if (!response.ok) {
+      throw new Error(
+        'Network response was not ok - HTTP Status: ' + response.status,
+      );
+    }
+    const json = await response.json();
+    return json.B2level;
+  } catch (error) {
+    console.error('Error fetching B2 level data:', error);
+    return [];
+  }
+};
+
 export {
   fetchData,
   fetchCountriesData,
   getImageURL,
   fetchA1LevelData,
   fetchA1LevelQuestions,
+  fetchB2LevelData,
 };
