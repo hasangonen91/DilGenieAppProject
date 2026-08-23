@@ -7,11 +7,15 @@ import {
   View,
   Dimensions,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import {getImageURL} from '../../../../../services/api/base';
-import FastImage from 'react-native-fast-image';
+import FastImage from '@d11/react-native-fast-image';
 import * as Animatable from 'react-native-animatable';
-import CustomModal from '../../../../../components/modal/Modal';
+import Icon from 'react-native-vector-icons/Ionicons';
+import SlideUpModal from '../../../../../components/modal/SlideUpModal';
 import TopicWordsList from '../../../../../components/topicWords/TopicWordsList';
+import Screen from '../../../../../components/screen/Screen';
+import {topicWords} from '../../../../../data/topicWords';
 
 const {width, height} = Dimensions.get('window');
 
@@ -45,116 +49,174 @@ const TopicsScreen: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setCurrentIndex(prevIndex => (prevIndex + 1) % data.length);
-    }, 20000); // 2 saniye aralıklarla indeksi güncelle
-
+    }, 20000);
     return () => clearTimeout(timer);
   }, [currentIndex]);
 
-  const renderItem = ({item, index}: {item: DataItem; index: number}) => (
-    <TouchableOpacity
-      style={[
-        styles.box,
-        selectedItem === item.id ? {borderColor: '#00e0ff'} : null,
-      ]}
-      onPress={() => {
-        setSelectedItem(item.id);
-      }}>
-      <Animatable.View
-        style={styles.boxContent}
-        animation={index === currentIndex ? 'swing' : undefined}
-        duration={1000}>
-        <FastImage
-          style={styles.image}
-          source={{
-            uri: getImageURL(item.imageName),
-            priority: FastImage.priority.high,
-          }}
-        />
-        <View style={styles.line} />
-        <Text style={styles.text}>{item.id}</Text>
-        <Text style={styles.subText}>{item.terms}</Text>
-      </Animatable.View>
-    </TouchableOpacity>
-  );
+  const renderItem = ({item, index}: {item: DataItem; index: number}) => {
+    const wordCount = topicWords[item.id]?.length ?? 0;
+    return (
+    <Animatable.View
+      animation="fadeInUp"
+      duration={500}
+      delay={Math.min(index * 90, 600)}
+      useNativeDriver>
+      <TouchableOpacity
+        style={styles.box}
+        activeOpacity={0.85}
+        onPress={() => setSelectedItem(item.id)}>
+        <View style={styles.imageWrap}>
+          <FastImage
+            style={styles.image as any}
+            source={{
+              uri: getImageURL(item.imageName),
+              priority: FastImage.priority.high,
+            }}
+          />
+          {/* Alt kısım için koyu degrade — yazılar her görselde okunur */}
+          <LinearGradient
+            colors={['transparent', 'rgba(2, 8, 37, 0.92)']}
+            style={styles.imageOverlay}
+          />
+          {wordCount > 0 && (
+            <View style={styles.countBadge}>
+              <Icon name="layers-outline" size={11} color="#020825" />
+              <Text style={styles.countBadgeText}>{wordCount}</Text>
+            </View>
+          )}
+        </View>
+
+        <View style={styles.textWrap}>
+          <Text style={styles.text} numberOfLines={1}>
+            {item.id}
+          </Text>
+          <View style={styles.subRow}>
+            <Icon name="book-outline" size={11} color="#00e0ff" />
+            <Text style={styles.subText}>{wordCount} kelime</Text>
+          </View>
+        </View>
+
+        {/* Sağ alt köşe ok — tıklanabilirlik ipucu */}
+        <View style={styles.goArrow}>
+          <Icon name="chevron-forward" size={13} color="#00e0ff" />
+        </View>
+      </TouchableOpacity>
+    </Animatable.View>
+    );
+  };
 
   return (
-    <View style={{flex: 1, backgroundColor: '#020825'}}>
+    <Screen>
       <FlatList
         data={data}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-        style={{
-          flex: 1,
-          width: width,
-          backgroundColor: '#020825',
-        }}
+        style={styles.list}
         contentContainerStyle={styles.container}
         numColumns={2}
         showsVerticalScrollIndicator={false}
       />
-      <CustomModal
+
+      <SlideUpModal
         isVisible={selectedItem !== null}
         closeModal={() => setSelectedItem(null)}
-        modalContent={
-          selectedItem ? (
-            <TopicWordsList
-              topic={selectedItem}
-              onClose={() => setSelectedItem(null)}
-              onLearn={() => {}}
-            />
-          ) : null
-        }
-        modalContentStyle={{height: height * 0.7, backgroundColor: '#020825'}}
-      />
-    </View>
+        title={selectedItem || ''}
+        subtitle={`${topicWords[selectedItem || '']?.length ?? 0} kelime • karta dokun, sesli dinle`}>
+        {selectedItem ? (
+          <TopicWordsList
+            topic={selectedItem}
+            onClose={() => setSelectedItem(null)}
+            onLearn={() => {}}
+          />
+        ) : null}
+      </SlideUpModal>
+    </Screen>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    justifyContent: 'space-around',
-    alignItems: 'center',
+  list: {
+    flex: 1,
     width: width,
     backgroundColor: '#020825',
   },
-  box: {
-    width: width * 0.4,
-    height: height * 0.25,
-    margin: 15,
-    backgroundColor: 'transparent',
-    borderRadius: 8,
-    justifyContent: 'flex-start',
+  container: {
+    width: width,
+    backgroundColor: '#020825',
+    paddingTop: 6,
+    paddingHorizontal: 8,
+    paddingBottom: 20,
     alignItems: 'center',
+  },
+  box: {
+    width: width * 0.42,
+    height: height * 0.22,
+    margin: 12,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#5D3FD3',
+    borderColor: 'rgba(93, 63, 211, 0.8)',
+    backgroundColor: 'rgba(93, 63, 211, 0.08)',
+    overflow: 'hidden',
+  },
+  imageWrap: {
+    width: '100%',
+    height: '68%',
   },
   image: {
-    width: '100%',
-    height: '75%',
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
-  boxContent: {
+  imageOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  countBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    flexDirection: 'row',
     alignItems: 'center',
-    width: '100%',
-    height: '100%',
+    gap: 3,
+    backgroundColor: '#00e0ff',
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+    borderRadius: 10,
+  },
+  countBadgeText: {
+    color: '#020825',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  textWrap: {
+    flex: 1,
+    paddingHorizontal: 10,
+    paddingTop: 8,
   },
   text: {
-    color: 'white',
+    color: '#FFFFFF',
     fontWeight: 'bold',
-    textAlign: 'center',
-    textAlignVertical: 'center',
+    fontSize: 15,
+  },
+  subRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 3,
   },
   subText: {
-    color: 'white',
-    textAlign: 'center',
-    textAlignVertical: 'center',
+    color: '#00e0ff',
+    fontSize: 11,
   },
-  line: {
-    width: '100%',
-    backgroundColor: '#5D3FD3',
-    height: height * 0.0015,
+  goArrow: {
+    position: 'absolute',
+    bottom: 8,
+    right: 10,
   },
 });
 

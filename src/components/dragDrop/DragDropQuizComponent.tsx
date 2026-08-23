@@ -163,13 +163,14 @@ const DragDropQuizComponent: React.FC<Props> = ({questions, onFinish}) => {
         correctCount={correctCount}
         incorrectCount={incorrectCount}
       />
-      <Progress.Bar
-        progress={progress}
-        color={'#4CAF50'}
-        width={width * 0.9}
-        style={styles.progressBar}
-        height={8}
-      />
+      <View style={styles.progressBar}>
+        <Progress.Bar
+          progress={progress}
+          color={'#4CAF50'}
+          width={width * 0.9}
+          height={8}
+        />
+      </View>
       <View style={styles.questionContainer}>
         <Text style={styles.subtitle}>öğrendiklerinizi pekiştirin{'\n'}</Text>
         <Text style={styles.instruction}>Cümleyi tamamlayın.</Text>

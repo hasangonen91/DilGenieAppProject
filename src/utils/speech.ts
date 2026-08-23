@@ -18,9 +18,7 @@ let isConfigured = false;
 
 // iOS/Android'de mevcut en kaliteli İngilizce sesi seç
 export async function setupSpeech() {
-  if (isConfigured) {
-    return;
-  }
+  if (isConfigured) return;
   try {
     // Sessiz modda da çalsın
     Tts.setIgnoreSilentSwitch?.('ignore');
@@ -39,23 +37,13 @@ export async function setupSpeech() {
           return;
         }
       }
-      // 2) Bulunamadıysa: quality=enhanced/premium olan İngilizce sesi bul
+      // 2) Bulunamadıysa: en yüksek kaliteli (2=enhanced, 3=premium) İngilizce sesi bul
       const enVoices = voices.filter(
         v => v.language && v.language.toLowerCase().startsWith('en'),
       );
       const best = enVoices
         .filter(v => !String(v.id).includes('compact'))
-        .sort((a, b) => {
-          const qa =
-            String(a.quality) === 'enhanced' || String(a.quality) === 'premium'
-              ? 2
-              : 0;
-          const qb =
-            String(b.quality) === 'enhanced' || String(b.quality) === 'premium'
-              ? 2
-              : 0;
-          return qb - qa;
-        })[0];
+        .sort((a, b) => (b.quality || 0) - (a.quality || 0))[0];
       if (best) {
         await Tts.setDefaultVoice(best.id);
         await Tts.setDefaultLanguage(
@@ -79,14 +67,26 @@ export async function setupSpeech() {
 }
 
 // Cümleyi konuş
-export function speak(text: string) {
-  if (!text) {
-    return;
+export function speak(text: string, opts?: {rate?: number}) {
+  if (!text) return;
+  Tts.stop(false);
+  // Kelime için yavaş (0.42), cümle için doğal (0.48) hız
+  if (opts?.rate) {
+    Tts.setDefaultRate?.(opts.rate, true);
   }
-  Tts.stop();
   Tts.speak(text);
 }
 
+// Tek kelime telaffuzu — biraz yavaş ve net
+export function speakWord(word: string) {
+  speak(word, {rate: 0.42});
+}
+
+// Örnek cümle okuma — doğal konuşma hızı
+export function speakSentence(sentence: string) {
+  speak(sentence, {rate: 0.48});
+}
+// ErrorBoundary için hata kaydı yardımcısı (bot katkısı)
 export const logError = (error: Error, errorInfo: {componentStack: string}) => {
   console.error('ErrorBoundary caught an error:', error, errorInfo);
 };

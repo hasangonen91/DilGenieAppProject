@@ -195,16 +195,18 @@ const GreetingsQuiz: React.FC<GreetingsQuizProps> = ({
         correctCount={correctCount}
         incorrectCount={incorrectCount}
       />
-      <Progress.Bar
-        progress={(currentItemIndex + 1) / totalQuestions}
-        color={'#4CAF50'}
-        width={315}
+      <View
         style={{
           marginVertical: 15,
           marginBottom: 20,
-        }}
-        height={8}
-      />
+        }}>
+        <Progress.Bar
+          progress={(currentItemIndex + 1) / totalQuestions}
+          color={'#4CAF50'}
+          width={315}
+          height={8}
+        />
+      </View>
       {renderSwipeContainer()}
       <CongratulationsModal
         visible={showCongratulations}

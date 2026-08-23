@@ -11,7 +11,7 @@ import {
   Platform,
   Dimensions,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
+import {getAuth, signInWithEmailAndPassword} from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import {GoogleSvg} from '../../../../assets';
 import Video from 'react-native-video';
@@ -58,9 +58,8 @@ const Login = () => {
       Alert.alert('Please fill in all fields.');
       return;
     }
-    auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(res => {
+    signInWithEmailAndPassword(getAuth(), email, password)
+      .then((res: any) => {
         console.log(res);
         setEmail('');
         setPassword('');
@@ -72,7 +71,7 @@ const Login = () => {
           params: {uid: res.user.uid, displayName: res.user.displayName},
         });
       })
-      .catch(error => console.log(error.message));
+      .catch((error: any) => console.log(error.message));
   };
 
   const togglePasswordVisibility = () => {

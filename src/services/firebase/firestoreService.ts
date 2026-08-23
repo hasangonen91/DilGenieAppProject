@@ -1,20 +1,31 @@
-import firestore from '@react-native-firebase/firestore';
-import type {WhereFilterOp} from 'firebase/firestore';
+import {
+  getFirestore,
+  collection,
+  doc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  getDocs,
+  getDoc,
+  query,
+  where,
+} from '@react-native-firebase/firestore';
+import type {WhereFilterOp} from '@react-native-firebase/firestore';
 
 /**
- * Firestore servis katmanı.
+ * Firestore servis katmanı (v26 modular API).
  * Tüm Firestore işlemleri burada merkezileştirilir ve hata yönetimi yapılır.
  */
+const db = getFirestore();
+
 const firestoreService = {
   /**
    * Belirtilen koleksiyondaki tüm belgeleri getirir.
-   * @param collectionName Koleksiyon adı
-   * @returns Belgelerin dizisi
    */
   async getCollection(collectionName: string): Promise<any[]> {
     try {
-      const snapshot = await firestore().collection(collectionName).get();
-      return snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+      const snapshot = await getDocs(collection(db, collectionName));
+      return snapshot.docs.map((d: any) => ({id: d.id, ...d.data()}));
     } catch (error: any) {
       throw new Error(`Firestore veri getirme hatası: ${error.message}`);
     }
@@ -22,14 +33,11 @@ const firestoreService = {
 
   /**
    * Belirtilen koleksiyona yeni bir belge ekler.
-   * @param collectionName Koleksiyon adı
-   * @param data Eklenecek veri
-   * @returns Eklenen belgenin ID'si
    */
   async addDocument(collectionName: string, data: any): Promise<string> {
     try {
-      const docRef = await firestore().collection(collectionName).add(data);
-      return docRef.id;
+      const ref = await addDoc(collection(db, collectionName), data);
+      return ref.id;
     } catch (error: any) {
       throw new Error(`Firestore belge ekleme hatası: ${error.message}`);
     }
@@ -37,9 +45,6 @@ const firestoreService = {
 
   /**
    * Belirtilen belgeyi günceller.
-   * @param collectionName Koleksiyon adı
-   * @param docId Güncellenecek belge ID'si
-   * @param data Güncellenecek alanlar
    */
   async updateDocument(
     collectionName: string,
@@ -47,44 +52,36 @@ const firestoreService = {
     data: any,
   ): Promise<void> {
     try {
-      await firestore().collection(collectionName).doc(docId).update(data);
+      await updateDoc(doc(db, collectionName, docId), data);
     } catch (error: any) {
-      throw new Error(`Firestore belge güncelleme hatası: ${error.message}`);
+      throw new Error(`Firestore güncelleme hatası: ${error.message}`);
     }
   },
 
   /**
    * Belirtilen belgeyi siler.
-   * @param collectionName Koleksiyon adı
-   * @param docId Silinecek belge ID'si
    */
   async deleteDocument(collectionName: string, docId: string): Promise<void> {
     try {
-      await firestore().collection(collectionName).doc(docId).delete();
+      await deleteDoc(doc(db, collectionName, docId));
     } catch (error: any) {
-      throw new Error(`Firestore belge silme hatası: ${error.message}`);
+      throw new Error(`Firestore silme hatası: ${error.message}`);
     }
   },
 
   /**
    * Tek bir belgeyi getirir.
-   * @param collectionName Koleksiyon adı
-   * @param docId Belge ID'si
-   * @returns Belge verisi veya null
    */
   async getDocument(
     collectionName: string,
     docId: string,
   ): Promise<any | null> {
     try {
-      const docSnap = await firestore()
-        .collection(collectionName)
-        .doc(docId)
-        .get();
-      if (!docSnap.exists) {
+      const snap = await getDoc(doc(db, collectionName, docId));
+      if (!snap.exists) {
         return null;
       }
-      return {id: docSnap.id, ...docSnap.data()};
+      return {id: snap.id, ...(snap.data() as any)};
     } catch (error: any) {
       throw new Error(`Firestore belge getirme hatası: ${error.message}`);
     }
@@ -92,11 +89,6 @@ const firestoreService = {
 
   /**
    * Basit bir field karşılaştırmalı sorgu yapar.
-   * @param collectionName Koleksiyon adı
-   * @param field Alan adı
-   * @param operator Firestore karşılaştırma operatörü (==, <, >, <=, >=, !=, in, not-in, array-contains, array-contains-any)
-   * @param value Karşılaştırılacak değer
-   * @returns Eşleşen belgelerin dizisi
    */
   async queryCollection(
     collectionName: string,
@@ -105,11 +97,12 @@ const firestoreService = {
     value: any,
   ): Promise<any[]> {
     try {
-      const q = firestore()
-        .collection(collectionName)
-        .where(field, operator, value);
-      const snapshot = await q.get();
-      return snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+      const q = query(
+        collection(db, collectionName),
+        where(field, operator, value),
+      );
+      const snapshot = await getDocs(q);
+      return snapshot.docs.map((d: any) => ({id: d.id, ...d.data()}));
     } catch (error: any) {
       throw new Error(`Firestore sorgu hatası: ${error.message}`);
     }

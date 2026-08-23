@@ -7,7 +7,12 @@ import {
   StyleSheet,
   Image,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
+import {
+  getAuth,
+  signOut as firebaseSignOut,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+} from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Header from '../../../components/header/Header';
@@ -48,7 +53,7 @@ const Profile: React.FC<ProfileProps> = ({navigation}) => {
   }, [isRotating]);
 
   useEffect(() => {
-    const user = auth().currentUser;
+    const user = getAuth().currentUser;
     if (user) {
       setUserDisplayName(user.displayName || 'John Doe');
       setUserEmail(user.email || 'johndoe@example.com');
@@ -58,10 +63,9 @@ const Profile: React.FC<ProfileProps> = ({navigation}) => {
   const signOut = async () => {
     try {
       await AsyncStorage.removeItem('userSession');
-      auth()
-        .signOut()
+      firebaseSignOut(getAuth())
         .then(() => navigation.navigate('Login'))
-        .catch(err => console.log(err.message));
+        .catch((err: any) => console.log(err.message));
     } catch (error) {
       console.log('AsyncStorage Error:', error);
     }
@@ -69,13 +73,13 @@ const Profile: React.FC<ProfileProps> = ({navigation}) => {
 
   const deleteAccount = async () => {
     try {
-      const user = auth().currentUser;
+      const user = getAuth().currentUser;
       if (user && user.email) {
-        const credential = auth.EmailAuthProvider.credential(
+        const credential = EmailAuthProvider.credential(
           user.email,
           'USER_PASSWORD',
         );
-        await user.reauthenticateWithCredential(credential);
+        await reauthenticateWithCredential(user, credential);
         Alert.alert(
           'Hesap Sil',
           'Hesabınızı silmek istediğinize emin misiniz?',
@@ -209,7 +213,7 @@ const Profile: React.FC<ProfileProps> = ({navigation}) => {
                     fill={fill}
                     tintColor="#00e0ff"
                     backgroundColor="#3d5875">
-                    {fill => (
+                    {(fill: number) => (
                       <Text style={styles.points}>
                         {Math.round((MAX_POINTS * fill) / 100)}
                       </Text>

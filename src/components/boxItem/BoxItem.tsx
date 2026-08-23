@@ -1,7 +1,7 @@
 // BoxItem.tsx
 import React from 'react';
 import {TouchableOpacity, View, Text, StyleSheet} from 'react-native';
-import FastImage from 'react-native-fast-image';
+import FastImage from '@d11/react-native-fast-image';
 import * as Animatable from 'react-native-animatable';
 import {getImageURL} from '../../services/api/base';
 

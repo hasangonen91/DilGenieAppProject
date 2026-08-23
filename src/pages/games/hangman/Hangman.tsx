@@ -190,10 +190,13 @@ const HangmanGame: React.FC = () => {
       return true;
     };
 
-    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    const backSubscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBackPress,
+    );
 
     return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+      backSubscription.remove();
     };
   }, []);
 

@@ -1,16 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Text,
-  SafeAreaView,
-} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Text} from 'react-native';
 import TopicsScreen from './Screens/TopicsScreen';
 import PopularsScreen from './Screens/PopularsScreen';
 import styles from './styles';
+import localStyles from './homeStyles';
+import Screen from '../../../components/screen/Screen';
 import {fetchData} from '../../../services/api/base';
-import auth from '@react-native-firebase/auth';
+import {getAuth} from '@react-native-firebase/auth';
 
 interface TabButtonProps {
   title: string;
@@ -45,14 +41,14 @@ const Home = ({route}: any) => {
   }
 
   useEffect(() => {
-    const user = auth().currentUser;
+    const user = getAuth().currentUser;
     if (user) {
       setUserDisplayName(user.displayName || 'John Doe');
     }
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(fetchRandomWord, 60000); // 2 dakikada bir (1 * 60 * 1000 milisaniye)
+    const interval = setInterval(fetchRandomWord, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -66,7 +62,7 @@ const Home = ({route}: any) => {
 
   useEffect(() => {
     fetchRandomWord();
-  }, []); // İlk renderda çalıştır
+  }, []);
 
   const TabButton = ({title, onPress, isActive}: TabButtonProps) => (
     <TouchableOpacity
@@ -84,46 +80,38 @@ const Home = ({route}: any) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <View style={styles.wordAndNameContainer}>
-          <View style={styles.nameContainer}>
-            <View style={styles.morningHeader}>
-              <Text style={styles.progressText}>
-                {message}
-                {'\t\t'}
-                {userDisplayName}
+    <Screen>
+      {/* Kompakt header — greeting + günlük kelime kartı */}
+      <View style={localStyles.headerBlock}>
+        <Text style={localStyles.greeting}>
+          {message}
+          {userDisplayName ? `, ${userDisplayName}` : ''}
+        </Text>
+
+        <View style={localStyles.wordCard}>
+          <View style={localStyles.levelChip}>
+            <Text style={localStyles.levelChipText}>
+              {loading ? '...' : `LEVEL ${randomWord?.level ?? '-'}`}
+            </Text>
+          </View>
+          {loading ? (
+            <Text style={localStyles.loadingText}>Loading...</Text>
+          ) : randomWord ? (
+            <View style={localStyles.wordRow}>
+              <Text style={localStyles.word}>{randomWord.word}</Text>
+              <Text style={localStyles.eq}>=</Text>
+              <Text style={localStyles.translation}>
+                {randomWord.translation}
               </Text>
             </View>
-
-            <View style={styles.wordList}>
-              {loading ? (
-                <Text>Loading...</Text>
-              ) : randomWord ? (
-                <React.Fragment>
-                  <Text style={styles.level}>
-                    Level{'\t'}={'\t'}
-                    {randomWord.level}
-                  </Text>
-                  <View style={styles.item}>
-                    <Text style={styles.word}>
-                      {randomWord.word}
-                      {'\t'}={'\t'}
-                    </Text>
-                    <Text style={styles.translation}>
-                      {randomWord.translation}
-                    </Text>
-                  </View>
-                </React.Fragment>
-              ) : (
-                <Text>No data available</Text>
-              )}
-            </View>
-          </View>
+          ) : (
+            <Text style={localStyles.loadingText}>No data available</Text>
+          )}
         </View>
       </View>
 
-      <View style={styles.tabContainer}>
+      {/* Sekmeler */}
+      <View style={localStyles.tabContainer}>
         <TabButton
           title="Topics"
           onPress={() => setActiveTab('Topics')}
@@ -135,11 +123,13 @@ const Home = ({route}: any) => {
           isActive={activeTab === 'Populars'}
         />
       </View>
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+
+      {/* İçerik — yukarıdan başlar, ortada asılı kalmaz */}
+      <View style={localStyles.contentArea}>
         {activeTab === 'Topics' && <TopicsScreen />}
         {activeTab === 'Populars' && <PopularsScreen />}
       </View>
-    </SafeAreaView>
+    </Screen>
   );
 };
 

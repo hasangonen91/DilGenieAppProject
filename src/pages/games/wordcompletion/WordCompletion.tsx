@@ -9,7 +9,7 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
+import FastImage from '@d11/react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
 import StartGameModal from '../../../components/modal/GameModal/StartModal';
 import GameOverModal from '../../../components/modal/GameModal/GameOverModal';

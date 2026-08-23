@@ -40,16 +40,13 @@ const TeachingPhase: React.FC<TeachingPhaseProps> = ({
       <Text style={styles.header}>
         {categoryName.en} - {categoryName.tr}
       </Text>
-      <Progress.Bar
-        progress={progress}
-        color={'#4CAF50'}
-        width={315}
+      <View
         style={{
           marginVertical: 15,
           marginBottom: 20,
-        }}
-        height={8}
-      />
+        }}>
+        <Progress.Bar progress={progress} color={'#4CAF50'} width={315} height={8} />
+      </View>
       {currentItem.image && (
         <Image style={styles.image} source={{uri: currentItem.image}} />
       )}

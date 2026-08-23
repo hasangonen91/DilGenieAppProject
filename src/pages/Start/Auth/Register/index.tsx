@@ -6,13 +6,18 @@ import {
   TouchableOpacity,
   View,
   TextInput,
+  TextInputInstance,
   Image,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
   Dimensions,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from '@react-native-firebase/auth';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
@@ -40,10 +45,10 @@ const Signup = () => {
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   // Define refs with explicit type
-  const nameInputRef = useRef<TextInput>(null);
-  const emailInputRef = useRef<TextInput>(null);
-  const passwordInputRef = useRef<TextInput>(null);
-  const confirmPasswordInputRef = useRef<TextInput>(null);
+  const nameInputRef = useRef<TextInputInstance | null>(null);
+  const emailInputRef = useRef<TextInputInstance | null>(null);
+  const passwordInputRef = useRef<TextInputInstance | null>(null);
+  const confirmPasswordInputRef = useRef<TextInputInstance | null>(null);
 
   const singupSubmit = () => {
     if (
@@ -60,15 +65,14 @@ const Signup = () => {
       return;
     }
 
-    auth()
-      .createUserWithEmailAndPassword(values.email, values.password)
-      .then(res => {
-        res.user.updateProfile({displayName: values.name});
+    createUserWithEmailAndPassword(getAuth(), values.email, values.password)
+      .then((res: any) => {
+        updateProfile(res.user, {displayName: values.name});
         console.log('user Created Successfully!');
         setValues({name: '', email: '', password: '', confirmPassword: ''});
         navigation.navigate('Login');
       })
-      .catch(error => console.log(error.message));
+      .catch((error: any) => console.log(error.message));
   };
 
   const fetchPolicyContent = () => {
@@ -94,11 +98,14 @@ const Signup = () => {
   };
 
   // Define focus functions with null checks
-  const focusNextField = useCallback((ref: React.RefObject<TextInput>) => {
-    if (ref.current) {
-      ref.current.focus();
-    }
-  }, []);
+  const focusNextField = useCallback(
+    (ref: React.RefObject<TextInputInstance | null>) => {
+      if (ref.current) {
+        ref.current.focus();
+      }
+    },
+    [],
+  );
 
   return (
     <KeyboardAvoidingView
