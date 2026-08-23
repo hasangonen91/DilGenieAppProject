@@ -1,8 +1,8 @@
 // Konu kelimeleri LOADER'ı — veri KODUN İÇİNDE DEĞİL.
 // 1) Önce data repo'dan (dilgenie/list/topicWords.json) çeker — bot gece besler
-// 2) Olmazsa bundle içindeki topicWords.seed.json ile çalışır (offline fallback)
+// 2) Olmazsa bundle içindeki topicWords.seed.tsx ile çalışır (offline fallback)
 // Kullanım: const words = await getTopicWords();  words['Nature'][0].en
-import seed from './topicWords.seed.json';
+import {topicWordsSeed as seed} from './topicWords.seed';
 
 export interface TopicWord {
   en: string;
